@@ -8,30 +8,17 @@ from django.contrib.auth.models import User, Group
 from django.contrib import admin
 import base64
 
-class Device(models.Model):
-    owner = models.CharField(max_length=1000, blank=False)
-    deviceid = models.CharField(max_length=1000, blank=False)
-
-    def __str__(self):
-        return str(self.deviceid)
-
-
-class DeviceAdmin(admin.ModelAdmin):
-    list_display = ('owner','deviceid')
-
-class DeviceEvent(models.Model):
-    device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name='events')
+class Event(models.Model):
     eventtype = models.CharField(max_length=1000, blank=False)
-    power = models.IntegerField()
     timestamp = models.DateTimeField()
     userid = models.CharField(max_length=1000, blank=True)
     requestor = models.GenericIPAddressField(blank=False)
 
     def __str__(self):
-        return str(self.eventtype) + str(self.device)
+        return str(self.eventtype)
 
-class DeviceEventAdmin(admin.ModelAdmin):
-    list_display = ('device','eventtype', 'power', 'timestamp')
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('eventtype', 'timestamp')
 
 class ApiKey(models.Model):
     owner = models.CharField(max_length=1000, blank=False)

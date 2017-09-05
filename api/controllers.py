@@ -48,9 +48,9 @@ def home(request):
    return render_to_response('ember/index.html',
                {}, RequestContext(request))
 
-def css_example(request):
+def xss_example(request):
   """
-  Send requests to css-example/ to the insecure client app
+  Send requests to xss-example/ to the insecure client app
   """
   return render_to_response('dumb-test-app/index.html',
               {}, RequestContext(request))
@@ -119,34 +119,22 @@ class Session(APIView):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class DeviceEvents(APIView):
+class Events(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
     def post(self, request, *args, **kwargs):
-        json_req = json.loads(request.POST.get('request'))
+        print 'REQUEST DATA'
+        print str(request.data)
 
-        eventtype = json_req.get('payload').get('delta')
-        power = json_req.get('payload').get('percent')
-        timestamp = json_req.get('timestamp')
-        userid = json_req.get('user_id')
+        eventtype = request.data.get('eventtype')
+        timestamp = int(request.data.get('timestamp'))
+        userid = request.data.get('userid')
         requestor = request.META['REMOTE_ADDR']
 
-        try:
-            device = Device.objects.get(deviceid=json_req.get('bit_id'))
-        except Device.DoesNotExist:
-            #device not created - Create it
-            device = Device(
-                deviceid=json_req.get('bit_id'),
-                owner=userid
-            )
-            device.save()
-
-        newEvent = DeviceEvent(
-            device=device,
+        newEvent = Event(
             eventtype=eventtype,
-            power=power,
             timestamp=datetime.datetime.fromtimestamp(timestamp/1000, pytz.utc),
             userid=userid,
             requestor=requestor
@@ -159,17 +147,16 @@ class DeviceEvents(APIView):
             return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
 
         newEvent.save()
-        print 'New Event Logged from: ' + json_req.get('bit_id')
-        print json_req.get('payload')
+        print 'New Event Logged from: ' + requestor
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def get(self, request, format=None):
-        events = DeviceEvent.objects.all()
+        events = Event.objects.all()
         json_data = serializers.serialize('json', events)
-        content = {'deviceevents': json_data}
+        content = {'events': json_data}
         return HttpResponse(json_data, content_type='json')
 
-class ActivateCloudbit(APIView):
+class ActivateIFTTT(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
@@ -182,49 +169,27 @@ class ActivateCloudbit(APIView):
         timestamp = int(request.data.get('timestamp'))
         requestor = request.META['REMOTE_ADDR']
         api_key = ApiKey.objects.all().first()
-
-        #get device info from Littlebits API
-        r = requests.get('https://api-http.littlebitscloud.cc/v2/devices/', headers= {
-            'Authorization' : 'Bearer ' + api_key.key
-        })
-        print 'Retrieving List of Devices from Littlebits:'
-        print r.json()
-        userid = r.json()[0].get('user_id')
-        deviceid= r.json()[0].get('id')
-
-        try:
-            device = Device.objects.get(deviceid=deviceid)
-        except Device.DoesNotExist:
-            #device not created - Create it
-            device = Device(
-                deviceid=deviceid,
-                owner=userid
-            )
-            device.save()
+        event_hook = "test"
 
         print "Creating New event"
 
-        newEvent = DeviceEvent(
-            device=device,
+        newEvent = Event(
             eventtype=eventtype,
-            power=-1,
             timestamp=datetime.datetime.fromtimestamp(timestamp/1000, pytz.utc),
-            userid=userid,
+            userid=str(api_key.owner),
             requestor=requestor
         )
 
         print newEvent
-        print "Sending Device Event to: " + str(deviceid)
+        print "Sending Device Event to IFTTT hook: " + str(event_hook)
 
-        #send the new event (to turn on the device) to littlebits API
-        event_req = requests.post('https://api-http.littlebitscloud.cc/v2/devices/'+deviceid+'/output', headers= {
-            'Authorization' : 'Bearer ' + api_key.key
+        #send the new event to IFTTT and print the result
+        event_req = requests.post('https://maker.ifttt.com/trigger/'+str(event_hook)+'/with/key/'+api_key.key, data= {
+            'value1' : timestamp,
+            'value2':  "\""+str(eventtype)+"\"",
+            'value3' : "\""+str(requestor)+"\""
         })
-        print event_req.json()
-
-        #check to ensure the device was on and received the event
-        if (event_req.json().get('success')!='true'):
-            return Response({'success':False, 'error':event_req.json().get('message')}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        print event_req.text
 
         #check that the event is safe to store in the databse
         try:
