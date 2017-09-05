@@ -65,7 +65,7 @@ define('littlebits-frontend/tests/app.lint-test', [], function () {
     assert.ok(true, 'services/constants.js should pass ESLint\n\n');
   });
 });
-define('littlebits-frontend/tests/helpers/destroy-app', ['exports', 'ember'], function (exports, _ember) {
+define('littlebits-frontend/tests/helpers/destroy-app', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -73,10 +73,10 @@ define('littlebits-frontend/tests/helpers/destroy-app', ['exports', 'ember'], fu
   });
   exports.default = destroyApp;
   function destroyApp(application) {
-    _ember.default.run(application, 'destroy');
+    Ember.run(application, 'destroy');
   }
 });
-define('littlebits-frontend/tests/helpers/module-for-acceptance', ['exports', 'qunit', 'ember', 'littlebits-frontend/tests/helpers/start-app', 'littlebits-frontend/tests/helpers/destroy-app'], function (exports, _qunit, _ember, _startApp, _destroyApp) {
+define('littlebits-frontend/tests/helpers/module-for-acceptance', ['exports', 'qunit', 'littlebits-frontend/tests/helpers/start-app', 'littlebits-frontend/tests/helpers/destroy-app'], function (exports, _qunit, _startApp, _destroyApp) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -105,7 +105,7 @@ define('littlebits-frontend/tests/helpers/module-for-acceptance', ['exports', 'q
     });
   };
 
-  var Promise = _ember.default.RSVP.Promise;
+  var Promise = Ember.RSVP.Promise;
 });
 define('littlebits-frontend/tests/helpers/resolver', ['exports', 'littlebits-frontend/resolver', 'littlebits-frontend/config/environment'], function (exports, _resolver, _environment) {
   'use strict';
@@ -124,7 +124,7 @@ define('littlebits-frontend/tests/helpers/resolver', ['exports', 'littlebits-fro
 
   exports.default = resolver;
 });
-define('littlebits-frontend/tests/helpers/start-app', ['exports', 'ember', 'littlebits-frontend/app', 'littlebits-frontend/config/environment'], function (exports, _ember, _app, _environment) {
+define('littlebits-frontend/tests/helpers/start-app', ['exports', 'littlebits-frontend/app', 'littlebits-frontend/config/environment'], function (exports, _app, _environment) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -132,10 +132,10 @@ define('littlebits-frontend/tests/helpers/start-app', ['exports', 'ember', 'litt
   });
   exports.default = startApp;
   function startApp(attrs) {
-    var attributes = _ember.default.merge({}, _environment.default.APP);
-    attributes = _ember.default.merge(attributes, attrs); // use defaults, but you can override;
+    var attributes = Ember.merge({}, _environment.default.APP);
+    attributes = Ember.merge(attributes, attrs); // use defaults, but you can override;
 
-    return _ember.default.run(function () {
+    return Ember.run(function () {
       var application = _app.default.create(attributes);
       application.setupForTesting();
       application.injectTestHelpers();
@@ -266,15 +266,15 @@ define('littlebits-frontend/tests/unit/controllers/login-test', ['ember-qunit'],
     assert.ok(controller);
   });
 });
-define('littlebits-frontend/tests/unit/initializers/auth-manager-test', ['ember', 'littlebits-frontend/initializers/auth-manager', 'qunit', 'littlebits-frontend/tests/helpers/destroy-app'], function (_ember, _authManager, _qunit, _destroyApp) {
+define('littlebits-frontend/tests/unit/initializers/auth-manager-test', ['littlebits-frontend/initializers/auth-manager', 'qunit', 'littlebits-frontend/tests/helpers/destroy-app'], function (_authManager, _qunit, _destroyApp) {
   'use strict';
 
   (0, _qunit.module)('Unit | Initializer | auth manager', {
     beforeEach: function beforeEach() {
       var _this = this;
 
-      _ember.default.run(function () {
-        _this.application = _ember.default.Application.create();
+      Ember.run(function () {
+        _this.application = Ember.Application.create();
         _this.application.deferReadiness();
       });
     },
@@ -291,15 +291,15 @@ define('littlebits-frontend/tests/unit/initializers/auth-manager-test', ['ember'
     assert.ok(true);
   });
 });
-define('littlebits-frontend/tests/unit/initializers/constants-test', ['ember', 'littlebits-frontend/initializers/constants', 'qunit', 'littlebits-frontend/tests/helpers/destroy-app'], function (_ember, _constants, _qunit, _destroyApp) {
+define('littlebits-frontend/tests/unit/initializers/constants-test', ['littlebits-frontend/initializers/constants', 'qunit', 'littlebits-frontend/tests/helpers/destroy-app'], function (_constants, _qunit, _destroyApp) {
   'use strict';
 
   (0, _qunit.module)('Unit | Initializer | constants', {
     beforeEach: function beforeEach() {
       var _this = this;
 
-      _ember.default.run(function () {
-        _this.application = _ember.default.Application.create();
+      Ember.run(function () {
+        _this.application = Ember.Application.create();
         _this.application.deferReadiness();
       });
     },

@@ -8,8 +8,6 @@ var runningTests = false;
 (function (global) {
   'use strict';
 
-  var heimdall = global.heimdall;
-
   function dict() {
     var obj = Object.create(null);
     obj['__'] = undefined;
@@ -51,7 +49,9 @@ var runningTests = false;
           }
         }
       }
-    }
+    },
+    // Option to enable or disable the generation of default exports
+    makeDefaultExport: true
   };
 
   var registry = dict();
@@ -101,6 +101,7 @@ var runningTests = false;
       return this.module.exports;
     }
 
+
     if (loader.wrapModules) {
       this.callback = loader.wrapModules(this.id, this.callback);
     }
@@ -114,7 +115,9 @@ var runningTests = false;
     if (!(this.hasExportsAsDep && result === undefined)) {
       this.module.exports = result;
     }
-    this.makeDefaultExport();
+    if (loader.makeDefaultExport) {
+      this.makeDefaultExport();
+    }
     return this.module.exports;
   };
 
@@ -271,6 +274,7 @@ var runningTests = false;
     if (child.charAt(0) !== '.') {
       return child;
     }
+
 
     var parts = child.split('/');
     var nameParts = id.split('/');
@@ -67257,6 +67261,7 @@ requireModule("ember");
 
 }());
 
+;Ember.libraries.register('Ember Bootstrap', '1.0.0-rc.2');
 ;(function() {
 /* globals define, Ember, jQuery */
 
@@ -75358,7 +75363,7 @@ window.matchMedia || (window.matchMedia = function() {
     };
 }());
  }
-;define('ember-ajax/-private/promise', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-ajax/-private/promise', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -75438,7 +75443,7 @@ window.matchMedia || (window.matchMedia = function() {
     if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
   }
 
-  var Promise = _ember.default.RSVP.Promise;
+  var Promise = Ember.RSVP.Promise;
 
   var AJAXPromise = function (_Promise) {
     _inherits(AJAXPromise, _Promise);
@@ -75465,15 +75470,15 @@ window.matchMedia || (window.matchMedia = function() {
 
   exports.default = AJAXPromise;
 });
-;define('ember-ajax/-private/utils/get-header', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-ajax/-private/utils/get-header', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = getHeader;
-  var A = _ember.default.A,
-      isNone = _ember.default.isNone;
+  var A = Ember.A,
+      isNone = Ember.isNone;
 
 
   /**
@@ -75639,16 +75644,16 @@ window.matchMedia || (window.matchMedia = function() {
     return a.protocol === b.protocol && a.hostname === b.hostname && a.port === b.port;
   }
 });
-;define('ember-ajax/ajax-request', ['exports', 'ember', 'ember-ajax/mixins/ajax-request'], function (exports, _ember, _ajaxRequest) {
+;define('ember-ajax/ajax-request', ['exports', 'ember-ajax/mixins/ajax-request'], function (exports, _ajaxRequest) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var EmberObject = _ember.default.Object;
+  var EmberObject = Ember.Object;
   exports.default = EmberObject.extend(_ajaxRequest.default);
 });
-;define('ember-ajax/errors', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-ajax/errors', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -75675,7 +75680,7 @@ window.matchMedia || (window.matchMedia = function() {
   exports.isConflictError = isConflictError;
   exports.isServerError = isServerError;
   exports.isSuccess = isSuccess;
-  var EmberError = _ember.default.Error;
+  var EmberError = Ember.Error;
 
 
   /**
@@ -75979,7 +75984,7 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-ajax/mixins/ajax-request', ['exports', 'ember', 'ember-ajax/errors', 'ember-ajax/utils/ajax', 'ember-ajax/-private/utils/parse-response-headers', 'ember-ajax/-private/utils/get-header', 'ember-ajax/-private/utils/url-helpers', 'ember-ajax/-private/utils/is-string', 'ember-ajax/-private/promise'], function (exports, _ember, _errors, _ajax, _parseResponseHeaders, _getHeader, _urlHelpers, _isString, _promise) {
+;define('ember-ajax/mixins/ajax-request', ['exports', 'ember-ajax/errors', 'ember-ajax/utils/ajax', 'ember-ajax/-private/utils/parse-response-headers', 'ember-ajax/-private/utils/get-header', 'ember-ajax/-private/utils/url-helpers', 'ember-ajax/-private/utils/is-string', 'ember-ajax/-private/promise'], function (exports, _errors, _ajax, _parseResponseHeaders, _getHeader, _urlHelpers, _isString, _promise) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -75992,18 +75997,18 @@ window.matchMedia || (window.matchMedia = function() {
     return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
   };
 
-  var A = _ember.default.A,
-      EmberError = _ember.default.Error,
-      Logger = _ember.default.Logger,
-      Mixin = _ember.default.Mixin,
-      Test = _ember.default.Test,
-      get = _ember.default.get,
-      isEmpty = _ember.default.isEmpty,
-      merge = _ember.default.merge,
-      run = _ember.default.run,
-      runInDebug = _ember.default.runInDebug,
-      testing = _ember.default.testing,
-      warn = _ember.default.warn;
+  var A = Ember.A,
+      EmberError = Ember.Error,
+      Logger = Ember.Logger,
+      Mixin = Ember.Mixin,
+      Test = Ember.Test,
+      get = Ember.get,
+      isEmpty = Ember.isEmpty,
+      merge = Ember.merge,
+      run = Ember.run,
+      runInDebug = Ember.runInDebug,
+      testing = Ember.testing,
+      warn = Ember.warn;
 
   var JSONContentType = /^application\/(?:vnd\.api\+)?json/i;
 
@@ -76804,15 +76809,15 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-ajax/mixins/ajax-support', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-ajax/mixins/ajax-support', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var Mixin = _ember.default.Mixin,
-      service = _ember.default.inject.service,
-      alias = _ember.default.computed.alias;
+  var Mixin = Ember.Mixin,
+      service = Ember.inject.service,
+      alias = Ember.computed.alias;
   exports.default = Mixin.create({
 
     /**
@@ -76848,7 +76853,7 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-ajax/mixins/legacy/normalize-error-response', ['exports', 'ember', 'ember-ajax/-private/utils/is-string'], function (exports, _ember, _isString) {
+;define('ember-ajax/mixins/legacy/normalize-error-response', ['exports', 'ember-ajax/-private/utils/is-string'], function (exports, _isString) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -76861,10 +76866,10 @@ window.matchMedia || (window.matchMedia = function() {
     return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
   };
 
-  var Mixin = _ember.default.Mixin,
-      isArray = _ember.default.isArray,
-      isNone = _ember.default.isNone,
-      merge = _ember.default.merge;
+  var Mixin = Ember.Mixin,
+      isArray = Ember.isArray,
+      isNone = Ember.isNone,
+      merge = Ember.merge;
 
 
   function isObject(object) {
@@ -77000,31 +77005,32 @@ window.matchMedia || (window.matchMedia = function() {
     return ajax.request.apply(ajax, arguments);
   }
 });
-;define('ember-ajax/services/ajax', ['exports', 'ember', 'ember-ajax/mixins/ajax-request'], function (exports, _ember, _ajaxRequest) {
+;define('ember-ajax/services/ajax', ['exports', 'ember-ajax/mixins/ajax-request'], function (exports, _ajaxRequest) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var Service = _ember.default.Service;
+  var Service = Ember.Service;
   exports.default = Service.extend(_ajaxRequest.default);
 });
-;define('ember-ajax/utils/ajax', ['exports', 'ember', 'ember-ajax/-private/utils/is-fastboot'], function (exports, _ember, _isFastboot) {
+;define('ember-ajax/utils/ajax', ['exports', 'ember-ajax/-private/utils/is-fastboot'], function (exports, _isFastboot) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var $ = _ember.default.$;
+  var $ = Ember.$;
   exports.default = _isFastboot.default ? najax : $.ajax;
 });
-;define('ember-bootstrap/components/base/bs-accordion', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-accordion', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _ember, _bsAccordion, _listenToCp) {
+;define('ember-bootstrap/components/base/bs-accordion', ['exports', 'ember-bootstrap/templates/components/bs-accordion', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _bsAccordion, _listenToCp) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _bsAccordion.default,
     ariaRole: 'tablist',
 
@@ -77075,14 +77081,15 @@ window.matchMedia || (window.matchMedia = function() {
 
   });
 });
-;define('ember-bootstrap/components/base/bs-accordion/item', ['exports', 'ember', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/mixins/component-child', 'ember-bootstrap/templates/components/bs-accordion/item'], function (exports, _ember, _typeClass, _componentChild, _item) {
+;define('ember-bootstrap/components/base/bs-accordion/item', ['exports', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/mixins/component-child', 'ember-bootstrap/templates/components/bs-accordion/item'], function (exports, _typeClass, _componentChild, _item) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Component.extend(_componentChild.default, _typeClass.default, {
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  exports.default = Component.extend(_componentChild.default, _typeClass.default, {
     layout: _item.default,
 
     /**
@@ -77141,13 +77148,14 @@ window.matchMedia || (window.matchMedia = function() {
     onClick: function onClick() {}
   });
 });
-;define('ember-bootstrap/components/base/bs-accordion/item/body', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-accordion/body'], function (exports, _ember, _body) {
+;define('ember-bootstrap/components/base/bs-accordion/item/body', ['exports', 'ember-bootstrap/templates/components/bs-accordion/body'], function (exports, _body) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _body.default,
     tagName: '',
 
@@ -77160,13 +77168,14 @@ window.matchMedia || (window.matchMedia = function() {
 
   });
 });
-;define('ember-bootstrap/components/base/bs-accordion/item/title', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-accordion/title'], function (exports, _ember, _title) {
+;define('ember-bootstrap/components/base/bs-accordion/item/title', ['exports', 'ember-bootstrap/templates/components/bs-accordion/title'], function (exports, _title) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _title.default,
     ariaRole: 'tab',
     classNameBindings: ['collapsed:collapsed:expanded'],
@@ -77189,16 +77198,17 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-alert', ['exports', 'ember', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/templates/components/bs-alert', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _ember, _transitionSupport, _bsAlert, _typeClass, _listenToCp) {
+;define('ember-bootstrap/components/base/bs-alert', ['exports', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/templates/components/bs-alert', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _transitionSupport, _bsAlert, _typeClass, _listenToCp) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      observer = _ember.default.observer,
-      later = _ember.default.run.later;
-  exports.default = _ember.default.Component.extend(_typeClass.default, _transitionSupport.default, {
+  var Component = Ember.Component;
+  var observer = Ember.observer;
+  var computed = Ember.computed;
+  var later = Ember.run.later;
+  exports.default = Component.extend(_typeClass.default, _transitionSupport.default, {
     layout: _bsAlert.default,
     classNameBindings: ['alert', 'fade', 'dismissible:alert-dismissible'],
 
@@ -77364,17 +77374,18 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-bootstrap/components/base/bs-button-group', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-button-group', 'ember-bootstrap/mixins/size-class'], function (exports, _ember, _bsButtonGroup, _sizeClass) {
+;define('ember-bootstrap/components/base/bs-button-group', ['exports', 'ember-bootstrap/templates/components/bs-button-group', 'ember-bootstrap/mixins/size-class'], function (exports, _bsButtonGroup, _sizeClass) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var A = _ember.default.A,
-      copy = _ember.default.copy,
-      computed = _ember.default.computed,
-      isArray = _ember.default.isArray;
-  exports.default = _ember.default.Component.extend(_sizeClass.default, {
+  var Component = Ember.Component;
+  var copy = Ember.copy;
+  var computed = Ember.computed;
+  var isArray = Ember.isArray;
+  var A = Ember.A;
+  exports.default = Component.extend(_sizeClass.default, {
     layout: _bsButtonGroup.default,
     ariaRole: 'group',
     classNameBindings: ['vertical:btn-group-vertical:btn-group', 'justified:btn-group-justified'],
@@ -77499,14 +77510,14 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-button-group/button', ['exports', 'ember', 'ember-bootstrap/components/bs-button'], function (exports, _ember, _bsButton) {
+;define('ember-bootstrap/components/base/bs-button-group/button', ['exports', 'ember-bootstrap/components/bs-button'], function (exports, _bsButton) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      isArray = _ember.default.isArray;
+  var computed = Ember.computed;
+  var isArray = Ember.isArray;
   exports.default = _bsButton.default.extend({
 
     /**
@@ -77545,15 +77556,17 @@ window.matchMedia || (window.matchMedia = function() {
 
   });
 });
-;define('ember-bootstrap/components/base/bs-button', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-button', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/mixins/size-class'], function (exports, _ember, _bsButton, _typeClass, _sizeClass) {
+;define('ember-bootstrap/components/base/bs-button', ['exports', 'ember-bootstrap/templates/components/bs-button', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/mixins/size-class'], function (exports, _bsButton, _typeClass, _sizeClass) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      observer = _ember.default.observer;
-  exports.default = _ember.default.Component.extend(_typeClass.default, _sizeClass.default, {
+  var scheduleOnce = Ember.run.scheduleOnce;
+  var Component = Ember.Component;
+  var observer = Ember.observer;
+  var computed = Ember.computed;
+  exports.default = Component.extend(_typeClass.default, _sizeClass.default, {
     layout: _bsButton.default,
     tagName: 'button',
     classNames: ['btn'],
@@ -77618,6 +77631,17 @@ window.matchMedia || (window.matchMedia = function() {
      * @public
      */
     block: false,
+
+    /**
+     * A click event on a button will not bubble up the DOM tree if it has an `onClick` action handler. Set to true to
+     * enable the event to bubble
+     *
+     * @property bubble
+     * @type boolean
+     * @default false
+     * @public
+     */
+    bubble: false,
 
     /**
      * If button is active and this is set, the icon property will match this property
@@ -77698,6 +77722,8 @@ window.matchMedia || (window.matchMedia = function() {
      * When clicking the button this action is called with the value of the button (that is the value of the "value" property).
      * Return a promise object, and the buttons state will automatically set to "pending", "resolved" and/or "rejected".
      *
+     * The click event will not bubble up, unless you set `bubble` to true.
+     *
      * @event onClick
      * @param {*} value
      * @public
@@ -77717,7 +77743,7 @@ window.matchMedia || (window.matchMedia = function() {
 
     resetObserver: observer('reset', function () {
       if (this.get('reset')) {
-        _ember.default.run.scheduleOnce('actions', this, function () {
+        scheduleOnce('actions', this, function () {
           this.set('textState', 'default');
         });
       }
@@ -77737,7 +77763,7 @@ window.matchMedia || (window.matchMedia = function() {
       var action = this.get('onClick');
       if (action !== null) {
         var promise = action(this.get('value'));
-        if (promise && typeof promise.then === 'function') {
+        if (promise && typeof promise.then === 'function' && !this.get('isDestroyed')) {
           this.set('textState', 'pending');
           promise.then(function () {
             if (!_this.get('isDestroyed')) {
@@ -77749,7 +77775,7 @@ window.matchMedia || (window.matchMedia = function() {
             }
           });
         }
-        return false;
+        return this.get('bubble');
       }
     },
     init: function init() {
@@ -77758,21 +77784,21 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-collapse', ['exports', 'ember', 'ember-bootstrap/utils/transition-end'], function (exports, _ember, _transitionEnd) {
+;define('ember-bootstrap/components/base/bs-collapse', ['exports', 'ember-bootstrap/utils/transition-end'], function (exports, _transitionEnd) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      isEmpty = _ember.default.isEmpty,
-      isPresent = _ember.default.isPresent,
-      observer = _ember.default.observer,
-      next = _ember.default.run.next,
-      _Ember$String = _ember.default.String,
-      camelize = _Ember$String.camelize,
-      htmlSafe = _Ember$String.htmlSafe;
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  var isPresent = Ember.isPresent;
+  var isEmpty = Ember.isEmpty;
+  var observer = Ember.observer;
+  var computed = Ember.computed;
+  var next = Ember.run.next;
+  var htmlSafe = Ember.String.htmlSafe;
+  var camelize = Ember.String.camelize;
+  exports.default = Component.extend({
 
     classNameBindings: ['collapse', 'collapsing'],
     attributeBindings: ['style'],
@@ -78038,7 +78064,7 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-bootstrap/components/base/bs-contextual-help', ['exports', 'ember', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/utils/get-position', 'ember-bootstrap/utils/get-calculated-offset', 'ember-bootstrap/utils/get-parent', 'ember-bootstrap/utils/set-offset', 'ember-bootstrap/utils/transition-end'], function (exports, _ember, _transitionSupport, _getPosition, _getCalculatedOffset, _getParent, _setOffset, _transitionEnd) {
+;define('ember-bootstrap/components/base/bs-contextual-help', ['exports', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/utils/get-position', 'ember-bootstrap/utils/get-calculated-offset', 'ember-bootstrap/utils/get-parent', 'ember-bootstrap/utils/set-offset', 'ember-bootstrap/utils/transition-end'], function (exports, _transitionSupport, _getPosition, _getCalculatedOffset, _getParent, _setOffset, _transitionEnd) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -78083,22 +78109,21 @@ window.matchMedia || (window.matchMedia = function() {
     };
   }();
 
-  var assert = _ember.default.assert,
-      Component = _ember.default.Component,
-      computed = _ember.default.computed,
-      guidFor = _ember.default.guidFor,
-      isArray = _ember.default.isArray,
-      isBlank = _ember.default.isBlank,
-      observer = _ember.default.observer,
-      run = _ember.default.run,
-      _Ember$run = _ember.default.run,
-      later = _Ember$run.later,
-      cancel = _Ember$run.cancel,
-      schedule = _Ember$run.schedule,
-      next = _Ember$run.next;
+  var Component = Ember.Component;
+  var guidFor = Ember.guidFor;
+  var isArray = Ember.isArray;
+  var isBlank = Ember.isBlank;
+  var EmberObject = Ember.Object;
+  var observer = Ember.observer;
+  var computed = Ember.computed;
+  var next = Ember.run.next;
+  var schedule = Ember.run.schedule;
+  var cancel = Ember.run.cancel;
+  var later = Ember.run.later;
+  var run = Ember.run;
 
 
-  var InState = _ember.default.Object.extend({
+  var InState = EmberObject.extend({
     hover: false,
     focus: false,
     click: false,
@@ -78324,7 +78349,8 @@ window.matchMedia || (window.matchMedia = function() {
       } else {
         el = document.querySelector(triggerElement);
       }
-      assert('Trigger element for tooltip/popover must be present', el);
+      (true && !(el) && Ember.assert('Trigger element for tooltip/popover must be present', el));
+
       return el;
     }),
 
@@ -78839,15 +78865,16 @@ window.matchMedia || (window.matchMedia = function() {
 
   });
 });
-;define('ember-bootstrap/components/base/bs-dropdown', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-dropdown'], function (exports, _ember, _bsDropdown) {
+;define('ember-bootstrap/components/base/bs-dropdown', ['exports', 'ember-bootstrap/templates/components/bs-dropdown'], function (exports, _bsDropdown) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      bind = _ember.default.run.bind;
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  var bind = Ember.run.bind;
+  exports.default = Component.extend({
     layout: _bsDropdown.default,
     classNameBindings: ['containerClass'],
 
@@ -79015,14 +79042,15 @@ window.matchMedia || (window.matchMedia = function() {
   });
   exports.default = _bsButton.default.extend(_dropdownToggle.default);
 });
-;define('ember-bootstrap/components/base/bs-dropdown/menu', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-dropdown/menu'], function (exports, _ember, _menu) {
+;define('ember-bootstrap/components/base/bs-dropdown/menu', ['exports', 'ember-bootstrap/templates/components/bs-dropdown/menu'], function (exports, _menu) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  exports.default = Component.extend({
     layout: _menu.default,
 
     /**
@@ -79062,38 +79090,42 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-bootstrap/components/base/bs-dropdown/menu/divider', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/components/base/bs-dropdown/menu/divider', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({});
+  var Component = Ember.Component;
+  exports.default = Component.extend({});
 });
-;define('ember-bootstrap/components/base/bs-dropdown/menu/item', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/components/base/bs-dropdown/menu/item', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({});
+  var Component = Ember.Component;
+  exports.default = Component.extend({});
 });
-;define('ember-bootstrap/components/base/bs-dropdown/menu/link-to', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/components/base/bs-dropdown/menu/link-to', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.LinkComponent.extend({});
+  var LinkComponent = Ember.LinkComponent;
+  exports.default = LinkComponent.extend({});
 });
-;define('ember-bootstrap/components/base/bs-dropdown/toggle', ['exports', 'ember', 'ember-bootstrap/mixins/dropdown-toggle'], function (exports, _ember, _dropdownToggle) {
+;define('ember-bootstrap/components/base/bs-dropdown/toggle', ['exports', 'ember-bootstrap/mixins/dropdown-toggle'], function (exports, _dropdownToggle) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Component.extend(_dropdownToggle.default, {
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  exports.default = Component.extend(_dropdownToggle.default, {
     /**
      * Defaults to a `<a>` tag. Change for other types of dropdown toggles.
      *
@@ -79134,18 +79166,18 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-form', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form'], function (exports, _ember, _bsForm) {
+;define('ember-bootstrap/components/base/bs-form', ['exports', 'ember-bootstrap/templates/components/bs-form'], function (exports, _bsForm) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      RSVP = _ember.default.RSVP,
-      set = _ember.default.set,
-      assert = _ember.default.assert,
-      isPresent = _ember.default.isPresent;
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  var RSVP = Ember.RSVP;
+  var set = Ember.set;
+  var computed = Ember.computed;
+  var isPresent = Ember.isPresent;
+  exports.default = Component.extend({
     layout: _bsForm.default,
     tagName: 'form',
     classNameBindings: ['layoutClass'],
@@ -79332,29 +79364,29 @@ window.matchMedia || (window.matchMedia = function() {
 
     actions: {
       change: function change(value, model, property) {
-        assert('You cannot use the form element\'s default onChange action for form elements if not using a model or setting the value directly on a form element. You must add your own onChange action to the form element in this case!', isPresent(model) && isPresent(property));
+        (true && !(isPresent(model) && isPresent(property)) && Ember.assert('You cannot use the form element\'s default onChange action for form elements if not using a model or setting the value directly on a form element. You must add your own onChange action to the form element in this case!', isPresent(model) && isPresent(property)));
+
         set(model, property, value);
       }
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-form/element', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element', 'ember-bootstrap/components/bs-form/group'], function (exports, _ember, _element, _group) {
+;define('ember-bootstrap/components/base/bs-form/element', ['exports', 'ember-bootstrap/templates/components/bs-form/element', 'ember-bootstrap/components/bs-form/group'], function (exports, _element, _group) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      defineProperty = _ember.default.defineProperty,
-      isArray = _ember.default.isArray,
-      isBlank = _ember.default.isBlank,
-      observer = _ember.default.observer,
-      on = _ember.default.on,
-      scheduleOnce = _ember.default.run.scheduleOnce,
-      assert = _ember.default.assert,
-      typeOf = _ember.default.typeOf,
-      A = _ember.default.A,
-      getOwner = _ember.default.getOwner;
+  var observer = Ember.observer;
+  var defineProperty = Ember.defineProperty;
+  var computed = Ember.computed;
+  var on = Ember.on;
+  var scheduleOnce = Ember.run.scheduleOnce;
+  var typeOf = Ember.typeOf;
+  var isBlank = Ember.isBlank;
+  var A = Ember.A;
+  var isArray = Ember.isArray;
+  var getOwner = Ember.getOwner;
 
 
   var nonDefaultLayouts = A(['checkbox']);
@@ -79725,7 +79757,7 @@ window.matchMedia || (window.matchMedia = function() {
      * {{form.element controlType="email" label="Email" placeholder="Email" value=email}}
      * ```
      *
-     * Note: you loose the ability to validate this form element by directly binding to its value. It is recommended
+     * Note: you lose the ability to validate this form element by directly binding to its value. It is recommended
      * to use the `property` feature instead.
      *
      *
@@ -79952,7 +79984,8 @@ window.matchMedia || (window.matchMedia = function() {
     _showValidationOn: computed('showValidationOn', function () {
       var showValidationOn = this.get('showValidationOn');
 
-      assert('showValidationOn must be a String or an Array', isArray(showValidationOn) || typeOf(showValidationOn) === 'string');
+      (true && !(isArray(showValidationOn) || typeOf(showValidationOn) === 'string') && Ember.assert('showValidationOn must be a String or an Array', isArray(showValidationOn) || typeOf(showValidationOn) === 'string'));
+
       if (isArray(showValidationOn)) {
         return showValidationOn;
       }
@@ -80232,13 +80265,14 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-form/element/control', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/components/base/bs-form/element/control', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
 
     /**
      * @property value
@@ -80329,13 +80363,14 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-form/element/errors', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element/errors'], function (exports, _ember, _errors) {
+;define('ember-bootstrap/components/base/bs-form/element/errors', ['exports', 'ember-bootstrap/templates/components/bs-form/element/errors'], function (exports, _errors) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _errors.default,
     tagName: '',
 
@@ -80354,13 +80389,14 @@ window.matchMedia || (window.matchMedia = function() {
     messages: null
   });
 });
-;define('ember-bootstrap/components/base/bs-form/element/feedback-icon', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element/feedback-icon'], function (exports, _ember, _feedbackIcon) {
+;define('ember-bootstrap/components/base/bs-form/element/feedback-icon', ['exports', 'ember-bootstrap/templates/components/bs-form/element/feedback-icon'], function (exports, _feedbackIcon) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _feedbackIcon.default,
     tagName: '',
 
@@ -80379,13 +80415,14 @@ window.matchMedia || (window.matchMedia = function() {
     iconName: null
   });
 });
-;define('ember-bootstrap/components/base/bs-form/element/help-text', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element/help-text'], function (exports, _ember, _helpText) {
+;define('ember-bootstrap/components/base/bs-form/element/help-text', ['exports', 'ember-bootstrap/templates/components/bs-form/element/help-text'], function (exports, _helpText) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _helpText.default,
 
     /**
@@ -80396,14 +80433,15 @@ window.matchMedia || (window.matchMedia = function() {
     text: null
   });
 });
-;define('ember-bootstrap/components/base/bs-form/element/label', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element/label'], function (exports, _ember, _label) {
+;define('ember-bootstrap/components/base/bs-form/element/label', ['exports', 'ember-bootstrap/templates/components/bs-form/element/label'], function (exports, _label) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  exports.default = Component.extend({
     layout: _label.default,
     tagName: '',
 
@@ -80487,13 +80525,14 @@ window.matchMedia || (window.matchMedia = function() {
     isHorizontal: computed.equal('formLayout', 'horizontal').readOnly()
   });
 });
-;define('ember-bootstrap/components/base/bs-form/element/layout', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/components/base/bs-form/element/layout', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     tagName: '',
 
     /**
@@ -80539,15 +80578,14 @@ window.matchMedia || (window.matchMedia = function() {
     helpTextComponent: null
   });
 });
-;define('ember-bootstrap/components/base/bs-form/element/layout/horizontal', ['exports', 'ember', 'ember-bootstrap/components/base/bs-form/element/layout', 'ember-bootstrap/templates/components/bs-form/element/layout/horizontal'], function (exports, _ember, _layout, _horizontal) {
+;define('ember-bootstrap/components/base/bs-form/element/layout/horizontal', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout', 'ember-bootstrap/templates/components/bs-form/element/layout/horizontal'], function (exports, _layout, _horizontal) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var assert = _ember.default.assert,
-      computed = _ember.default.computed,
-      isBlank = _ember.default.isBlank;
+  var computed = Ember.computed;
+  var isBlank = Ember.isBlank;
   exports.default = _layout.default.extend({
     layout: _horizontal.default,
 
@@ -80573,7 +80611,8 @@ window.matchMedia || (window.matchMedia = function() {
         return;
       }
       var parts = this.get('horizontalLabelGridClass').split('-');
-      assert('horizontalInputGridClass must match format bootstrap grid column class', parts.length === 3);
+      (true && !(parts.length === 3) && Ember.assert('horizontalInputGridClass must match format bootstrap grid column class', parts.length === 3));
+
       parts[2] = 12 - parts[2];
       return parts.join('-');
     }).readOnly(),
@@ -80648,14 +80687,16 @@ window.matchMedia || (window.matchMedia = function() {
     layout: _checkbox.default
   });
 });
-;define('ember-bootstrap/components/base/bs-form/group', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/group', 'ember-bootstrap/config', 'ember-bootstrap/mixins/size-class'], function (exports, _ember, _group, _config, _sizeClass) {
+;define('ember-bootstrap/components/base/bs-form/group', ['exports', 'ember-bootstrap/templates/components/bs-form/group', 'ember-bootstrap/config', 'ember-bootstrap/mixins/size-class'], function (exports, _group, _config, _sizeClass) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Component.extend(_sizeClass.default, {
+  var isBlank = Ember.isBlank;
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  exports.default = Component.extend(_sizeClass.default, {
     layout: _group.default,
 
     classNameBindings: ['validationClass'],
@@ -80835,7 +80876,7 @@ window.matchMedia || (window.matchMedia = function() {
      */
     validationClass: computed('_validationType', function () {
       var validation = this.get('_validationType');
-      if (!_ember.default.isBlank(validation)) {
+      if (!isBlank(validation)) {
         return 'has-' + this.get('_validationType');
       }
     }).readOnly()
@@ -80891,17 +80932,21 @@ window.matchMedia || (window.matchMedia = function() {
 
   });
 });
-;define('ember-bootstrap/components/base/bs-modal', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/utils/listen-to-cp', 'ember-bootstrap/utils/transition-end'], function (exports, _ember, _bsModal, _transitionSupport, _listenToCp, _transitionEnd) {
+;define('ember-bootstrap/components/base/bs-modal', ['exports', 'ember-bootstrap/templates/components/bs-modal', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/utils/listen-to-cp', 'ember-bootstrap/utils/transition-end'], function (exports, _bsModal, _transitionSupport, _listenToCp, _transitionEnd) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      get = _ember.default.get,
-      getOwner = _ember.default.getOwner,
-      observer = _ember.default.observer;
-  exports.default = _ember.default.Component.extend(_transitionSupport.default, {
+  var Component = Ember.Component;
+  var getOwner = Ember.getOwner;
+  var observer = Ember.observer;
+  var get = Ember.get;
+  var computed = Ember.computed;
+  var schedule = Ember.run.schedule;
+  var next = Ember.run.next;
+  var bind = Ember.run.bind;
+  exports.default = Component.extend(_transitionSupport.default, {
     layout: _bsModal.default,
 
     /**
@@ -80955,6 +81000,32 @@ window.matchMedia || (window.matchMedia = function() {
      * @private
      */
     showModal: false,
+
+    /**
+     * Render modal markup?
+     *
+     * @property inDom
+     * @type boolean
+     * @default false
+     * @private
+     */
+    inDom: false,
+
+    /**
+     * @property paddingLeft
+     * @type number|null
+     * @default null
+     * @private
+     */
+    paddingLeft: null,
+
+    /**
+     * @property paddingRight
+     * @type number|null
+     * @default null
+     * @private
+     */
+    paddingRight: null,
 
     /**
      * Use a semi-transparent modal background to hide the rest of the page.
@@ -81192,8 +81263,8 @@ window.matchMedia || (window.matchMedia = function() {
           // trigger submit event on body forms
           var event = document.createEvent('Events');
           event.initEvent('submit', true, true);
-          forms.forEach(function (form) {
-            form.dispatchEvent(event);
+          Array.prototype.slice.call(forms).forEach(function (form) {
+            return form.dispatchEvent(event);
           });
         } else {
           // if we have no form, we send a submit action
@@ -81240,27 +81311,31 @@ window.matchMedia || (window.matchMedia = function() {
       this.resize();
 
       var callback = function callback() {
+        var _this = this;
+
         if (this.get('isDestroyed')) {
           return;
         }
 
-        var modalEl = this.get('modalElement');
-        modalEl.style.display = 'block';
-        modalEl.scrollTop = 0;
+        this.set('inDom', true);
+        schedule('afterRender', function () {
+          var modalEl = _this.get('modalElement');
+          modalEl.scrollTop = 0;
 
-        this.handleUpdate();
-        this.set('showModal', true);
-        this.get('onShow')();
+          _this.handleUpdate();
+          _this.set('showModal', true);
+          _this.get('onShow')();
 
-        if (this.get('usesTransition')) {
-          (0, _transitionEnd.default)(this.get('modalElement'), function () {
-            this.takeFocus();
-            this.get('onShown')();
-          }, this, this.get('transitionDuration'));
-        } else {
-          this.takeFocus();
-          this.get('onShown')();
-        }
+          if (_this.get('usesTransition')) {
+            (0, _transitionEnd.default)(_this.get('modalElement'), function () {
+              this.takeFocus();
+              this.get('onShown')();
+            }, _this, _this.get('transitionDuration'));
+          } else {
+            _this.takeFocus();
+            _this.get('onShown')();
+          }
+        });
       };
       this.handleBackdrop(callback);
     },
@@ -81296,18 +81371,19 @@ window.matchMedia || (window.matchMedia = function() {
      * @private
      */
     hideModal: function hideModal() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.get('isDestroyed')) {
         return;
       }
 
-      this.get('modalElement').style.display = 'none';
+      this.set('inDom', false);
+
       this.handleBackdrop(function () {
         document.body.classList.remove('modal-open');
-        _this.resetAdjustments();
-        _this.resetScrollbar();
-        _this.get('onHidden')();
+        _this2.resetAdjustments();
+        _this2.resetScrollbar();
+        _this2.get('onHidden')();
       });
     },
 
@@ -81330,9 +81406,10 @@ window.matchMedia || (window.matchMedia = function() {
         }
 
         if (doAnimate) {
-          _ember.default.run.schedule('afterRender', this, function () {
+          schedule('afterRender', this, function () {
             var backdrop = this.get('backdropElement');
-            _ember.default.assert('Backdrop element should be in DOM', backdrop);
+            (true && !(backdrop) && Ember.assert('Backdrop element should be in DOM', backdrop));
+
             (0, _transitionEnd.default)(backdrop, callback, this, this.get('backdropTransitionDuration'));
           });
         } else {
@@ -81340,7 +81417,8 @@ window.matchMedia || (window.matchMedia = function() {
         }
       } else if (!this.get('isOpen') && this.get('backdrop')) {
         var backdrop = this.get('backdropElement');
-        _ember.default.assert('Backdrop element should be in DOM', backdrop);
+        (true && !(backdrop) && Ember.assert('Backdrop element should be in DOM', backdrop));
+
 
         var callbackRemove = function callbackRemove() {
           this.set('showBackdrop', false);
@@ -81354,7 +81432,7 @@ window.matchMedia || (window.matchMedia = function() {
           callbackRemove.call(this);
         }
       } else if (callback) {
-        _ember.default.run.next(this, callback);
+        next(this, callback);
       }
     },
 
@@ -81367,7 +81445,7 @@ window.matchMedia || (window.matchMedia = function() {
      */
     resize: function resize() {
       if (this.get('isOpen')) {
-        this._handleUpdate = _ember.default.run.bind(this, this.handleUpdate);
+        this._handleUpdate = bind(this, this.handleUpdate);
         window.addEventListener('resize', this._handleUpdate, false);
       } else {
         window.removeEventListener('resize', this._handleUpdate, false);
@@ -81390,9 +81468,10 @@ window.matchMedia || (window.matchMedia = function() {
      */
     adjustDialog: function adjustDialog() {
       var modalIsOverflowing = this.get('modalElement').scrollHeight > document.documentElement.clientHeight;
-      var el = this.get('modalElement');
-      el.style.paddingLeft = !this.bodyIsOverflowing && modalIsOverflowing ? this.get('scrollbarWidth') + 'px' : null;
-      el.style.paddingRight = this.bodyIsOverflowing && !modalIsOverflowing ? this.get('scrollbarWidth') + 'px' : null;
+      this.setProperties({
+        paddingLeft: !this.bodyIsOverflowing && modalIsOverflowing ? this.get('scrollbarWidth') : null,
+        paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.get('scrollbarWidth') : null
+      });
     },
 
 
@@ -81401,9 +81480,10 @@ window.matchMedia || (window.matchMedia = function() {
      * @private
      */
     resetAdjustments: function resetAdjustments() {
-      var el = this.get('modalElement');
-      el.style.paddingLeft = null;
-      el.style.paddingRight = null;
+      this.setProperties({
+        paddingLeft: null,
+        paddingRight: null
+      });
     },
 
 
@@ -81454,7 +81534,8 @@ window.matchMedia || (window.matchMedia = function() {
     scrollbarWidth: computed(function () {
       var scrollDiv = document.createElement('div');
       scrollDiv.className = 'modal-scrollbar-measure';
-      this.get('modalElement').insertAdjacentElement('afterend', scrollDiv);
+      var modalEl = this.get('modalElement');
+      modalEl.parentNode.insertBefore(scrollDiv, modalEl.nextSibling);
       var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
       scrollDiv.parentNode.removeChild(scrollDiv);
       return scrollbarWidth;
@@ -81485,39 +81566,47 @@ window.matchMedia || (window.matchMedia = function() {
     init: function init() {
       this._super.apply(this, arguments);
 
-      var _getProperties = this.getProperties('isOpen', 'backdrop', 'fade'),
+      var _getProperties = this.getProperties('isOpen', 'backdrop', 'fade', 'isFastBoot'),
           isOpen = _getProperties.isOpen,
           backdrop = _getProperties.backdrop,
-          fade = _getProperties.fade;
+          fade = _getProperties.fade,
+          isFastBoot = _getProperties.isFastBoot;
 
-      this.set('showModal', isOpen && !fade);
-      this.set('showBackdrop', isOpen && backdrop);
+      this.setProperties({
+        showModal: isOpen && (!fade || isFastBoot),
+        showBackdrop: isOpen && backdrop,
+        inDom: isOpen && isFastBoot
+      });
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-modal/body', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/body'], function (exports, _ember, _body) {
+;define('ember-bootstrap/components/base/bs-modal/body', ['exports', 'ember-bootstrap/templates/components/bs-modal/body'], function (exports, _body) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _body.default,
     classNames: ['modal-body']
   });
 });
-;define('ember-bootstrap/components/base/bs-modal/dialog', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/dialog'], function (exports, _ember, _dialog) {
+;define('ember-bootstrap/components/base/bs-modal/dialog', ['exports', 'ember-bootstrap/templates/components/bs-modal/dialog'], function (exports, _dialog) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Component.extend({
+  var isBlank = Ember.isBlank;
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  var htmlSafe = Ember.String.htmlSafe;
+  exports.default = Component.extend({
     layout: _dialog.default,
     classNames: ['modal'],
     classNameBindings: ['fade'],
-    attributeBindings: ['tabindex'],
+    attributeBindings: ['tabindex', 'style'],
     ariaRole: 'dialog',
     tabindex: '-1',
 
@@ -81540,6 +81629,32 @@ window.matchMedia || (window.matchMedia = function() {
      * @private
      */
     showModal: false,
+
+    /**
+     * Render modal markup?
+     *
+     * @property inDom
+     * @type boolean
+     * @default false
+     * @private
+     */
+    inDom: false,
+
+    /**
+     * @property paddingLeft
+     * @type number|null
+     * @default null
+     * @private
+     */
+    paddingLeft: null,
+
+    /**
+     * @property paddingRight
+     * @type number|null
+     * @default null
+     * @private
+     */
+    paddingRight: null,
 
     /**
      * Closes the modal when escape key is pressed.
@@ -81573,11 +81688,31 @@ window.matchMedia || (window.matchMedia = function() {
     backdropClose: true,
 
     /**
-     * @event onClose
-     * @public
+     * @property style
+     * @type string
+     * @readOnly
+     * @private
      */
-    onClose: function onClose() {},
+    style: computed('inDom', 'paddingLeft', 'paddingRight', function () {
+      var styles = [];
 
+      var _getProperties = this.getProperties('inDom', 'paddingLeft', 'paddingRight'),
+          inDom = _getProperties.inDom,
+          paddingLeft = _getProperties.paddingLeft,
+          paddingRight = _getProperties.paddingRight;
+
+      if (inDom) {
+        styles.push('display: block');
+      }
+      if (paddingLeft) {
+        styles.push('padding-left: ' + paddingLeft + 'px');
+      }
+      if (paddingRight) {
+        styles.push('padding-right: ' + paddingRight + 'px');
+      }
+
+      return htmlSafe(styles.join(';'));
+    }),
 
     /**
      * Name of the size class
@@ -81589,9 +81724,14 @@ window.matchMedia || (window.matchMedia = function() {
      */
     sizeClass: computed('size', function () {
       var size = this.get('size');
-      return _ember.default.isBlank(size) ? null : 'modal-' + size;
+      return isBlank(size) ? null : 'modal-' + size;
     }).readOnly(),
 
+    /**
+     * @event onClose
+     * @public
+     */
+    onClose: function onClose() {},
     keyDown: function keyDown(e) {
       var code = e.keyCode || e.which;
       if (code === 27 && this.get('keyboard')) {
@@ -81606,14 +81746,15 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-modal/footer', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/footer'], function (exports, _ember, _footer) {
+;define('ember-bootstrap/components/base/bs-modal/footer', ['exports', 'ember-bootstrap/templates/components/bs-modal/footer'], function (exports, _footer) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  exports.default = Component.extend({
     layout: _footer.default,
     tagName: 'form',
     classNames: ['modal-footer'],
@@ -81674,13 +81815,14 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-modal/header', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/header'], function (exports, _ember, _header) {
+;define('ember-bootstrap/components/base/bs-modal/header', ['exports', 'ember-bootstrap/templates/components/bs-modal/header'], function (exports, _header) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _header.default,
     classNames: ['modal-header'],
 
@@ -81711,13 +81853,14 @@ window.matchMedia || (window.matchMedia = function() {
     onClose: function onClose() {}
   });
 });
-;define('ember-bootstrap/components/base/bs-modal/header/close', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/header/close'], function (exports, _ember, _close) {
+;define('ember-bootstrap/components/base/bs-modal/header/close', ['exports', 'ember-bootstrap/templates/components/bs-modal/header/close'], function (exports, _close) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _close.default,
     tagName: 'button',
     classNames: ['close'],
@@ -81735,26 +81878,29 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-modal/header/title', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/header/title'], function (exports, _ember, _title) {
+;define('ember-bootstrap/components/base/bs-modal/header/title', ['exports', 'ember-bootstrap/templates/components/bs-modal/header/title'], function (exports, _title) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _title.default,
     tagName: 'h4',
     classNames: ['modal-title']
   });
 });
-;define('ember-bootstrap/components/base/bs-nav', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-nav'], function (exports, _ember, _bsNav) {
+;define('ember-bootstrap/components/base/bs-nav', ['exports', 'ember-bootstrap/templates/components/bs-nav'], function (exports, _bsNav) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var isPresent = _ember.default.isPresent;
-  exports.default = _ember.default.Component.extend({
+  var computed = Ember.computed;
+  var Component = Ember.Component;
+  var isPresent = Ember.isPresent;
+  exports.default = Component.extend({
     layout: _bsNav.default,
 
     tagName: 'ul',
@@ -81762,7 +81908,7 @@ window.matchMedia || (window.matchMedia = function() {
 
     classNameBindings: ['typeClass', 'justified:nav-justified'],
 
-    typeClass: _ember.default.computed('type', function () {
+    typeClass: computed('type', function () {
       var type = this.get('type');
       if (isPresent(type)) {
         return 'nav-' + type;
@@ -81821,15 +81967,16 @@ window.matchMedia || (window.matchMedia = function() {
     dropdownComponent: 'bs-dropdown'
   });
 });
-;define('ember-bootstrap/components/base/bs-nav/item', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-nav/item', 'ember-bootstrap/mixins/component-parent'], function (exports, _ember, _item, _componentParent) {
+;define('ember-bootstrap/components/base/bs-nav/item', ['exports', 'ember-bootstrap/templates/components/bs-nav/item', 'ember-bootstrap/mixins/component-parent'], function (exports, _item, _componentParent) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      LinkComponent = _ember.default.LinkComponent;
-  exports.default = _ember.default.Component.extend(_componentParent.default, {
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  var LinkComponent = Ember.LinkComponent;
+  exports.default = Component.extend(_componentParent.default, {
     layout: _item.default,
     classNameBindings: ['disabled', 'active'],
     tagName: 'li',
@@ -81883,22 +82030,25 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-nav/link-to', ['exports', 'ember', 'ember-bootstrap/mixins/component-child'], function (exports, _ember, _componentChild) {
+;define('ember-bootstrap/components/base/bs-nav/link-to', ['exports', 'ember-bootstrap/mixins/component-child'], function (exports, _componentChild) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.LinkComponent.extend(_componentChild.default, {});
+  var LinkComponent = Ember.LinkComponent;
+  exports.default = LinkComponent.extend(_componentChild.default, {});
 });
-;define('ember-bootstrap/components/base/bs-navbar', ['exports', 'ember', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/templates/components/bs-navbar', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _ember, _typeClass, _bsNavbar, _listenToCp) {
+;define('ember-bootstrap/components/base/bs-navbar', ['exports', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/templates/components/bs-navbar', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _typeClass, _bsNavbar, _listenToCp) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var observer = _ember.default.observer;
-  exports.default = _ember.default.Component.extend(_typeClass.default, {
+  var Component = Ember.Component;
+  var observer = Ember.observer;
+  var computed = Ember.computed;
+  exports.default = Component.extend(_typeClass.default, {
     layout: _bsNavbar.default,
 
     tagName: 'nav',
@@ -81945,7 +82095,7 @@ window.matchMedia || (window.matchMedia = function() {
      */
     position: null,
 
-    positionClass: _ember.default.computed('position', function () {
+    positionClass: computed('position', function () {
       var position = this.get('position');
       var validPositions = this.get('_validPositions');
       var positionPrefix = this.get('_positionPrefix');
@@ -82152,13 +82302,13 @@ window.matchMedia || (window.matchMedia = function() {
 
   });
 });
-;define('ember-bootstrap/components/base/bs-popover', ['exports', 'ember', 'ember-bootstrap/components/base/bs-contextual-help', 'ember-bootstrap/templates/components/bs-popover'], function (exports, _ember, _bsContextualHelp, _bsPopover) {
+;define('ember-bootstrap/components/base/bs-popover', ['exports', 'ember-bootstrap/components/base/bs-contextual-help', 'ember-bootstrap/templates/components/bs-popover'], function (exports, _bsContextualHelp, _bsPopover) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
+  var computed = Ember.computed;
   exports.default = _bsContextualHelp.default.extend({
     layout: _bsPopover.default,
 
@@ -82191,14 +82341,15 @@ window.matchMedia || (window.matchMedia = function() {
     }).volatile()
   });
 });
-;define('ember-bootstrap/components/base/bs-popover/element', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-popover/element'], function (exports, _ember, _element) {
+;define('ember-bootstrap/components/base/bs-popover/element', ['exports', 'ember-bootstrap/templates/components/bs-popover/element'], function (exports, _element) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  exports.default = Component.extend({
     layout: _element.default,
 
     classNames: ['popover'],
@@ -82244,26 +82395,28 @@ window.matchMedia || (window.matchMedia = function() {
     hasTitle: computed.notEmpty('title')
   });
 });
-;define('ember-bootstrap/components/base/bs-progress', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-progress'], function (exports, _ember, _bsProgress) {
+;define('ember-bootstrap/components/base/bs-progress', ['exports', 'ember-bootstrap/templates/components/bs-progress'], function (exports, _bsProgress) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _bsProgress.default,
     classNames: ['progress']
   });
 });
-;define('ember-bootstrap/components/base/bs-progress/bar', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-progress/bar', 'ember-bootstrap/mixins/type-class'], function (exports, _ember, _bar, _typeClass) {
+;define('ember-bootstrap/components/base/bs-progress/bar', ['exports', 'ember-bootstrap/templates/components/bs-progress/bar', 'ember-bootstrap/mixins/type-class'], function (exports, _bar, _typeClass) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      htmlSafe = _ember.default.String.htmlSafe;
-  exports.default = _ember.default.Component.extend(_typeClass.default, {
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  var htmlSafe = Ember.String.htmlSafe;
+  exports.default = Component.extend(_typeClass.default, {
     layout: _bar.default,
     classNames: ['progress-bar'],
     classNameBindings: ['progressBarStriped'],
@@ -82396,16 +82549,17 @@ window.matchMedia || (window.matchMedia = function() {
 
   });
 });
-;define('ember-bootstrap/components/base/bs-tab', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-tab', 'ember-bootstrap/mixins/component-parent', 'ember-bootstrap/components/bs-tab/pane', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _ember, _bsTab, _componentParent, _pane, _listenToCp) {
+;define('ember-bootstrap/components/base/bs-tab', ['exports', 'ember-bootstrap/templates/components/bs-tab', 'ember-bootstrap/mixins/component-parent', 'ember-bootstrap/components/bs-tab/pane', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _bsTab, _componentParent, _pane, _listenToCp) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      isPresent = _ember.default.isPresent,
-      A = _ember.default.A;
-  exports.default = _ember.default.Component.extend(_componentParent.default, {
+  var Component = Ember.Component;
+  var computed = Ember.computed;
+  var isPresent = Ember.isPresent;
+  var A = Ember.A;
+  exports.default = Component.extend(_componentParent.default, {
     layout: _bsTab.default,
 
     /**
@@ -82547,16 +82701,17 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-tab/pane', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-tab/pane', 'ember-bootstrap/mixins/component-child', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/utils/transition-end'], function (exports, _ember, _pane, _componentChild, _transitionSupport, _transitionEnd) {
+;define('ember-bootstrap/components/base/bs-tab/pane', ['exports', 'ember-bootstrap/templates/components/bs-tab/pane', 'ember-bootstrap/mixins/component-child', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/utils/transition-end'], function (exports, _pane, _componentChild, _transitionSupport, _transitionEnd) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed,
-      observer = _ember.default.observer,
-      scheduleOnce = _ember.default.run.scheduleOnce;
-  exports.default = _ember.default.Component.extend(_componentChild.default, _transitionSupport.default, {
+  var Component = Ember.Component;
+  var observer = Ember.observer;
+  var computed = Ember.computed;
+  var scheduleOnce = Ember.run.scheduleOnce;
+  exports.default = Component.extend(_componentChild.default, _transitionSupport.default, {
     layout: _pane.default,
     classNameBindings: ['active', 'usesTransition:fade'],
     classNames: ['tab-pane'],
@@ -82703,13 +82858,13 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/base/bs-tooltip', ['exports', 'ember', 'ember-bootstrap/components/base/bs-contextual-help', 'ember-bootstrap/templates/components/bs-tooltip'], function (exports, _ember, _bsContextualHelp, _bsTooltip) {
+;define('ember-bootstrap/components/base/bs-tooltip', ['exports', 'ember-bootstrap/components/base/bs-contextual-help', 'ember-bootstrap/templates/components/bs-tooltip'], function (exports, _bsContextualHelp, _bsTooltip) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
+  var computed = Ember.computed;
   exports.default = _bsContextualHelp.default.extend({
     layout: _bsTooltip.default,
 
@@ -82726,13 +82881,14 @@ window.matchMedia || (window.matchMedia = function() {
     }).volatile()
   });
 });
-;define('ember-bootstrap/components/base/bs-tooltip/element', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-tooltip/element'], function (exports, _ember, _element) {
+;define('ember-bootstrap/components/base/bs-tooltip/element', ['exports', 'ember-bootstrap/templates/components/bs-tooltip/element'], function (exports, _element) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  var Component = Ember.Component;
+  exports.default = Component.extend({
     layout: _element.default,
 
     classNames: ['tooltip'],
@@ -82953,16 +83109,19 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/bs-form', ['exports', 'ember', 'ember-bootstrap/components/base/bs-form'], function (exports, _ember, _bsForm) {
+;define('ember-bootstrap/components/bs-form', ['exports', 'ember-bootstrap/components/base/bs-form'], function (exports, _bsForm) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
+  var computed = Ember.computed;
   exports.default = _bsForm.default.extend({
     layoutClass: computed('formLayout', function () {
       var layout = this.get('formLayout');
+      var supportedTypes = ['vertical', 'horizontal', 'inline'];
+      (true && !(supportedTypes.indexOf(layout) >= 0) && Ember.assert('must provide a valid `formLayout` attribute.', supportedTypes.indexOf(layout) >= 0));
+
       return layout === 'vertical' ? 'form' : 'form-' + layout;
     }).readOnly()
   });
@@ -83166,13 +83325,13 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/components/bs-form/group', ['exports', 'ember', 'ember-bootstrap/components/base/bs-form/group'], function (exports, _ember, _group) {
+;define('ember-bootstrap/components/bs-form/group', ['exports', 'ember-bootstrap/components/base/bs-form/group'], function (exports, _group) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
+  var computed = Ember.computed;
   exports.default = _group.default.extend({
     classNames: ['form-group'],
     classNameBindings: ['hasFeedback'],
@@ -83477,15 +83636,16 @@ window.matchMedia || (window.matchMedia = function() {
     classNameBindings: ['placement', 'showHelp:in']
   });
 });
-;define('ember-bootstrap/config', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/config', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
+  var EmberObject = Ember.Object;
 
 
-  var Config = _ember.default.Object.extend();
+  var Config = EmberObject.extend();
 
   Config.reopenClass({
     formValidationSuccessIcon: 'glyphicon glyphicon-ok',
@@ -83507,42 +83667,45 @@ window.matchMedia || (window.matchMedia = function() {
 
   exports.default = Config;
 });
-;define('ember-bootstrap/helpers/bs-contains', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/helpers/bs-contains', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.bsContains = bsContains;
-  var isArray = _ember.default.isArray,
-      A = _ember.default.A;
+  var helper = Ember.Helper.helper;
+  var A = Ember.A;
+  var isArray = Ember.isArray;
   function bsContains(params /* , hash*/) {
     return isArray(params[0]) ? A(params[0]).includes(params[1]) : false;
   }
 
-  exports.default = _ember.default.Helper.helper(bsContains);
+  exports.default = helper(bsContains);
 });
-;define('ember-bootstrap/helpers/bs-eq', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/helpers/bs-eq', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.eq = eq;
+  var helper = Ember.Helper.helper;
   function eq(params) {
     return params[0] === params[1];
   }
 
-  exports.default = _ember.default.Helper.helper(eq);
+  exports.default = helper(eq);
 });
-;define('ember-bootstrap/mixins/component-child', ['exports', 'ember', 'ember-bootstrap/mixins/component-parent'], function (exports, _ember, _componentParent) {
+;define('ember-bootstrap/mixins/component-child', ['exports', 'ember-bootstrap/mixins/component-parent'], function (exports, _componentParent) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Mixin.create({
+  var Mixin = Ember.Mixin;
+  var computed = Ember.computed;
+  exports.default = Mixin.create({
 
     /**
      * The parent component
@@ -83607,13 +83770,16 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/mixins/component-parent', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/mixins/component-parent', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Mixin.create({
+  var schedule = Ember.run.schedule;
+  var A = Ember.A;
+  var Mixin = Ember.Mixin;
+  exports.default = Mixin.create({
 
     /**
      * Array of registered child components
@@ -83626,7 +83792,7 @@ window.matchMedia || (window.matchMedia = function() {
 
     init: function init() {
       this._super.apply(this, arguments);
-      this.set('children', _ember.default.A());
+      this.set('children', A());
     },
 
 
@@ -83638,7 +83804,7 @@ window.matchMedia || (window.matchMedia = function() {
      * @public
      */
     registerChild: function registerChild(child) {
-      _ember.default.run.schedule('sync', this, function () {
+      schedule('sync', this, function () {
         this.get('children').addObject(child);
       });
     },
@@ -83656,25 +83822,27 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/mixins/control-attributes', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/mixins/control-attributes', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Mixin.create({
+  var Mixin = Ember.Mixin;
+  exports.default = Mixin.create({
     attributeBindings: ['name', 'autofocus', 'disabled', 'readonly', 'required', 'tabindex', 'form', 'title', 'ariaDescribedBy:aria-describedby'],
     tagName: 'input'
   });
 });
-;define('ember-bootstrap/mixins/dropdown-toggle', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/mixins/dropdown-toggle', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var next = _ember.default.run.next;
-  exports.default = _ember.default.Mixin.create({
+  var Mixin = Ember.Mixin;
+  var next = Ember.run.next;
+  exports.default = Mixin.create({
     classNames: ['dropdown-toggle'],
 
     /**
@@ -83707,13 +83875,16 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-bootstrap/mixins/size-class', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/mixins/size-class', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Mixin.create({
+  var isBlank = Ember.isBlank;
+  var computed = Ember.computed;
+  var Mixin = Ember.Mixin;
+  exports.default = Mixin.create({
     /**
      * Prefix for the size class, e.g. "btn" for button size classes ("btn-lg", "btn-sm" etc.)
      *
@@ -83726,10 +83897,10 @@ window.matchMedia || (window.matchMedia = function() {
 
     classNameBindings: ['sizeClass'],
 
-    sizeClass: _ember.default.computed('size', function () {
+    sizeClass: computed('size', function () {
       var prefix = this.get('classTypePrefix');
       var size = this.get('size');
-      return _ember.default.isBlank(size) ? null : prefix + '-' + size;
+      return isBlank(size) ? null : prefix + '-' + size;
     }),
 
     /**
@@ -83744,24 +83915,28 @@ window.matchMedia || (window.matchMedia = function() {
     size: null
   });
 });
-;define('ember-bootstrap/mixins/sub-component', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/mixins/sub-component', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Mixin.create({
-    targetObject: _ember.default.computed.alias('parentView')
+  var alias = Ember.computed.alias;
+  var Mixin = Ember.Mixin;
+  exports.default = Mixin.create({
+    targetObject: alias('parentView')
   });
 });
-;define('ember-bootstrap/mixins/transition-support', ['exports', 'ember', 'ember-bootstrap/utils/transition-support'], function (exports, _ember, _transitionSupport) {
+;define('ember-bootstrap/mixins/transition-support', ['exports', 'ember-bootstrap/utils/transition-support'], function (exports, _transitionSupport) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var computed = _ember.default.computed;
-  exports.default = _ember.default.Mixin.create({
+  var getOwner = Ember.getOwner;
+  var Mixin = Ember.Mixin;
+  var computed = Ember.computed;
+  exports.default = Mixin.create({
 
     /**
      * @property transitionsEnabled
@@ -83777,8 +83952,8 @@ window.matchMedia || (window.matchMedia = function() {
      * @type {Ember.Service}
      * @private
      */
-    fastboot: _ember.default.computed(function () {
-      var owner = _ember.default.getOwner(this);
+    fastboot: computed(function () {
+      var owner = getOwner(this);
       return owner.lookup('service:fastboot');
     }),
 
@@ -83795,13 +83970,15 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-bootstrap/mixins/type-class', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/mixins/type-class', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Mixin.create({
+  var computed = Ember.computed;
+  var Mixin = Ember.Mixin;
+  exports.default = Mixin.create({
     /**
      * Prefix for the type class, e.g. "btn" for button type classes ("btn-primary2 etc.)
      *
@@ -83814,7 +83991,7 @@ window.matchMedia || (window.matchMedia = function() {
 
     classNameBindings: ['typeClass'],
 
-    typeClass: _ember.default.computed('type', function () {
+    typeClass: computed('type', function () {
       var prefix = this.get('classTypePrefix');
       var type = this.get('type') || 'default';
       return prefix + '-' + type;
@@ -83843,7 +84020,7 @@ window.matchMedia || (window.matchMedia = function() {
   "use strict";
 
   exports.__esModule = true;
-  exports.default = Ember.HTMLBars.template({ "id": "hZWif5+H", "block": "{\"statements\":[[6,[\"bs-collapse\"],null,[[\"collapsed\",\"class\"],[[28,[\"collapsed\"]],\"panel-collapse\"]],{\"statements\":[[0,\"  \"],[11,\"div\",[]],[15,\"class\",\"panel-body\"],[13],[0,\"\\n    \"],[18,\"default\"],[0,\"\\n  \"],[14],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-accordion/body.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "ad5M8Hi9", "block": "{\"statements\":[[6,[\"bs-collapse\"],null,[[\"collapsed\",\"class\"],[[28,[\"collapsed\"]],\"panel-collapse\"]],{\"statements\":[[0,\"  \"],[11,\"div\",[]],[16,\"class\",[34,[\"panel-body \",[26,[\"class\"]]]]],[13],[0,\"\\n    \"],[18,\"default\"],[0,\"\\n  \"],[14],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-accordion/body.hbs" } });
 });
 ;define("ember-bootstrap/templates/components/bs-accordion/item", ["exports"], function (exports) {
   "use strict";
@@ -83957,13 +84134,13 @@ window.matchMedia || (window.matchMedia = function() {
   "use strict";
 
   exports.__esModule = true;
-  exports.default = Ember.HTMLBars.template({ "id": "/rV6WUn8", "block": "{\"statements\":[[6,[\"ember-wormhole\"],null,[[\"to\",\"renderInPlace\"],[\"ember-bootstrap-wormhole\",[28,[\"_renderInPlace\"]]]],{\"statements\":[[0,\"\\n\"],[6,[\"bs-modal/dialog\"],null,[[\"onClose\",\"fade\",\"showModal\",\"id\",\"keyboard\",\"size\",\"backdropClose\",\"class\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[28,[\"fade\"]],[28,[\"showModal\"]],[28,[\"modalId\"]],[28,[\"keyboard\"]],[28,[\"size\"]],[28,[\"backdropClose\"]],[28,[\"class\"]]]],{\"statements\":[[0,\"    \"],[1,[33,[\"bs-modal/header\"],null,[[\"title\",\"closeButton\",\"onClose\"],[[28,[\"title\"]],[28,[\"closeButton\"]],[33,[\"action\"],[[28,[null]],\"close\"],null]]]],false],[0,\"\\n\"],[6,[\"bs-modal/body\"],null,null,{\"statements\":[[0,\"      \"],[18,\"default\",[[33,[\"hash\"],null,[[\"close\",\"submit\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]]]],[0,\"\\n\"]],\"locals\":[]},null],[0,\"    \"],[1,[33,[\"bs-modal/footer\"],null,[[\"closeTitle\",\"submitTitle\",\"onClose\",\"onSubmit\"],[[28,[\"closeTitle\"]],[28,[\"submitTitle\"]],[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]],false],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\n  \"],[11,\"div\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"showBackdrop\"]]],null,{\"statements\":[[0,\"      \"],[11,\"div\",[]],[16,\"class\",[34,[\"modal-backdrop \",[33,[\"if\"],[[28,[\"fade\"]],\"fade\"],null],\" \",[33,[\"if\"],[[28,[\"showModal\"]],[28,[\"showClass\"]]],null]]]],[16,\"id\",[34,[[26,[\"backdropId\"]]]]],[13],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"  \"],[14],[0,\"\\n\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal-simple.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "b2IvRYf6", "block": "{\"statements\":[[6,[\"ember-wormhole\"],null,[[\"to\",\"renderInPlace\"],[\"ember-bootstrap-wormhole\",[28,[\"_renderInPlace\"]]]],{\"statements\":[[0,\"\\n\"],[6,[\"bs-modal/dialog\"],null,[[\"onClose\",\"fade\",\"showModal\",\"id\",\"keyboard\",\"size\",\"backdropClose\",\"class\",\"inDom\",\"paddingLeft\",\"paddingRight\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[28,[\"fade\"]],[28,[\"showModal\"]],[28,[\"modalId\"]],[28,[\"keyboard\"]],[28,[\"size\"]],[28,[\"backdropClose\"]],[28,[\"class\"]],[28,[\"inDom\"]],[28,[\"paddingLeft\"]],[28,[\"paddingRight\"]]]],{\"statements\":[[0,\"    \"],[1,[33,[\"bs-modal/header\"],null,[[\"title\",\"closeButton\",\"onClose\"],[[28,[\"title\"]],[28,[\"closeButton\"]],[33,[\"action\"],[[28,[null]],\"close\"],null]]]],false],[0,\"\\n\"],[6,[\"bs-modal/body\"],null,null,{\"statements\":[[0,\"      \"],[18,\"default\",[[33,[\"hash\"],null,[[\"close\",\"submit\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]]]],[0,\"\\n\"]],\"locals\":[]},null],[0,\"    \"],[1,[33,[\"bs-modal/footer\"],null,[[\"closeTitle\",\"submitTitle\",\"onClose\",\"onSubmit\"],[[28,[\"closeTitle\"]],[28,[\"submitTitle\"]],[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]],false],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\n  \"],[11,\"div\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"showBackdrop\"]]],null,{\"statements\":[[0,\"      \"],[11,\"div\",[]],[16,\"class\",[34,[\"modal-backdrop \",[33,[\"if\"],[[28,[\"fade\"]],\"fade\"],null],\" \",[33,[\"if\"],[[28,[\"showModal\"]],[28,[\"showClass\"]]],null]]]],[16,\"id\",[34,[[26,[\"backdropId\"]]]]],[13],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"  \"],[14],[0,\"\\n\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal-simple.hbs" } });
 });
 ;define("ember-bootstrap/templates/components/bs-modal", ["exports"], function (exports) {
   "use strict";
 
   exports.__esModule = true;
-  exports.default = Ember.HTMLBars.template({ "id": "S+YvuVsL", "block": "{\"statements\":[[6,[\"ember-wormhole\"],null,[[\"to\",\"renderInPlace\"],[\"ember-bootstrap-wormhole\",[28,[\"_renderInPlace\"]]]],{\"statements\":[[0,\"\\n\"],[6,[\"bs-modal/dialog\"],null,[[\"onClose\",\"fade\",\"showModal\",\"id\",\"keyboard\",\"size\",\"backdropClose\",\"class\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[28,[\"fade\"]],[28,[\"showModal\"]],[28,[\"modalId\"]],[28,[\"keyboard\"]],[28,[\"size\"]],[28,[\"backdropClose\"]],[28,[\"class\"]]]],{\"statements\":[[0,\"    \"],[18,\"default\",[[33,[\"hash\"],null,[[\"header\",\"body\",\"footer\",\"close\",\"submit\"],[[33,[\"component\"],[\"bs-modal/header\"],[[\"title\",\"onClose\"],[[28,[\"title\"]],[33,[\"action\"],[[28,[null]],\"close\"],null]]]],[33,[\"component\"],[\"bs-modal/body\"],null],[33,[\"component\"],[\"bs-modal/footer\"],[[\"onClose\",\"onSubmit\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]],[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]]]],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\n  \"],[11,\"div\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"showBackdrop\"]]],null,{\"statements\":[[0,\"      \"],[11,\"div\",[]],[16,\"class\",[34,[\"modal-backdrop \",[33,[\"if\"],[[28,[\"fade\"]],\"fade\"],null],\" \",[33,[\"if\"],[[28,[\"showModal\"]],[28,[\"showClass\"]]],null]]]],[16,\"id\",[34,[[26,[\"backdropId\"]]]]],[13],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"  \"],[14],[0,\"\\n\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "6Ypjg1Wo", "block": "{\"statements\":[[6,[\"ember-wormhole\"],null,[[\"to\",\"renderInPlace\"],[\"ember-bootstrap-wormhole\",[28,[\"_renderInPlace\"]]]],{\"statements\":[[0,\"\\n\"],[6,[\"bs-modal/dialog\"],null,[[\"onClose\",\"fade\",\"showModal\",\"id\",\"keyboard\",\"size\",\"backdropClose\",\"class\",\"inDom\",\"paddingLeft\",\"paddingRight\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[28,[\"fade\"]],[28,[\"showModal\"]],[28,[\"modalId\"]],[28,[\"keyboard\"]],[28,[\"size\"]],[28,[\"backdropClose\"]],[28,[\"class\"]],[28,[\"inDom\"]],[28,[\"paddingLeft\"]],[28,[\"paddingRight\"]]]],{\"statements\":[[0,\"    \"],[18,\"default\",[[33,[\"hash\"],null,[[\"header\",\"body\",\"footer\",\"close\",\"submit\"],[[33,[\"component\"],[\"bs-modal/header\"],[[\"title\",\"onClose\"],[[28,[\"title\"]],[33,[\"action\"],[[28,[null]],\"close\"],null]]]],[33,[\"component\"],[\"bs-modal/body\"],null],[33,[\"component\"],[\"bs-modal/footer\"],[[\"onClose\",\"onSubmit\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]],[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]]]],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\n  \"],[11,\"div\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"showBackdrop\"]]],null,{\"statements\":[[0,\"      \"],[11,\"div\",[]],[16,\"class\",[34,[\"modal-backdrop \",[33,[\"if\"],[[28,[\"fade\"]],\"fade\"],null],\" \",[33,[\"if\"],[[28,[\"showModal\"]],[28,[\"showClass\"]]],null]]]],[16,\"id\",[34,[[26,[\"backdropId\"]]]]],[13],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"  \"],[14],[0,\"\\n\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal.hbs" } });
 });
 ;define("ember-bootstrap/templates/components/bs-modal/body", ["exports"], function (exports) {
   "use strict";
@@ -84079,14 +84256,13 @@ window.matchMedia || (window.matchMedia = function() {
   exports.__esModule = true;
   exports.default = Ember.HTMLBars.template({ "id": "HtMjO+VV", "block": "{\"statements\":[[11,\"div\",[]],[15,\"class\",\"tooltip-arrow\"],[13],[14],[0,\"\\n\"],[11,\"div\",[]],[15,\"class\",\"tooltip-inner\"],[13],[0,\"\\n  \"],[18,\"default\"],[0,\"\\n\"],[14]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-tooltip/element.hbs" } });
 });
-;define('ember-bootstrap/utils/get-calculated-offset', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/utils/get-calculated-offset', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = getCalculatedOffset;
-  var assert = _ember.default.assert;
   function getCalculatedOffset(placement, pos, actualWidth, actualHeight) {
     switch (placement) {
       case 'bottom':
@@ -84098,23 +84274,24 @@ window.matchMedia || (window.matchMedia = function() {
       case 'right':
         return { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width };
       default:
-        assert('position must be one of bottom|top|left|right', false);
+        (true && !(false) && Ember.assert('position must be one of bottom|top|left|right', false));
+
     }
   }
 });
-;define('ember-bootstrap/utils/get-parent', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/utils/get-parent', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = getParent;
-  var get = _ember.default.get;
+  var get = Ember.get;
   function getParent(view) {
     if (get(view, 'tagName') === '') {
       // Beware: use of private API! :(
-      if (_ember.default.ViewUtils && _ember.default.ViewUtils.getViewBounds) {
-        return _ember.default.ViewUtils.getViewBounds(view).parentElement;
+      if (Ember.ViewUtils && Ember.ViewUtils.getViewBounds) {
+        return Ember.ViewUtils.getViewBounds(view).parentElement;
       } else {
         return view._renderNode.contextualElement;
       }
@@ -84123,14 +84300,14 @@ window.matchMedia || (window.matchMedia = function() {
     }
   }
 });
-;define('ember-bootstrap/utils/get-position', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/utils/get-position', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = getPosition;
-  var assign = _ember.default.assign;
+  var assign = Ember.assign;
   function getPosition(el) {
     var isBody = el.tagName === 'BODY';
 
@@ -84174,7 +84351,7 @@ window.matchMedia || (window.matchMedia = function() {
     };
   }
 });
-;define('ember-bootstrap/utils/listen-to-cp', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-bootstrap/utils/listen-to-cp', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -84195,8 +84372,8 @@ window.matchMedia || (window.matchMedia = function() {
     });
   };
 
-  var computed = _ember.default.computed,
-      getWithDefault = _ember.default.getWithDefault;
+  var getWithDefault = Ember.getWithDefault;
+  var computed = Ember.computed;
 });
 ;define("ember-bootstrap/utils/set-offset", ["exports"], function (exports) {
   "use strict";
@@ -84231,17 +84408,16 @@ window.matchMedia || (window.matchMedia = function() {
     };
   }
 });
-;define('ember-bootstrap/utils/transition-end', ['exports', 'ember', 'ember-bootstrap/utils/transition-support'], function (exports, _ember, _transitionSupport) {
+;define('ember-bootstrap/utils/transition-end', ['exports', 'ember-bootstrap/utils/transition-support'], function (exports, _transitionSupport) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = onTransitionEnd;
-  var _Ember$run = _ember.default.run,
-      join = _Ember$run.join,
-      cancel = _Ember$run.cancel,
-      later = _Ember$run.later;
+  var later = Ember.run.later;
+  var cancel = Ember.run.cancel;
+  var join = Ember.run.join;
   function onTransitionEnd(node, handler, context) {
     var duration = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 
@@ -84266,7 +84442,7 @@ window.matchMedia || (window.matchMedia = function() {
       if (backup) {
         cancel(backup);
       }
-      event.target.removeEventListener(_transitionSupport.default, done);
+      node.removeEventListener(_transitionSupport.default, done);
       join(context, handler, event);
     }
   }
@@ -84281,10 +84457,10 @@ window.matchMedia || (window.matchMedia = function() {
     var el = document.createElement('bootstrap');
 
     var transEndEventNames = {
+      transition: 'transitionend',
       WebkitTransition: 'webkitTransitionEnd',
       MozTransition: 'transitionend',
-      OTransition: 'oTransitionEnd otransitionend',
-      transition: 'transitionend'
+      OTransition: 'oTransitionEnd otransitionend'
     };
 
     for (var name in transEndEventNames) {
@@ -84374,15 +84550,15 @@ window.matchMedia || (window.matchMedia = function() {
 
   });
 });
-;define('ember-cli-app-version/initializer-factory', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-cli-app-version/initializer-factory', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = initializerFactory;
-  var classify = _ember.default.String.classify,
-      libraries = _ember.default.libraries;
+  var classify = Ember.String.classify,
+      libraries = Ember.libraries;
   function initializerFactory(name, version) {
     var registered = false;
 
@@ -84567,20 +84743,20 @@ window.matchMedia || (window.matchMedia = function() {
 
   exports["default"] = _ember["default"].getOwner;
 });
-;define("ember-inflector/index", ["module", "exports", "ember", "ember-inflector/lib/system", "ember-inflector/lib/ext/string"], function (module, exports, _ember, _system) {
+;define("ember-inflector/index", ["module", "exports", "ember-inflector/lib/system", "ember-inflector/lib/ext/string"], function (module, exports, _system) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.defaultRules = exports.singularize = exports.pluralize = undefined;
-  /* global define, module */
+
 
   _system.Inflector.defaultRules = _system.defaultRules;
-  _ember.default.Inflector = _system.Inflector;
+  Ember.Inflector = _system.Inflector;
 
-  _ember.default.String.pluralize = _system.pluralize;
-  _ember.default.String.singularize = _system.singularize;
+  Ember.String.pluralize = _system.pluralize;
+  Ember.String.singularize = _system.singularize;
 
   exports.default = _system.Inflector;
   exports.pluralize = _system.pluralize;
@@ -84602,10 +84778,10 @@ window.matchMedia || (window.matchMedia = function() {
     _system.Inflector.pluralize = _system.pluralize;
   }
 });
-;define('ember-inflector/lib/ext/string', ['ember', 'ember-inflector/lib/system/string'], function (_ember, _string) {
+;define('ember-inflector/lib/ext/string', ['ember-inflector/lib/system/string'], function (_string) {
   'use strict';
 
-  if (_ember.default.EXTEND_PROTOTYPES === true || _ember.default.EXTEND_PROTOTYPES.String) {
+  if (Ember.EXTEND_PROTOTYPES === true || Ember.EXTEND_PROTOTYPES.String) {
     /**
       See {{#crossLink "Ember.String/pluralize"}}{{/crossLink}}
        @method pluralize
@@ -84697,7 +84873,7 @@ window.matchMedia || (window.matchMedia = function() {
     uncountable: ['equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep', 'jeans', 'police']
   };
 });
-;define('ember-inflector/lib/system/inflector', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-inflector/lib/system/inflector', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -84705,7 +84881,7 @@ window.matchMedia || (window.matchMedia = function() {
   });
 
 
-  var capitalize = _ember.default.String.capitalize;
+  var capitalize = Ember.String.capitalize;
 
   var BLANK_REGEX = /^\s*$/;
   var LAST_WORD_DASHED_REGEX = /([\w/-]+[_/\s-])([a-z\d]+$)/;
@@ -85032,7 +85208,7 @@ window.matchMedia || (window.matchMedia = function() {
   exports.pluralize = pluralize;
   exports.singularize = singularize;
 });
-;define('ember-inflector/lib/utils/make-helper', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-inflector/lib/utils/make-helper', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -85040,13 +85216,13 @@ window.matchMedia || (window.matchMedia = function() {
   });
   exports.default = makeHelper;
   function makeHelper(helperFunction) {
-    if (_ember.default.Helper) {
-      return _ember.default.Helper.helper(helperFunction);
+    if (Ember.Helper) {
+      return Ember.Helper.helper(helperFunction);
     }
-    if (_ember.default.HTMLBars) {
-      return _ember.default.HTMLBars.makeBoundHelper(helperFunction);
+    if (Ember.HTMLBars) {
+      return Ember.HTMLBars.makeBoundHelper(helperFunction);
     }
-    return _ember.default.Handlebars.makeBoundHelper(helperFunction);
+    return Ember.Handlebars.makeBoundHelper(helperFunction);
   }
 });
 ;define('ember-load-initializers/index', ['exports'], function (exports) {
@@ -85124,9 +85300,9 @@ window.matchMedia || (window.matchMedia = function() {
 
       var collapsedKeys = collapseKeys(keys);
 
-      function createArgs(context) {
+      function createArgs(context, key) {
         var bundledKeys = collapsedKeys.map(function (macro) {
-          return { context: context, macro: macro };
+          return { context: context, macro: macro, key: key };
         });
         var values = void 0;
         if (isLazy) {
@@ -85172,21 +85348,21 @@ window.matchMedia || (window.matchMedia = function() {
     var newCallback = void 0;
 
     if (typeof incomingCallback === 'function') {
-      newCallback = function newCallback() {
-        return incomingCallback.apply(this, createArgs(this));
+      newCallback = function newCallback(key) {
+        return incomingCallback.apply(this, createArgs(this, key));
       };
     } else {
       newCallback = {};
       if (incomingCallback.get) {
-        newCallback.get = function () {
-          return incomingCallback.get.apply(this, createArgs(this));
+        newCallback.get = function (key) {
+          return incomingCallback.get.apply(this, createArgs(this, key));
         };
       }
       if (incomingCallback.set) {
         newCallback.set = function (key, value) {
           var _incomingCallback$set;
 
-          return (_incomingCallback$set = incomingCallback.set).call.apply(_incomingCallback$set, [this, value].concat(_toConsumableArray(createArgs(this))));
+          return (_incomingCallback$set = incomingCallback.set).call.apply(_incomingCallback$set, [this, value].concat(_toConsumableArray(createArgs(this, key))));
         };
       }
     }
@@ -85284,7 +85460,7 @@ window.matchMedia || (window.matchMedia = function() {
   });
   exports.default = (0, _buildComputed.default)({ collapseKeys: _collapseKeys.default, getValue: _getValue.default, flattenKeys: _flattenKeys.default });
 });
-;define('ember-macro-helpers/create-class-computed', ['exports', 'ember', 'ember-object', 'ember-component', 'ember-computed', 'ember-evented/on', 'ember-metal/observer', 'ember-utils', 'ember-metal/get', 'ember-metal/set', 'ember-weakmap', 'ember-macro-helpers/get-value', 'ember-macro-helpers/collapse-keys', 'ember-macro-helpers/flatten-keys'], function (exports, _ember, _emberObject, _emberComponent, _emberComputed, _on, _observer, _emberUtils, _get, _set, _emberWeakmap, _getValue, _collapseKeys, _flattenKeys) {
+;define('ember-macro-helpers/create-class-computed', ['exports', 'ember-object', 'ember-component', 'ember-computed', 'ember-evented/on', 'ember-metal/observer', 'ember-metal/get', 'ember-metal/set', 'ember-weakmap', 'ember-macro-helpers/get-value', 'ember-macro-helpers/collapse-keys', 'ember-macro-helpers/flatten-keys'], function (exports, _emberObject, _emberComponent, _emberComputed, _on, _observer, _get, _set, _emberWeakmap, _getValue, _collapseKeys, _flattenKeys) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -85313,13 +85489,13 @@ window.matchMedia || (window.matchMedia = function() {
 
       var mappedKeys = [];
 
-      function rewriteComputed() {
+      function rewriteComputed(obj, key) {
         var _this = this;
 
         var mappedWithResolvedOberverKeys = mappedKeys.map(function (macro, i) {
           var shouldObserve = observerBools[i];
           if (shouldObserve) {
-            macro = (0, _getValue.default)({ context: _this, macro: macro });
+            macro = (0, _getValue.default)({ context: _this, macro: macro, key: key });
           }
           return macro;
         });
@@ -85352,14 +85528,14 @@ window.matchMedia || (window.matchMedia = function() {
         })
       });
 
-      return _emberComputed.default.apply(undefined, _toConsumableArray((0, _flattenKeys.default)(keys)).concat([function (key) {
+      var cp = _emberComputed.default.apply(undefined, _toConsumableArray((0, _flattenKeys.default)(keys)).concat([function (key) {
         var _this2 = this;
 
-        var propertyInstance = findOrCreatePropertyInstance(this, ObserverClass, key);
+        var propertyInstance = findOrCreatePropertyInstance(this, ObserverClass, key, cp);
 
         var properties = collapsedKeys.reduce(function (properties, macro, i) {
           if (typeof macro !== 'string') {
-            properties[i.toString()] = (0, _getValue.default)({ context: _this2, macro: macro });
+            properties[i.toString()] = (0, _getValue.default)({ context: _this2, macro: macro, key: key });
           }
           return properties;
         }, {});
@@ -85368,6 +85544,8 @@ window.matchMedia || (window.matchMedia = function() {
 
         return (0, _get.default)(propertyInstance, 'computed');
       }])).readOnly();
+
+      return cp;
     };
   };
 
@@ -85383,27 +85561,19 @@ window.matchMedia || (window.matchMedia = function() {
     }
   }
 
-  var defineProperty = _ember.default.defineProperty;
+  var defineProperty = Ember.defineProperty;
 
 
   var PROPERTIES = new _emberWeakmap.default();
 
-  function findOrCreatePropertyInstance(context, propertyClass, key) {
-    var isComponent = context instanceof _emberComponent.default;
-
+  function findOrCreatePropertyInstance(context, propertyClass, key, cp) {
     var propertiesForContext = PROPERTIES.get(context);
-    if ((0, _emberUtils.isNone)(propertiesForContext)) {
-      propertiesForContext = {};
+    if (!propertiesForContext) {
+      propertiesForContext = new _emberWeakmap.default();
       PROPERTIES.set(context, propertiesForContext);
-
-      if (isComponent) {
-        context.one('willDestroyElement', function () {
-          PROPERTIES.delete(context);
-        });
-      }
     }
 
-    var property = propertiesForContext[key];
+    var property = propertiesForContext.get(cp);
     if (property) {
       return property;
     }
@@ -85415,12 +85585,11 @@ window.matchMedia || (window.matchMedia = function() {
       nonStrings: _emberObject.default.create()
     });
 
-    propertiesForContext[key] = property;
+    propertiesForContext.set(cp, property);
 
-    if (isComponent) {
+    if (context instanceof _emberComponent.default) {
       context.one('willDestroyElement', function () {
         property.destroy();
-        delete propertiesForContext[key];
       });
     }
 
@@ -85429,7 +85598,18 @@ window.matchMedia || (window.matchMedia = function() {
 
   var BaseClass = _emberObject.default.extend({
     computedDidChange: (0, _observer.default)('computed', function () {
-      this.context.notifyPropertyChange(this.key);
+      var context = this.context,
+          key = this.key;
+
+
+      if (context.isDestroying) {
+        // controllers can get into this state
+        this.destroy();
+
+        return;
+      }
+
+      context.notifyPropertyChange(key);
     })
   });
 
@@ -85462,7 +85642,7 @@ window.matchMedia || (window.matchMedia = function() {
     }, []);
   };
 });
-;define('ember-macro-helpers/expand-property', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-macro-helpers/expand-property', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -85477,7 +85657,7 @@ window.matchMedia || (window.matchMedia = function() {
     return newPropertyList;
   };
 
-  var expandProperties = _ember.default.expandProperties;
+  var expandProperties = Ember.expandProperties;
 });
 ;define('ember-macro-helpers/flatten-keys-unsafe', ['exports', 'ember-macro-helpers/flatten-keys'], function (exports, _flattenKeys) {
   'use strict';
@@ -85591,7 +85771,7 @@ window.matchMedia || (window.matchMedia = function() {
     return (0, _get.default)(context, macro);
   };
 });
-;define('ember-macro-helpers/is-computed', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-macro-helpers/is-computed', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -85602,7 +85782,7 @@ window.matchMedia || (window.matchMedia = function() {
     return key instanceof ComputedProperty;
   };
 
-  var ComputedProperty = _ember.default.ComputedProperty;
+  var ComputedProperty = Ember.ComputedProperty;
 });
 ;define('ember-macro-helpers/lazy-computed', ['exports', 'ember-macro-helpers/-build-computed', 'ember-macro-helpers/collapse-keys', 'ember-macro-helpers/get-value', 'ember-macro-helpers/flatten-keys'], function (exports, _buildComputed, _collapseKeys, _getValue, _flattenKeys) {
   'use strict';
@@ -85898,16 +86078,20 @@ window.matchMedia || (window.matchMedia = function() {
   exports.__esModule = true;
   exports.default = Ember.HTMLBars.template({ "id": "ennd7O1C", "block": "{\"statements\":[[18,\"default\"],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-masonry-grid/components/masonry-item/template.hbs" } });
 });
-;define('ember-moment/computeds/-base', ['exports', 'ember-macro-helpers/computed-unsafe'], function (exports, _emberMacroHelpersComputedUnsafe) {
-  exports['default'] = computedFactory;
+;define('ember-moment/computeds/-base', ['exports', 'ember-macro-helpers/computed-unsafe'], function (exports, _computedUnsafe) {
+  'use strict';
 
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = computedFactory;
   function computedFactory(fn) {
     return function () {
       for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
 
-      return _emberMacroHelpersComputedUnsafe['default'].apply(undefined, args.concat([function () {
+      return _computedUnsafe.default.apply(undefined, args.concat([function () {
         for (var _len2 = arguments.length, vals = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
           vals[_key2] = arguments[_key2];
         }
@@ -85917,48 +86101,147 @@ window.matchMedia || (window.matchMedia = function() {
     };
   }
 });
-;define('ember-moment/computeds/calendar', ['exports', 'ember', 'moment', 'ember-moment/computeds/-base'], function (exports, _ember, _moment, _emberMomentComputedsBase) {
-  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+;define('ember-moment/computeds/calendar', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _base) {
+  'use strict';
 
-  exports['default'] = (0, _emberMomentComputedsBase['default'])(function calendarComputed(params) {
-    var formatHash = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  exports.default = (0, _base.default)(function calendarComputed(params) {
+    var formatHash = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     if (!params || params && params.length > 3) {
       throw new TypeError('ember-moment: Invalid Number of arguments, at most 3');
     }
 
-    var _params = _slicedToArray(params, 3);
-
-    var date = _params[0];
-    var referenceTime = _params[1];
-    var formats = _params[2];
+    var _params = _slicedToArray(params, 3),
+        date = _params[0],
+        referenceTime = _params[1],
+        formats = _params[2];
 
     var clone = Object.create(formatHash);
-    var mergedFormats = _ember['default'].merge(clone, formats);
+    var mergedFormats = Ember.merge(clone, formats);
 
-    return (0, _moment['default'])(date).calendar(referenceTime, mergedFormats);
+    return (0, _moment.default)(date).calendar(referenceTime, mergedFormats);
   });
 });
-;define('ember-moment/computeds/duration', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _emberMomentComputedsBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/computeds/duration', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _base) {
+  'use strict';
 
-  exports['default'] = (0, _emberMomentComputedsBase['default'])(function durationComputed(params) {
-    return _moment['default'].duration.apply(_moment['default'], _toConsumableArray(params));
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = (0, _base.default)(function durationComputed(params) {
+    return _moment.default.duration.apply(_moment.default, _toConsumableArray(params));
   });
 });
-;define('ember-moment/computeds/format', ['exports', 'ember', 'moment', 'ember-moment/utils/get-owner', 'ember-moment/computeds/-base'], function (exports, _ember, _moment, _emberMomentUtilsGetOwner, _emberMomentComputedsBase) {
-  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+;define('ember-moment/computeds/format', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _base) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
 
   var CONFIG_KEY = 'config:environment';
-  var get = _ember['default'].get;
-  exports['default'] = (0, _emberMomentComputedsBase['default'])(function formatComputed(_ref) {
-    var _ref2 = _slicedToArray(_ref, 2);
-
-    var value = _ref2[0];
-    var optionalFormat = _ref2[1];
+  var get = Ember.get,
+      getOwner = Ember.getOwner;
+  exports.default = (0, _base.default)(function formatComputed(_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        value = _ref2[0],
+        optionalFormat = _ref2[1];
 
     if (!optionalFormat) {
-      var owner = (0, _emberMomentUtilsGetOwner['default'])(this);
+      var owner = getOwner(this);
 
       if (owner && owner.hasRegistration && owner.hasRegistration(CONFIG_KEY)) {
         var config = owner.resolveRegistration(CONFIG_KEY);
@@ -85969,93 +86252,269 @@ window.matchMedia || (window.matchMedia = function() {
       }
     }
 
-    return (0, _moment['default'])(value).format(optionalFormat);
+    return (0, _moment.default)(value).format(optionalFormat);
   });
 });
-;define('ember-moment/computeds/from-now', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _emberMomentComputedsBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/computeds/from-now', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _base) {
+  'use strict';
 
-  exports['default'] = (0, _emberMomentComputedsBase['default'])(function fromNowComputed(params) {
-    var maybeHideSuffix = undefined;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = (0, _base.default)(function fromNowComputed(params) {
+    var maybeHideSuffix = void 0;
 
     if (params.length > 1) {
       maybeHideSuffix = params.pop();
     }
 
-    return _moment['default'].apply(undefined, _toConsumableArray(params)).fromNow(maybeHideSuffix);
+    return _moment.default.apply(undefined, _toConsumableArray(params)).fromNow(maybeHideSuffix);
   });
 });
-;define('ember-moment/computeds/humanize', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _emberMomentComputedsBase) {
-  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+;define('ember-moment/computeds/humanize', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _base) {
+  'use strict';
 
-  exports['default'] = (0, _emberMomentComputedsBase['default'])(function humanizeComputed(_ref) {
-    var _ref2 = _slicedToArray(_ref, 2);
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-    var duration = _ref2[0];
-    var suffixless = _ref2[1];
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
 
-    if (!_moment['default'].isDuration(duration)) {
-      duration = _moment['default'].duration(duration);
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  exports.default = (0, _base.default)(function humanizeComputed(_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        duration = _ref2[0],
+        suffixless = _ref2[1];
+
+    if (!_moment.default.isDuration(duration)) {
+      duration = _moment.default.duration(duration);
     }
 
     return duration.humanize(suffixless);
   });
 });
-;define('ember-moment/computeds/locale', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _emberMomentComputedsBase) {
-  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+;define('ember-moment/computeds/locale', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _base) {
+  'use strict';
 
-  exports['default'] = (0, _emberMomentComputedsBase['default'])(function localeComputed(_ref) {
-    var _ref2 = _slicedToArray(_ref, 2);
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-    var date = _ref2[0];
-    var locale = _ref2[1];
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
 
-    if (!_moment['default'].isDuration(date)) {
-      date = (0, _moment['default'])(date);
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  exports.default = (0, _base.default)(function localeComputed(_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        date = _ref2[0],
+        locale = _ref2[1];
+
+    if (!_moment.default.isDuration(date)) {
+      date = (0, _moment.default)(date);
     }
 
     return date.locale(locale);
   });
 });
-;define('ember-moment/computeds/moment', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _emberMomentComputedsBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/computeds/moment', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _base) {
+  'use strict';
 
-  exports['default'] = (0, _emberMomentComputedsBase['default'])(function momentComputed(params) {
-    return _moment['default'].apply(undefined, _toConsumableArray(params));
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = (0, _base.default)(function momentComputed(params) {
+    return _moment.default.apply(undefined, _toConsumableArray(params));
   });
 });
-;define('ember-moment/computeds/to-now', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _emberMomentComputedsBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/computeds/to-now', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _base) {
+  'use strict';
 
-  exports['default'] = (0, _emberMomentComputedsBase['default'])(function toNowComputed(params) {
-    var maybeHidePrefix = undefined;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = (0, _base.default)(function toNowComputed(params) {
+    var maybeHidePrefix = void 0;
 
     if (params.length > 1) {
       maybeHidePrefix = params.pop();
     }
 
-    return _moment['default'].apply(undefined, _toConsumableArray(params)).toNow(maybeHidePrefix);
+    return _moment.default.apply(undefined, _toConsumableArray(params)).toNow(maybeHidePrefix);
   });
 });
-;define('ember-moment/computeds/tz', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _emberMomentComputedsBase) {
-  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+;define('ember-moment/computeds/tz', ['exports', 'moment', 'ember-moment/computeds/-base'], function (exports, _moment, _base) {
+  'use strict';
 
-  exports['default'] = (0, _emberMomentComputedsBase['default'])(function tzComputed(_ref) {
-    var _ref2 = _slicedToArray(_ref, 2);
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-    var date = _ref2[0];
-    var tz = _ref2[1];
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
 
-    return (0, _moment['default'])(date).tz(tz);
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  exports.default = (0, _base.default)(function tzComputed(_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        date = _ref2[0],
+        tz = _ref2[1];
+
+    return (0, _moment.default)(date).tz(tz);
   });
 });
-;define('ember-moment/helpers/-base', ['exports', 'ember'], function (exports, _ember) {
-  var observer = _ember['default'].observer;
-  var inject = _ember['default'].inject;
-  var get = _ember['default'].get;
-  var Helper = _ember['default'].Helper;
-  var run = _ember['default'].run;
-  exports['default'] = Helper.extend({
+;define('ember-moment/helpers/-base', ['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var observer = Ember.observer,
+      inject = Ember.inject,
+      get = Ember.get,
+      Helper = Ember.Helper,
+      run = Ember.run;
+  exports.default = Helper.extend({
     moment: inject.service(),
     disableInterval: false,
 
@@ -86087,10 +86546,9 @@ window.matchMedia || (window.matchMedia = function() {
         }, parseInt(interval, 10));
       }
     },
-
     morphMoment: function morphMoment(time, _ref2) {
-      var locale = _ref2.locale;
-      var timeZone = _ref2.timeZone;
+      var locale = _ref2.locale,
+          timeZone = _ref2.timeZone;
 
       var momentService = get(this, 'moment');
 
@@ -86107,29 +86565,32 @@ window.matchMedia || (window.matchMedia = function() {
 
       return time;
     },
-
     clearTimer: function clearTimer() {
       clearTimeout(this.intervalTimer);
     },
-
     destroy: function destroy() {
       this.clearTimer();
       this._super.apply(this, arguments);
     }
   });
 });
-;define('ember-moment/helpers/is-after', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+;define('ember-moment/helpers/is-after', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var precision = _ref.precision;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var precision = _ref.precision,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86150,18 +86611,23 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/is-before', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+;define('ember-moment/helpers/is-before', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var precision = _ref.precision;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var precision = _ref.precision,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86182,27 +86648,44 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/is-between', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/is-between', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var precision = _ref.precision;
-      var inclusivity = _ref.inclusivity;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var precision = _ref.precision,
+          inclusivity = _ref.inclusivity,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
       var moment = this.get('moment');
       var _params = [].concat(params);
       var length = params.length;
+
 
       if (length < 2 || length > 3) {
         throw new TypeError('ember-moment: Invalid Number of arguments, expected 2 or 3');
@@ -86218,18 +86701,23 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/is-same-or-after', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+;define('ember-moment/helpers/is-same-or-after', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var precision = _ref.precision;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var precision = _ref.precision,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86250,18 +86738,23 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/is-same-or-before', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+;define('ember-moment/helpers/is-same-or-before', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var precision = _ref.precision;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var precision = _ref.precision,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86282,18 +86775,23 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/is-same', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+;define('ember-moment/helpers/is-same', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var precision = _ref.precision;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var precision = _ref.precision,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86314,20 +86812,36 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/moment-add', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/moment-add', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var precision = _ref.precision;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var precision = _ref.precision,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86339,7 +86853,7 @@ window.matchMedia || (window.matchMedia = function() {
 
       if (length === 1) {
         additionArgs.push(params[0]);
-      } else if (length === 2 && _ember['default'].typeOf(params[0]) === 'number' && _ember['default'].typeOf(params[1]) === 'string') {
+      } else if (length === 2 && Ember.typeOf(params[0]) === 'number' && Ember.typeOf(params[1]) === 'string') {
         additionArgs.push.apply(additionArgs, _toConsumableArray(params));
       } else {
         args.push(params[0]);
@@ -86350,16 +86864,58 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/moment-calendar', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+;define('ember-moment/helpers/moment-calendar', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params) {
-      var formatHash = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    compute: (0, _helperCompute.default)(function (params) {
+      var formatHash = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
       this._super.apply(this, arguments);
 
@@ -86368,37 +86924,124 @@ window.matchMedia || (window.matchMedia = function() {
       }
 
       var moment = this.get('moment');
-      var locale = formatHash.locale;
-      var timeZone = formatHash.timeZone;
+      var locale = formatHash.locale,
+          timeZone = formatHash.timeZone;
 
-      var _params = _slicedToArray(params, 3);
-
-      var date = _params[0];
-      var referenceTime = _params[1];
-      var formats = _params[2];
+      var _params = _slicedToArray(params, 3),
+          date = _params[0],
+          referenceTime = _params[1],
+          formats = _params[2];
 
       var clone = Object.create(formatHash);
 
       delete clone.locale;
       delete clone.timeZone;
 
-      var mergedFormats = _ember['default'].merge(clone, formats);
+      var mergedFormats = Ember.merge(clone, formats);
 
       return this.morphMoment(moment.moment(date), { locale: locale, timeZone: timeZone }).calendar(referenceTime, mergedFormats);
     })
   });
 });
-;define('ember-moment/helpers/moment-duration', ['exports', 'moment', 'ember', 'ember-moment/helpers/-base'], function (exports, _moment, _ember, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/moment-diff', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
+
+    globalAllowEmpty: false,
+
+    compute: (0, _helperCompute.default)(function (params, _ref) {
+      var precision = _ref.precision,
+          float = _ref.float,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
+
+      this._super.apply(this, arguments);
+
+      if (!params || params && params.length !== 2) {
+        throw new TypeError('ember-moment: Invalid Number of arguments, must be 2');
+      }
+
+      var moment = this.get('moment');
+
+      var _params = _slicedToArray(params, 2),
+          dateA = _params[0],
+          dateB = _params[1];
+
+      return this.morphMoment(moment.moment(dateB), { locale: locale, timeZone: timeZone }).diff(dateA, precision, float);
+    })
+  });
+});
+;define('ember-moment/helpers/moment-duration', ['exports', 'moment', 'ember-moment/helpers/-base'], function (exports, _moment, _base) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     disableInterval: true,
 
     compute: function compute(params, _ref) {
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
       var momentService = this.get('moment');
@@ -86407,17 +87050,22 @@ window.matchMedia || (window.matchMedia = function() {
         throw new TypeError('ember-moment: Invalid Number of arguments, at most 2');
       }
 
-      var result = momentService.moment(_moment['default'].duration.apply(_moment['default'], _toConsumableArray(params)));
+      var result = momentService.moment(_moment.default.duration.apply(_moment.default, _toConsumableArray(params)));
       return this.morphMoment(result._i, { locale: locale, timeZone: timeZone }).humanize();
     }
   });
 });
-;define('ember-moment/helpers/moment-format', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  var observer = _ember['default'].observer;
-  var isEmpty = _ember['default'].isEmpty;
-  var get = _ember['default'].get;
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+;define('ember-moment/helpers/moment-format', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var observer = Ember.observer,
+      isEmpty = Ember.isEmpty,
+      get = Ember.get;
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
@@ -86425,16 +87073,17 @@ window.matchMedia || (window.matchMedia = function() {
       this.recompute();
     }),
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
       var moment = this.get('moment');
       var length = params.length;
+
 
       if (length > 3) {
         throw new TypeError('ember-moment: Invalid Number of arguments, expected at most 4');
@@ -86459,18 +87108,34 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/moment-from-now', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/moment-from-now', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
-      var hideSuffix = _ref.hideSuffix;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+    compute: (0, _helperCompute.default)(function (params, _ref) {
+      var hideSuffix = _ref.hideSuffix,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86480,27 +87145,43 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/moment-from', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/moment-from', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  function _toArray(arr) {
+    return Array.isArray(arr) ? arr : Array.from(arr);
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (_ref, _ref3) {
+    compute: (0, _helperCompute.default)(function (_ref, _ref2) {
       var _morphMoment;
 
-      var _ref2 = _toArray(_ref);
+      var _ref3 = _toArray(_ref),
+          datetime = _ref3[0],
+          params = _ref3.slice(1);
 
-      var datetime = _ref2[0];
-
-      var params = _ref2.slice(1);
-
-      var locale = _ref3.locale;
-      var timeZone = _ref3.timeZone;
+      var locale = _ref2.locale,
+          timeZone = _ref2.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86510,19 +87191,35 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/moment-subtract', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/moment-subtract', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var precision = _ref.precision;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var precision = _ref.precision,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86534,7 +87231,7 @@ window.matchMedia || (window.matchMedia = function() {
 
       if (length === 1) {
         subtractionArgs.push(params[0]);
-      } else if (length === 2 && _ember['default'].typeOf(params[0]) === 'number' && _ember['default'].typeOf(params[1]) === 'string') {
+      } else if (length === 2 && Ember.typeOf(params[0]) === 'number' && Ember.typeOf(params[1]) === 'string') {
         subtractionArgs.push.apply(subtractionArgs, _toConsumableArray(params));
       } else {
         args.push(params[0]);
@@ -86545,20 +87242,36 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/moment-to-date', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/moment-to-date', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
+    compute: (0, _helperCompute.default)(function (params, _ref) {
       var _morphMoment;
 
-      var hidePrefix = _ref.hidePrefix;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var hidePrefix = _ref.hidePrefix,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86568,18 +87281,34 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/moment-to-now', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/moment-to-now', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (params, _ref) {
-      var hidePrefix = _ref.hidePrefix;
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+    compute: (0, _helperCompute.default)(function (params, _ref) {
+      var hidePrefix = _ref.hidePrefix,
+          locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86589,27 +87318,43 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/moment-to', ['exports', 'ember', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentUtilsHelperCompute, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/moment-to', ['exports', 'ember-moment/utils/helper-compute', 'ember-moment/helpers/-base'], function (exports, _helperCompute, _base) {
+  'use strict';
 
-  function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  function _toArray(arr) {
+    return Array.isArray(arr) ? arr : Array.from(arr);
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     globalAllowEmpty: false,
 
-    compute: (0, _emberMomentUtilsHelperCompute['default'])(function (_ref, _ref3) {
+    compute: (0, _helperCompute.default)(function (_ref, _ref2) {
       var _morphMoment;
 
-      var _ref2 = _toArray(_ref);
+      var _ref3 = _toArray(_ref),
+          datetime = _ref3[0],
+          params = _ref3.slice(1);
 
-      var datetime = _ref2[0];
-
-      var params = _ref2.slice(1);
-
-      var locale = _ref3.locale;
-      var timeZone = _ref3.timeZone;
+      var locale = _ref2.locale,
+          timeZone = _ref2.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86619,15 +87364,31 @@ window.matchMedia || (window.matchMedia = function() {
     })
   });
 });
-;define('ember-moment/helpers/moment', ['exports', 'ember', 'ember-moment/helpers/-base'], function (exports, _ember, _emberMomentHelpersBase) {
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+;define('ember-moment/helpers/moment', ['exports', 'ember-moment/helpers/-base'], function (exports, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     compute: function compute(params, _ref) {
-      var locale = _ref.locale;
-      var timeZone = _ref.timeZone;
+      var locale = _ref.locale,
+          timeZone = _ref.timeZone;
 
       this._super.apply(this, arguments);
 
@@ -86637,56 +87398,108 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-moment/helpers/now', ['exports', 'ember', 'moment', 'ember-moment/helpers/-base'], function (exports, _ember, _moment, _emberMomentHelpersBase) {
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+;define('ember-moment/helpers/now', ['exports', 'moment', 'ember-moment/helpers/-base'], function (exports, _moment, _base) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     compute: function compute() {
       this._super.apply(this, arguments);
 
       var momentService = this.get('moment');
 
-      return momentService.moment(_moment['default'].now());
+      return momentService.moment(_moment.default.now());
     }
   });
 });
-;define('ember-moment/helpers/unix', ['exports', 'ember', 'moment', 'ember-moment/helpers/-base'], function (exports, _ember, _moment, _emberMomentHelpersBase) {
-  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+;define('ember-moment/helpers/unix', ['exports', 'moment', 'ember-moment/helpers/-base'], function (exports, _moment, _base) {
+  'use strict';
 
-  exports['default'] = _emberMomentHelpersBase['default'].extend({
-    moment: _ember['default'].inject.service(),
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  exports.default = _base.default.extend({
+    moment: Ember.inject.service(),
 
     compute: function compute(_ref) {
-      var _ref2 = _slicedToArray(_ref, 1);
-
-      var unixTimeStamp = _ref2[0];
+      var _ref2 = _slicedToArray(_ref, 1),
+          unixTimeStamp = _ref2[0];
 
       this._super.apply(this, arguments);
 
       var momentService = this.get('moment');
-      return momentService.moment(_moment['default'].unix(unixTimeStamp));
+      return momentService.moment(_moment.default.unix(unixTimeStamp));
     }
   });
 });
-;define('ember-moment/services/moment', ['exports', 'ember', 'moment'], function (exports, _ember, _moment2) {
-  var computed = _ember['default'].computed;
-  var _get = _ember['default'].get;
-  var getProperties = _ember['default'].getProperties;
-  var _set = _ember['default'].set;
-  var logger = _ember['default'].Logger;
-  exports['default'] = _ember['default'].Service.extend(_ember['default'].Evented, {
+;define('ember-moment/services/moment', ['exports', 'moment'], function (exports, _moment2) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = Ember.computed,
+      _get = Ember.get,
+      getProperties = Ember.getProperties,
+      _set = Ember.set,
+      setProperties = Ember.setProperties,
+      logger = Ember.Logger;
+  exports.default = Ember.Service.extend(Ember.Evented, {
     _timeZone: null,
 
     locale: null,
+    localeOptions: {},
     defaultFormat: null,
 
     timeZone: computed('_timeZone', {
       get: function get() {
         return _get(this, '_timeZone');
       },
-
       set: function set(propertyKey, timeZone) {
-        if (!_moment2['default'].tz) {
+        if (!_moment2.default.tz) {
           logger.warn('[ember-moment] attempted to set timezone, but moment-timezone is not setup.');
           return;
         }
@@ -86700,33 +87513,37 @@ window.matchMedia || (window.matchMedia = function() {
     setLocale: function setLocale(locale) {
       this.changeLocale(locale);
     },
+    updateLocale: function updateLocale(locale) {
+      var localeOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+      this.changeLocale(locale, localeOptions);
+    },
     changeLocale: function changeLocale(locale) {
-      _set(this, 'locale', locale);
-      _moment2['default'].locale(locale);
+      var localeOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      setProperties(this, {
+        locale: locale,
+        localeOptions: localeOptions
+      });
+      _moment2.default.updateLocale(locale, localeOptions);
       this.trigger('localeChanged', locale);
     },
-
     setTimeZone: function setTimeZone(timeZone) {
       this.changeTimeZone(timeZone);
     },
-
     changeTimeZone: function changeTimeZone(timeZone) {
       _set(this, 'timeZone', timeZone);
       this.trigger('timeZoneChanged', timeZone);
     },
-
     isMoment: function isMoment(obj) {
-      return _moment2['default'].isMoment(obj);
+      return _moment2.default.isMoment(obj);
     },
-
     moment: function moment() {
-      var momentObj = _moment2['default'].apply(undefined, arguments);
+      var momentObj = _moment2.default.apply(undefined, arguments);
 
-      var _getProperties = getProperties(this, 'locale', 'timeZone');
-
-      var locale = _getProperties.locale;
-      var timeZone = _getProperties.timeZone;
+      var _getProperties = getProperties(this, 'locale', 'timeZone'),
+          locale = _getProperties.locale,
+          timeZone = _getProperties.timeZone;
 
       if (locale && momentObj.locale) {
         momentObj = momentObj.locale(locale);
@@ -86740,27 +87557,14 @@ window.matchMedia || (window.matchMedia = function() {
     }
   });
 });
-;define('ember-moment/utils/get-owner', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-moment/utils/helper-compute', ['exports'], function (exports) {
+  'use strict';
 
-  var getOwner = _ember['default'].getOwner;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-  if (!getOwner) {
-    try {
-      getOwner = require('ember-getowner-polyfill')['default'];
-    } catch (e) {
-      _ember['default'].Logger.warn('Ember.getOwner API unsupported.  To resolve this: `ember install ember-getowner-polyfill`');
-    }
-  }
-
-  exports['default'] = getOwner;
-});
-/* globals require */
-;define('ember-moment/utils/helper-compute', ['exports', 'ember'], function (exports, _ember) {
-  var isBlank = _ember['default'].isBlank;
-  var get = _ember['default'].get;
-  var warn = _ember['default'].Logger.warn;
-
-  exports['default'] = function (cb) {
+  exports.default = function (cb) {
     return function (params, hash) {
       if (!params || params && params.length === 0) {
         throw new TypeError('ember-moment: Invalid Number of arguments, expected at least 1');
@@ -86785,6 +87589,10 @@ window.matchMedia || (window.matchMedia = function() {
       return cb.apply(this, arguments);
     };
   };
+
+  var isBlank = Ember.isBlank,
+      get = Ember.get,
+      warn = Ember.Logger.warn;
 });
 ;/*
  * This is a stub file, it must be on disk b/c babel-plugin-debug-macros
@@ -86820,13 +87628,13 @@ define("ember-resolver/features", [], function () {
     }
   });
 });
-;define('ember-resolver/resolvers/classic/container-debug-adapter', ['exports', 'ember', 'ember-resolver/resolvers/classic/index'], function (exports, _ember, _index) {
+;define('ember-resolver/resolvers/classic/container-debug-adapter', ['exports', 'ember-resolver/resolvers/classic/index'], function (exports, _index) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var ContainerDebugAdapter = _ember.default.ContainerDebugAdapter;
+  var ContainerDebugAdapter = Ember.ContainerDebugAdapter;
 
 
   function getPod(type, key, prefix) {
@@ -86892,7 +87700,7 @@ define("ember-resolver/features", [], function () {
         */
     catalogEntriesByType: function catalogEntriesByType(type) {
       var moduleNames = this._moduleRegistry.moduleNames();
-      var types = _ember.default.A();
+      var types = Ember.A();
 
       var prefix = this.namespace.modulePrefix;
 
@@ -86923,7 +87731,7 @@ define("ember-resolver/features", [], function () {
     }
   });
 });
-;define('ember-resolver/resolvers/classic/index', ['exports', 'ember', 'ember-resolver/utils/class-factory', 'ember-resolver/utils/make-dictionary'], function (exports, _ember, _classFactory, _makeDictionary) {
+;define('ember-resolver/resolvers/classic/index', ['exports', 'ember-resolver/utils/class-factory', 'ember-resolver/utils/make-dictionary'], function (exports, _classFactory, _makeDictionary) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -86963,12 +87771,12 @@ define("ember-resolver/features", [], function () {
     return ModuleRegistry;
   }();
 
-  var _Ember$String = _ember.default.String,
+  var _Ember$String = Ember.String,
       underscore = _Ember$String.underscore,
       classify = _Ember$String.classify,
       dasherize = _Ember$String.dasherize;
-  var get = _ember.default.get,
-      DefaultResolver = _ember.default.DefaultResolver;
+  var get = Ember.get,
+      DefaultResolver = Ember.DefaultResolver;
 
 
   function parseName(fullName) {
@@ -87000,6 +87808,11 @@ define("ember-resolver/features", [], function () {
         type = nameParts[0];
         name = nameParts[1];
       }
+
+      if (type === 'template' && prefix.lastIndexOf('components/', 0) === 0) {
+        name = 'components/' + name;
+        prefix = prefix.slice(11);
+      }
     } else {
       fullNameParts = fullName.split(':');
       type = fullNameParts[0];
@@ -87025,7 +87838,7 @@ define("ember-resolver/features", [], function () {
   function resolveOther(parsedName) {
     /*jshint validthis:true */
 
-    _ember.default.assert('`modulePrefix` must be defined', this.namespace.modulePrefix);
+    Ember.assert('`modulePrefix` must be defined', this.namespace.modulePrefix);
 
     var normalizedModuleName = this.findModuleName(parsedName);
 
@@ -87140,7 +87953,7 @@ define("ember-resolver/features", [], function () {
       if (this._moduleRegistry.has(engineRoutesModule)) {
         var routeMap = this._extractDefaultExport(engineRoutesModule);
 
-        _ember.default.assert('The route map for ' + engineName + ' should be wrapped by \'buildRoutes\' before exporting.', routeMap.isRouteMap);
+        Ember.assert('The route map for ' + engineName + ' should be wrapped by \'buildRoutes\' before exporting.', routeMap.isRouteMap);
 
         return routeMap;
       }
@@ -87174,7 +87987,7 @@ define("ember-resolver/features", [], function () {
       @property moduleNameLookupPatterns
      @returns {Ember.Array}
      */
-    moduleNameLookupPatterns: _ember.default.computed(function () {
+    moduleNameLookupPatterns: Ember.computed(function () {
       return [this.podBasedModuleName, this.podBasedComponentsInSubdir, this.mainModuleName, this.defaultModuleName];
     }).readOnly(),
 
@@ -87225,19 +88038,19 @@ define("ember-resolver/features", [], function () {
       var partializedModuleName = moduleName.replace(/\/-([^\/]*)$/, '/_$1');
 
       if (this._moduleRegistry.has(partializedModuleName)) {
-        _ember.default.deprecate('Modules should not contain underscores. ' + 'Attempted to lookup "' + moduleName + '" which ' + 'was not found. Please rename "' + partializedModuleName + '" ' + 'to "' + moduleName + '" instead.', false, { id: 'ember-resolver.underscored-modules', until: '3.0.0' });
+        Ember.deprecate('Modules should not contain underscores. ' + 'Attempted to lookup "' + moduleName + '" which ' + 'was not found. Please rename "' + partializedModuleName + '" ' + 'to "' + moduleName + '" instead.', false, { id: 'ember-resolver.underscored-modules', until: '3.0.0' });
 
         return partializedModuleName;
       }
 
-      _ember.default.runInDebug(function () {
+      Ember.runInDebug(function () {
         var isCamelCaseHelper = parsedName.type === 'helper' && /[a-z]+[A-Z]+/.test(moduleName);
         if (isCamelCaseHelper) {
           _this._camelCaseHelperWarnedNames = _this._camelCaseHelperWarnedNames || [];
           var alreadyWarned = _this._camelCaseHelperWarnedNames.indexOf(parsedName.fullName) > -1;
           if (!alreadyWarned && _this._moduleRegistry.has(dasherize(moduleName))) {
             _this._camelCaseHelperWarnedNames.push(parsedName.fullName);
-            _ember.default.warn('Attempted to lookup "' + parsedName.fullName + '" which ' + 'was not found. In previous versions of ember-resolver, a bug would have ' + 'caused the module at "' + dasherize(moduleName) + '" to be ' + 'returned for this camel case helper name. This has been fixed. ' + 'Use the dasherized name to resolve the module that would have been ' + 'returned in previous versions.', false, { id: 'ember-resolver.camelcase-helper-names', until: '3.0.0' });
+            Ember.warn('Attempted to lookup "' + parsedName.fullName + '" which ' + 'was not found. In previous versions of ember-resolver, a bug would have ' + 'caused the module at "' + dasherize(moduleName) + '" to be ' + 'returned for this camel case helper name. This has been fixed. ' + 'Use the dasherized name to resolve the module that would have been ' + 'returned in previous versions.', false, { id: 'ember-resolver.camelcase-helper-names', until: '3.0.0' });
           }
         }
       });
@@ -87250,7 +88063,7 @@ define("ember-resolver/features", [], function () {
       return moduleName;
     },
     _logLookup: function _logLookup(found, parsedName, description) {
-      if (!_ember.default.ENV.LOG_MODULE_RESOLVER && !parsedName.root.LOG_RESOLVER) {
+      if (!Ember.ENV.LOG_MODULE_RESOLVER && !parsedName.root.LOG_RESOLVER) {
         return;
       }
 
@@ -87267,7 +88080,7 @@ define("ember-resolver/features", [], function () {
         description = this.lookupDescription(parsedName);
       }
 
-      _ember.default.Logger.info(symbol, parsedName.fullName, padding, description);
+      Ember.Logger.info(symbol, parsedName.fullName, padding, description);
     },
     knownForType: function knownForType(type) {
       var moduleKeys = this._moduleRegistry.moduleNames();
@@ -87489,7 +88302,7 @@ define("ember-resolver/features", [], function () {
 
   exports['default'] = _ember['default'].WeakMap ? _ember['default'].WeakMap : WeakMap;
 });
-;define('ember-welcome-page/components/welcome-page', ['exports', 'ember', 'ember-welcome-page/templates/components/welcome-page'], function (exports, _ember, _welcomePage) {
+;define('ember-welcome-page/components/welcome-page', ['exports', 'ember-welcome-page/templates/components/welcome-page'], function (exports, _welcomePage) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -87534,11 +88347,11 @@ define("ember-resolver/features", [], function () {
     };
   }();
 
-  exports.default = _ember.default.Component.extend({
+  exports.default = Ember.Component.extend({
     layout: _welcomePage.default,
 
-    emberVersion: _ember.default.computed(function () {
-      var _Ember$VERSION$split = _ember.default.VERSION.split("."),
+    emberVersion: Ember.computed(function () {
+      var _Ember$VERSION$split = Ember.VERSION.split("."),
           _Ember$VERSION$split2 = _slicedToArray(_Ember$VERSION$split, 2),
           major = _Ember$VERSION$split2[0],
           minor = _Ember$VERSION$split2[1];
@@ -87553,16 +88366,16 @@ define("ember-resolver/features", [], function () {
   exports.__esModule = true;
   exports.default = Ember.HTMLBars.template({ "id": "t1+kJFex", "block": "{\"statements\":[[11,\"div\",[]],[15,\"id\",\"ember-welcome-page-id-selector\"],[16,\"data-ember-version\",[34,[[26,[\"emberVersion\"]]]]],[13],[0,\"\\n  \"],[11,\"div\",[]],[15,\"class\",\"columns\"],[13],[0,\"\\n    \"],[11,\"div\",[]],[15,\"class\",\"tomster\"],[13],[0,\"\\n      \"],[11,\"img\",[]],[15,\"src\",\"ember-welcome-page/images/construction.png\"],[15,\"alt\",\"Under construction\"],[13],[14],[0,\"\\n    \"],[14],[0,\"\\n    \"],[11,\"div\",[]],[15,\"class\",\"welcome\"],[13],[0,\"\\n      \"],[11,\"h2\",[]],[15,\"id\",\"title\"],[13],[0,\"Congratulations, you made it!\"],[14],[0,\"\\n\\n      \"],[11,\"p\",[]],[13],[0,\"You’ve officially spun up your very first Ember app :-)\"],[14],[0,\"\\n      \"],[11,\"p\",[]],[13],[0,\"You’ve got one more decision to make: what do you want to do next? We’d suggest one of the following to help you get going:\"],[14],[0,\"\\n      \"],[11,\"ol\",[]],[13],[0,\"\\n        \"],[11,\"li\",[]],[13],[11,\"a\",[]],[16,\"href\",[34,[\"https://guides.emberjs.com/v\",[26,[\"emberVersion\"]],\"/getting-started/quick-start/\"]]],[13],[0,\"Quick Start\"],[14],[0,\" - a quick introduction to how Ember works. Learn about defining your first route, writing a UI component and deploying your application.\"],[14],[0,\"\\n        \"],[11,\"li\",[]],[13],[11,\"a\",[]],[16,\"href\",[34,[\"https://guides.emberjs.com/v\",[26,[\"emberVersion\"]],\"/tutorial/ember-cli/\"]]],[13],[0,\"Ember Guides\"],[14],[0,\" - this is our more thorough, hands-on intro to Ember. Your crash course in Ember philosophy, background and some in-depth discussion of how things work (and why they work the way they do).\"],[14],[0,\"\\n      \"],[14],[0,\"\\n      \"],[11,\"p\",[]],[13],[0,\"If you run into problems, you can check \"],[11,\"a\",[]],[15,\"href\",\"http://stackoverflow.com/questions/tagged/ember.js\"],[13],[0,\"Stack Overflow\"],[14],[0,\" or \"],[11,\"a\",[]],[15,\"href\",\"http://discuss.emberjs.com/\"],[13],[0,\"our forums\"],[14],[0,\"  for ideas and answers—someone’s probably been through the same thing and already posted an answer.  If not, you can post your \"],[11,\"strong\",[]],[13],[0,\"own\"],[14],[0,\" question. People love to help new Ember developers get started, and our community is incredibly supportive \"],[14],[0,\"\\n    \"],[14],[0,\"\\n  \"],[14],[0,\"\\n    \"],[11,\"p\",[]],[15,\"class\",\"postscript\"],[13],[0,\"To remove this welcome message, remove the \"],[11,\"code\",[]],[13],[0,\"{{welcome-page}}\"],[14],[0,\" component from your \"],[11,\"code\",[]],[13],[0,\"application.hbs\"],[14],[0,\" file.\"],[11,\"br\",[]],[13],[14],[0,\"You'll see this page update soon after!\"],[14],[0,\"\\n\"],[14],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-welcome-page/templates/components/welcome-page.hbs" } });
 });
-;define('ember-wormhole/components/ember-wormhole', ['exports', 'ember', 'ember-wormhole/templates/components/ember-wormhole', 'ember-wormhole/utils/dom'], function (exports, _ember, _emberWormhole, _dom) {
+;define('ember-wormhole/components/ember-wormhole', ['exports', 'ember-wormhole/templates/components/ember-wormhole', 'ember-wormhole/utils/dom'], function (exports, _emberWormhole, _dom) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var Component = _ember.default.Component,
-      computed = _ember.default.computed,
-      observer = _ember.default.observer,
-      run = _ember.default.run;
+  var Component = Ember.Component,
+      computed = Ember.computed,
+      observer = Ember.observer,
+      run = Ember.run;
   exports.default = Component.extend({
     layout: _emberWormhole.default,
 
@@ -87691,7 +88504,7 @@ define("ember-resolver/features", [], function () {
   exports.__esModule = true;
   exports.default = Ember.HTMLBars.template({ "id": "kfOuAXbY", "block": "{\"statements\":[[1,[33,[\"unbound\"],[[28,[\"_wormholeHeadNode\"]]],null],false],[18,\"default\"],[1,[33,[\"unbound\"],[[28,[\"_wormholeTailNode\"]]],null],false]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-wormhole/templates/components/ember-wormhole.hbs" } });
 });
-;define('ember-wormhole/utils/dom', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-wormhole/utils/dom', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -87701,10 +88514,7 @@ define("ember-resolver/features", [], function () {
   exports.findElementById = findElementById;
   exports.getDOM = getDOM;
 
-  var getOwner = _ember.default.getOwner; /*
-                                           * Implement some helpers methods for interacting with the DOM,
-                                           * be it Fastboot's SimpleDOM or the browser's version.
-                                           */
+  var getOwner = Ember.getOwner;
 
   function getActiveElement() {
     if (typeof document === 'undefined') {
@@ -87838,7 +88648,7 @@ define("ember-resolver/features", [], function () {
 
   exports.default = Action;
 });
-;define("liquid-fire/animate", ["exports", "liquid-fire/promise", "ember", "velocity"], function (exports, _promise, _ember, _velocity) {
+;define("liquid-fire/animate", ["exports", "liquid-fire/promise", "velocity"], function (exports, _promise, _velocity) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -87855,6 +88665,7 @@ define("ember-resolver/features", [], function () {
 
   // Make sure Velocity always has promise support by injecting our own
   // RSVP-based implementation if it doesn't already have one.
+  /* jshint newcap: false */
   if (!_velocity.default.Promise) {
     _velocity.default.Promise = _promise.default;
   }
@@ -87863,7 +88674,6 @@ define("ember-resolver/features", [], function () {
   // is under high stress the RAF timestamp may have a significant offset which
   // can result in dropping a large chunk of frames. Because of this, the use of
   // the RAF timestamp should be opt-in.
-  /* jshint newcap: false */
   _velocity.default.timestamp = false;
 
   function animate(elt, props, opts, label) {
@@ -87879,7 +88689,7 @@ define("ember-resolver/features", [], function () {
     if (!opts) {
       opts = {};
     } else {
-      opts = _ember.default.copy(opts);
+      opts = Ember.copy(opts);
     }
 
     // By default, we ask velocity to clear the element's `display`
@@ -87972,18 +88782,18 @@ define("ember-resolver/features", [], function () {
     }
   }
 });
-;define('liquid-fire/components/-lf-get-outlet-state', ['exports', 'ember', 'liquid-fire/ember-internals'], function (exports, _ember, _emberInternals) {
+;define('liquid-fire/components/-lf-get-outlet-state', ['exports', 'liquid-fire/ember-internals'], function (exports, _emberInternals) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  exports.default = Ember.Component.extend({
     tagName: '',
     layout: _emberInternals.getOutletStateTemplate
   });
 });
-;define('liquid-fire/components/illiquid-model', ['exports', 'ember', 'liquid-fire/templates/components/illiquid-model'], function (exports, _ember, _illiquidModel) {
+;define('liquid-fire/components/illiquid-model', ['exports', 'liquid-fire/templates/components/illiquid-model'], function (exports, _illiquidModel) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -87991,7 +88801,7 @@ define("ember-resolver/features", [], function () {
   });
 
 
-  var IlliquidModel = _ember.default.Component.extend({
+  var IlliquidModel = Ember.Component.extend({
     layout: _illiquidModel.default,
     tagName: '',
     didReceiveAttrs: function didReceiveAttrs() {
@@ -88007,7 +88817,7 @@ define("ember-resolver/features", [], function () {
 
   exports.default = IlliquidModel;
 });
-;define('liquid-fire/components/liquid-bind', ['exports', 'ember', 'liquid-fire/templates/components/liquid-bind'], function (exports, _ember, _liquidBind) {
+;define('liquid-fire/components/liquid-bind', ['exports', 'liquid-fire/templates/components/liquid-bind'], function (exports, _liquidBind) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -88015,11 +88825,11 @@ define("ember-resolver/features", [], function () {
   });
 
 
-  var LiquidBind = _ember.default.Component.extend({
+  var LiquidBind = Ember.Component.extend({
     layout: _liquidBind.default,
     tagName: '',
     positionalParams: ['value'], // needed for Ember 1.13.[0-5] and 2.0.0-beta.[1-3] support
-    forwardMatchContext: _ember.default.computed('matchContext', function () {
+    forwardMatchContext: Ember.computed('matchContext', function () {
       var m = this.get('matchContext');
       if (!m) {
         m = {};
@@ -88037,13 +88847,13 @@ define("ember-resolver/features", [], function () {
 
   exports.default = LiquidBind;
 });
-;define('liquid-fire/components/liquid-child', ['exports', 'ember'], function (exports, _ember) {
+;define('liquid-fire/components/liquid-child', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend({
+  exports.default = Ember.Component.extend({
     classNames: ['liquid-child'],
 
     init: function init() {
@@ -88082,7 +88892,7 @@ define("ember-resolver/features", [], function () {
 
       var promises = this._waitingFor;
       this._waitingFor = [];
-      return _ember.default.RSVP.Promise.all(promises).then(function () {
+      return Ember.RSVP.Promise.all(promises).then(function () {
         if (_this2._waitingFor.length > 0) {
           return _this2._waitForAll();
         }
@@ -88090,13 +88900,13 @@ define("ember-resolver/features", [], function () {
     }
   });
 });
-;define("liquid-fire/components/liquid-container", ["exports", "ember", "liquid-fire/growable", "liquid-fire/components/liquid-measured", "liquid-fire/templates/components/liquid-container"], function (exports, _ember, _growable, _liquidMeasured, _liquidContainer) {
+;define("liquid-fire/components/liquid-container", ["exports", "liquid-fire/growable", "liquid-fire/components/liquid-measured", "liquid-fire/templates/components/liquid-container"], function (exports, _growable, _liquidMeasured, _liquidContainer) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend(_growable.default, {
+  exports.default = Ember.Component.extend(_growable.default, {
     layout: _liquidContainer.default,
     classNames: ['liquid-container'],
 
@@ -88137,7 +88947,7 @@ define("ember-resolver/features", [], function () {
     },
 
 
-    startMonitoringSize: _ember.default.on('didInsertElement', function () {
+    startMonitoringSize: Ember.on('didInsertElement', function () {
       this._wasInserted = true;
     }),
 
@@ -88234,7 +89044,7 @@ define("ember-resolver/features", [], function () {
     }
   }
 });
-;define('liquid-fire/components/liquid-if', ['exports', 'ember', 'liquid-fire/templates/components/liquid-if'], function (exports, _ember, _liquidIf) {
+;define('liquid-fire/components/liquid-if', ['exports', 'liquid-fire/templates/components/liquid-if'], function (exports, _liquidIf) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -88242,7 +89052,7 @@ define("ember-resolver/features", [], function () {
   });
 
 
-  var LiquidIf = _ember.default.Component.extend({
+  var LiquidIf = Ember.Component.extend({
     positionalParams: ['predicate'], // needed for Ember 1.13.[0-5] and 2.0.0-beta.[1-3] support
     layout: _liquidIf.default,
     tagName: '',
@@ -88255,14 +89065,14 @@ define("ember-resolver/features", [], function () {
 
   exports.default = LiquidIf;
 });
-;define("liquid-fire/components/liquid-measured", ["exports", "liquid-fire/mutation-observer", "ember", "liquid-fire/templates/components/liquid-measured"], function (exports, _mutationObserver, _ember, _liquidMeasured) {
+;define("liquid-fire/components/liquid-measured", ["exports", "liquid-fire/mutation-observer", "liquid-fire/templates/components/liquid-measured"], function (exports, _mutationObserver, _liquidMeasured) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.measure = measure;
-  exports.default = _ember.default.Component.extend({
+  exports.default = Ember.Component.extend({
     layout: _liquidMeasured.default,
 
     init: function init() {
@@ -88304,7 +89114,7 @@ define("ember-resolver/features", [], function () {
       window.removeEventListener('unload', this._destroyOnUnload);
     },
 
-    transitionMap: _ember.default.inject.service('liquid-fire-transitions'),
+    transitionMap: Ember.inject.service('liquid-fire-transitions'),
 
     didMutate: function didMutate() {
       // by incrementing the running transitions counter here we prevent
@@ -88313,7 +89123,7 @@ define("ember-resolver/features", [], function () {
       // response.
       var tmap = this.get('transitionMap');
       tmap.incrementRunningTransitions();
-      _ember.default.run.next(this, function () {
+      Ember.run.next(this, function () {
         this._didMutate();
         tmap.decrementRunningTransitions();
       });
@@ -88335,7 +89145,7 @@ define("ember-resolver/features", [], function () {
     return $elt[0].getBoundingClientRect();
   }
 });
-;define('liquid-fire/components/liquid-outlet', ['exports', 'ember', 'liquid-fire/templates/components/liquid-outlet', 'liquid-fire/ember-internals'], function (exports, _ember, _liquidOutlet, _emberInternals) {
+;define('liquid-fire/components/liquid-outlet', ['exports', 'liquid-fire/templates/components/liquid-outlet', 'liquid-fire/ember-internals'], function (exports, _liquidOutlet, _emberInternals) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -88343,11 +89153,11 @@ define("ember-resolver/features", [], function () {
   });
 
 
-  var LiquidOutlet = _ember.default.Component.extend({
+  var LiquidOutlet = Ember.Component.extend({
     layout: _liquidOutlet.default,
     positionalParams: ['inputOutletName'], // needed for Ember 1.13.[0-5] and 2.0.0-beta.[1-3] support
     tagName: '',
-    versionEquality: _ember.default.computed('outletName', 'watchModels', function () {
+    versionEquality: Ember.computed('outletName', 'watchModels', function () {
       var outletName = this.get('outletName');
       var watchModels = this.get('watchModels');
       return function (oldValue, newValue) {
@@ -88368,13 +89178,13 @@ define("ember-resolver/features", [], function () {
 
   exports.default = LiquidOutlet;
 });
-;define("liquid-fire/components/liquid-spacer", ["exports", "liquid-fire/components/liquid-measured", "liquid-fire/growable", "ember", "liquid-fire/templates/components/liquid-spacer"], function (exports, _liquidMeasured, _growable, _ember, _liquidSpacer) {
+;define("liquid-fire/components/liquid-spacer", ["exports", "liquid-fire/components/liquid-measured", "liquid-fire/growable", "liquid-fire/templates/components/liquid-spacer"], function (exports, _liquidMeasured, _growable, _liquidSpacer) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend(_growable.default, {
+  exports.default = Ember.Component.extend(_growable.default, {
     layout: _liquidSpacer.default,
     enabled: true,
 
@@ -88391,7 +89201,7 @@ define("ember-resolver/features", [], function () {
       }
     },
 
-    sizeChange: _ember.default.observer('measurements', function () {
+    sizeChange: Ember.observer('measurements', function () {
       if (!this.get('enabled')) {
         return;
       }
@@ -88443,13 +89253,13 @@ define("ember-resolver/features", [], function () {
     return accum;
   }
 });
-;define('liquid-fire/components/liquid-sync', ['exports', 'ember', 'liquid-fire/templates/components/liquid-sync', 'liquid-fire/mixins/pausable'], function (exports, _ember, _liquidSync, _pausable) {
+;define('liquid-fire/components/liquid-sync', ['exports', 'liquid-fire/templates/components/liquid-sync', 'liquid-fire/mixins/pausable'], function (exports, _liquidSync, _pausable) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Component.extend(_pausable.default, {
+  exports.default = Ember.Component.extend(_pausable.default, {
     tagName: '',
     layout: _liquidSync.default,
     didInsertElement: function didInsertElement() {
@@ -88474,7 +89284,7 @@ define("ember-resolver/features", [], function () {
     inverted: true
   });
 });
-;define("liquid-fire/components/liquid-versions", ["exports", "ember", "liquid-fire/ember-internals", "liquid-fire/templates/components/liquid-versions"], function (exports, _ember, _emberInternals, _liquidVersions) {
+;define("liquid-fire/components/liquid-versions", ["exports", "liquid-fire/ember-internals", "liquid-fire/templates/components/liquid-versions"], function (exports, _emberInternals, _liquidVersions) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -88482,14 +89292,14 @@ define("ember-resolver/features", [], function () {
   });
 
 
-  var get = _ember.default.get;
-  var set = _ember.default.set;
+  var get = Ember.get;
+  var set = Ember.set;
 
-  exports.default = _ember.default.Component.extend({
+  exports.default = Ember.Component.extend({
     layout: _liquidVersions.default,
     tagName: "",
 
-    transitionMap: _ember.default.inject.service('liquid-fire-transitions'),
+    transitionMap: Ember.inject.service('liquid-fire-transitions'),
 
     didReceiveAttrs: function didReceiveAttrs() {
       this._super.apply(this, arguments);
@@ -88504,7 +89314,7 @@ define("ember-resolver/features", [], function () {
 
       if (!versions) {
         firstTime = true;
-        versions = _ember.default.A();
+        versions = Ember.A();
       } else {
         if (versions[0]) {
           oldValue = versions[0].value;
@@ -88517,7 +89327,7 @@ define("ember-resolver/features", [], function () {
           // equal for our purposes that are not `===`. In that case, we
           // still need to thread updated values through to our children
           // so they have their own opportunity to react.
-          _ember.default.set(versions[0], 'value', newValue);
+          Ember.set(versions[0], 'value', newValue);
         }
         return;
       }
@@ -88551,7 +89361,7 @@ define("ember-resolver/features", [], function () {
 
       transition = get(this, 'transitionMap').transitionFor({
         versions: versions,
-        parentElement: _ember.default.$((0, _emberInternals.containingElement)(this)),
+        parentElement: Ember.$((0, _emberInternals.containingElement)(this)),
         use: get(this, 'use'),
         rules: get(this, 'rules'),
         matchContext: get(this, 'matchContext') || {},
@@ -88682,7 +89492,7 @@ define("ember-resolver/features", [], function () {
     return versions[index] ? versions[index].value : null;
   }
 });
-;define("liquid-fire/constraint", ["exports", "ember", "liquid-fire/constrainables"], function (exports, _ember, _constrainables) {
+;define("liquid-fire/constraint", ["exports", "liquid-fire/constrainables"], function (exports, _constrainables) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -88763,19 +89573,19 @@ define("ember-resolver/features", [], function () {
   function constraintKeys(matcher) {
     if (typeof matcher === 'undefined' || matcher === null) {
       matcher = [EMPTY];
-    } else if (!_ember.default.isArray(matcher)) {
+    } else if (!Ember.isArray(matcher)) {
       matcher = [matcher];
     }
-    return _ember.default.A(matcher).map(function (elt) {
+    return Ember.A(matcher).map(function (elt) {
       if (typeof elt === 'string') {
         return elt;
       } else {
-        return _ember.default.guidFor(elt);
+        return Ember.guidFor(elt);
       }
     });
   }
 });
-;define('liquid-fire/constraints', ['exports', 'ember', 'liquid-fire/constraint', 'liquid-fire/constrainables'], function (exports, _ember, _constraint, _constrainables) {
+;define('liquid-fire/constraints', ['exports', 'liquid-fire/constraint', 'liquid-fire/constrainables'], function (exports, _constraint, _constrainables) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -88882,7 +89692,7 @@ define("ember-resolver/features", [], function () {
         if (!context[key]) {
           context[key] = {};
         }
-        context[key][_ember.default.guidFor(rule)] = rule;
+        context[key][Ember.guidFor(rule)] = rule;
       }
     }, {
       key: 'bestMatch',
@@ -88929,7 +89739,7 @@ define("ember-resolver/features", [], function () {
       value: function matchingSet(prop, value) {
         var keys = (0, _constraint.constraintKeys)(value);
         var context = this.targets[prop];
-        var matched = _ember.default.A();
+        var matched = Ember.A();
         for (var i = 0; i < keys.length; i++) {
           if (context[keys[i]]) {
             matched.push(context[keys[i]]);
@@ -88950,11 +89760,11 @@ define("ember-resolver/features", [], function () {
     }, {
       key: 'logDebugRules',
       value: function logDebugRules(matched, context, target, value) {
-        _ember.default.A(Object.keys(context)).forEach(function (setKey) {
+        Ember.A(Object.keys(context)).forEach(function (setKey) {
           var set = context[setKey];
-          _ember.default.A(Object.keys(set)).forEach(function (ruleKey) {
+          Ember.A(Object.keys(set)).forEach(function (ruleKey) {
             var rule = set[ruleKey];
-            if (rule.debug && !matched[_ember.default.guidFor(rule)]) {
+            if (rule.debug && !matched[Ember.guidFor(rule)]) {
               var _console;
 
               (_console = console).log.apply(_console, [describeRule(rule) + ' rejected because ' + target + ' was'].concat(_toConsumableArray(value)));
@@ -89081,7 +89891,7 @@ define("ember-resolver/features", [], function () {
     return best;
   }
 
-  var constrainableKeys = _ember.default.A(Object.keys(_constrainables.default));
+  var constrainableKeys = Ember.A(Object.keys(_constrainables.default));
 });
 ;define("liquid-fire/dsl", ["exports", "liquid-fire/animate", "liquid-fire/rule", "liquid-fire/constraint", "liquid-fire/action"], function (exports, _animate, _rule, _constraint, _action) {
   "use strict";
@@ -89333,7 +90143,7 @@ define("ember-resolver/features", [], function () {
     }
   });
 });
-;define('liquid-fire/ember-internals/common', ['exports', 'ember'], function (exports, _ember) {
+;define('liquid-fire/ember-internals/common', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -89376,7 +90186,7 @@ define("ember-resolver/features", [], function () {
       var r = void 0,
           c = void 0;
       if ((r = routeInfo.render) && (c = r.controller)) {
-        routeInfo._lf_model = _ember.default.get(c, 'model');
+        routeInfo._lf_model = Ember.get(c, 'model');
       } else {
         routeInfo._lf_model = null;
       }
@@ -89408,13 +90218,12 @@ define("ember-resolver/features", [], function () {
     return oldModel[0] === newModel[0];
   }
 });
-;define('liquid-fire/ember-internals/version-specific/index', ['exports', 'liquid-fire/templates/version-specific/get-outlet-state', 'ember'], function (exports, _getOutletState, _ember) {
+;define('liquid-fire/ember-internals/version-specific/index', ['exports', 'liquid-fire/templates/version-specific/get-outlet-state'], function (exports, _getOutletState) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.getOutletStateTemplate = undefined;
   exports.initialize = initialize;
   exports.containingElement = containingElement;
   Object.defineProperty(exports, 'getOutletStateTemplate', {
@@ -89423,22 +90232,23 @@ define("ember-resolver/features", [], function () {
       return _getOutletState.default;
     }
   });
-  var getViewBounds = _ember.default.ViewUtils.getViewBounds;
+  var getViewBounds = Ember.ViewUtils.getViewBounds;
   function initialize() {}
 
   function containingElement(view) {
     return getViewBounds(view).parentElement;
   }
 });
-;define("liquid-fire/growable", ["exports", "ember", "liquid-fire/promise", "velocity"], function (exports, _ember, _promise, _velocity) {
+;define("liquid-fire/growable", ["exports", "liquid-fire/promise", "velocity"], function (exports, _promise, _velocity) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  var capitalize = _ember.default.String.capitalize; /* jshint newcap: false */
-  exports.default = _ember.default.Mixin.create({
+  var capitalize = Ember.String.capitalize;
+
+  exports.default = Ember.Mixin.create({
     growDuration: 250,
     growPixelsPerSecond: 200,
     growEasing: 'slide',
@@ -89447,7 +90257,7 @@ define("ember-resolver/features", [], function () {
     growWidth: true,
     growHeight: true,
 
-    transitionMap: _ember.default.inject.service('liquid-fire-transitions'),
+    transitionMap: Ember.inject.service('liquid-fire-transitions'),
 
     animateGrowth: function animateGrowth(elt, have, want) {
       var _this = this;
@@ -89496,7 +90306,7 @@ define("ember-resolver/features", [], function () {
 
   });
 });
-;define('liquid-fire/helpers/lf-lock-model', ['exports', 'ember', 'liquid-fire/ember-internals'], function (exports, _ember, _emberInternals) {
+;define('liquid-fire/helpers/lf-lock-model', ['exports', 'liquid-fire/ember-internals'], function (exports, _emberInternals) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -89552,9 +90362,9 @@ define("ember-resolver/features", [], function () {
     return routeInfo;
   }
 
-  exports.default = _ember.default.Helper.helper(lfLockModel);
+  exports.default = Ember.Helper.helper(lfLockModel);
 });
-;define('liquid-fire/helpers/lf-or', ['exports', 'ember'], function (exports, _ember) {
+;define('liquid-fire/helpers/lf-or', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -89567,7 +90377,7 @@ define("ember-resolver/features", [], function () {
     }, false);
   }
 
-  exports.default = _ember.default.Helper.helper(lfOr);
+  exports.default = Ember.Helper.helper(lfOr);
 });
 ;define("liquid-fire/index", ["exports", "liquid-fire/mixins/pausable", "liquid-fire/transition-map", "liquid-fire/animate", "liquid-fire/promise", "liquid-fire/mutation-observer", "liquid-fire/velocity-ext"], function (exports, _pausable, _transitionMap, _animate, _promise, _mutationObserver) {
          "use strict";
@@ -89603,22 +90413,22 @@ define("ember-resolver/features", [], function () {
     return typeof window !== 'undefined' && window && typeof document !== 'undefined' && document;
   }
 });
-;define('liquid-fire/mixins/pausable', ['exports', 'ember'], function (exports, _ember) {
+;define('liquid-fire/mixins/pausable', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Mixin.create({
-    _transitionMap: _ember.default.inject.service('liquid-fire-transitions'),
+  exports.default = Ember.Mixin.create({
+    _transitionMap: Ember.inject.service('liquid-fire-transitions'),
 
-    _initializeLiquidFirePauseable: _ember.default.on('init', function () {
+    _initializeLiquidFirePauseable: Ember.on('init', function () {
       this._lfDefer = [];
     }),
     pauseLiquidFire: function pauseLiquidFire() {
       var context = this.nearestWithProperty('_isLiquidChild');
       if (context) {
-        var defer = new _ember.default.RSVP.defer();
+        var defer = new Ember.RSVP.defer();
         var tmap = this.get('_transitionMap');
         tmap.incrementRunningTransitions();
         defer.promise.finally(function () {
@@ -89629,7 +90439,7 @@ define("ember-resolver/features", [], function () {
       }
     },
 
-    resumeLiquidFire: _ember.default.on('willDestroyElement', function () {
+    resumeLiquidFire: Ember.on('willDestroyElement', function () {
       var defer = this._lfDefer.pop();
       if (defer) {
         defer.resolve();
@@ -89680,15 +90490,15 @@ define("ember-resolver/features", [], function () {
     }
   }
 });
-;define("liquid-fire/promise", ["exports", "ember"], function (exports, _ember) {
+;define("liquid-fire/promise", ["exports"], function (exports) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.RSVP.Promise;
+  exports.default = Ember.RSVP.Promise;
 });
-;define("liquid-fire/rule", ["exports", "ember", "liquid-fire/action", "liquid-fire/constraint"], function (exports, _ember, _action, _constraint) {
+;define("liquid-fire/rule", ["exports", "liquid-fire/action", "liquid-fire/constraint"], function (exports, _action, _constraint) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -89723,7 +90533,7 @@ define("ember-resolver/features", [], function () {
     function Rule() {
       _classCallCheck(this, Rule);
 
-      this.constraints = _ember.default.A();
+      this.constraints = Ember.A();
       this.use = null;
       this.reverse = null;
     }
@@ -89781,7 +90591,7 @@ define("ember-resolver/features", [], function () {
 
   exports.default = Rule;
 });
-;define('liquid-fire/running-transition', ['exports', 'ember'], function (exports, _ember) {
+;define('liquid-fire/running-transition', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -89900,27 +90710,17 @@ define("ember-resolver/features", [], function () {
       var outputKey = key;
       if (props.hasOwnProperty(key)) {
         if (prefix) {
-          outputKey = prefix + _ember.default.String.capitalize(key);
+          outputKey = prefix + Ember.String.capitalize(key);
         }
         context[outputKey] = props[key];
       }
     }
   }
 });
-;define("liquid-fire/tabbable", ["ember"], function (_ember) {
+;define("liquid-fire/tabbable", [], function () {
   "use strict";
 
-  var $ = _ember.default.$; /*!
-                             * Adapted from jQuery UI core
-                             *
-                             * http://jqueryui.com
-                             *
-                             * Copyright 2014 jQuery Foundation and other contributors
-                             * Released under the MIT license.
-                             * http://jquery.org/license
-                             *
-                             * http://api.jqueryui.com/category/ui-core/
-                             */
+  var $ = Ember.$;
 
   function focusable(element, isTabIndexNotNaN) {
     var nodeName = element.nodeName.toLowerCase();
@@ -90002,7 +90802,7 @@ define("ember-resolver/features", [], function () {
   exports.__esModule = true;
   exports.default = Ember.HTMLBars.template({ "id": "eBB9EhBd", "block": "{\"statements\":[[18,\"default\",[[33,[\"-get-dynamic-var\"],[\"outletState\"],null]]]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "liquid-fire/templates/version-specific/get-outlet-state.hbs" } });
 });
-;define("liquid-fire/transition-map", ["exports", "liquid-fire/running-transition", "liquid-fire/dsl", "ember", "liquid-fire/action", "liquid-fire/constraints"], function (exports, _runningTransition, _dsl, _ember, _action, _constraints) {
+;define("liquid-fire/transition-map", ["exports", "liquid-fire/running-transition", "liquid-fire/dsl", "liquid-fire/action", "liquid-fire/constraints"], function (exports, _runningTransition, _dsl, _action, _constraints) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -90010,13 +90810,13 @@ define("ember-resolver/features", [], function () {
   });
 
 
-  var TransitionMap = _ember.default.Service.extend({
+  var TransitionMap = Ember.Service.extend({
     init: function init() {
       this._super.apply(this, arguments);
 
       this.activeCount = 0;
       this.constraints = new _constraints.default();
-      var owner = _ember.default.getOwner(this);
+      var owner = Ember.getOwner(this);
       var config;
       if (owner.factoryFor) {
         var maybeConfig = owner.factoryFor('transitions:main');
@@ -90027,7 +90827,7 @@ define("ember-resolver/features", [], function () {
       if (config) {
         this.map(config);
       }
-      if (_ember.default.testing) {
+      if (Ember.testing) {
         this._registerWaiter();
       }
     },
@@ -90041,7 +90841,7 @@ define("ember-resolver/features", [], function () {
       var _this = this;
 
       this.activeCount--;
-      _ember.default.run.next(function () {
+      Ember.run.next(function () {
         _this._maybeResolveIdle();
       });
     },
@@ -90051,9 +90851,9 @@ define("ember-resolver/features", [], function () {
       if (this._waitingPromise) {
         return this._waitingPromise;
       }
-      return this._waitingPromise = new _ember.default.RSVP.Promise(function (resolve) {
+      return this._waitingPromise = new Ember.RSVP.Promise(function (resolve) {
         _this2._resolveWaiting = resolve;
-        _ember.default.run.next(function () {
+        Ember.run.next(function () {
           _this2._maybeResolveIdle();
         });
       });
@@ -90067,7 +90867,7 @@ define("ember-resolver/features", [], function () {
       }
     },
     lookup: function lookup(transitionName) {
-      var owner = _ember.default.getOwner(this);
+      var owner = Ember.getOwner(this);
       var handler;
       if (owner.factoryFor) {
         var maybeHandler = owner.factoryFor('transition:' + transitionName);
@@ -90121,11 +90921,11 @@ define("ember-resolver/features", [], function () {
       this._waiter = function () {
         return self.runningTransitions() === 0;
       };
-      _ember.default.Test.registerWaiter(this._waiter);
+      Ember.Test.registerWaiter(this._waiter);
     },
     willDestroy: function willDestroy() {
       if (this._waiter) {
-        _ember.default.Test.unregisterWaiter(this._waiter);
+        Ember.Test.unregisterWaiter(this._waiter);
         this._waiter = null;
       }
     }
@@ -90177,7 +90977,7 @@ define("ember-resolver/features", [], function () {
     return _liquidFire.Promise.resolve();
   }
 });
-;define("liquid-fire/transitions/explode", ["exports", "ember", "liquid-fire"], function (exports, _ember, _liquidFire) {
+;define("liquid-fire/transitions/explode", ["exports", "liquid-fire"], function (exports, _liquidFire) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -90222,7 +91022,7 @@ define("ember-resolver/features", [], function () {
   }
 
   function explodePiece(context, piece, seen) {
-    var childContext = _ember.default.copy(context);
+    var childContext = Ember.copy(context);
     var selectors = [piece.pickOld || piece.pick, piece.pickNew || piece.pick];
     var cleanupOld, cleanupNew;
 
@@ -90251,7 +91051,7 @@ define("ember-resolver/features", [], function () {
     childContext[field] = null;
     if (elt && selector) {
       child = elt.find(selector).filter(function () {
-        var guid = _ember.default.guidFor(this);
+        var guid = Ember.guidFor(this);
         if (!seen[guid]) {
           seen[guid] = true;
           return true;
@@ -90297,7 +91097,7 @@ define("ember-resolver/features", [], function () {
     if (!piece.use) {
       throw new Error("every argument to the 'explode' animation must include a followup animation to 'use'");
     }
-    if (_ember.default.isArray(piece.use)) {
+    if (Ember.isArray(piece.use)) {
       name = piece.use[0];
       args = piece.use.slice(1);
     } else {
@@ -90357,9 +91157,9 @@ define("ember-resolver/features", [], function () {
       };
     }
 
-    var hits = _ember.default.A(context.oldElement.find("[" + piece.matchBy + "]").toArray());
+    var hits = Ember.A(context.oldElement.find("[" + piece.matchBy + "]").toArray());
     return _liquidFire.Promise.all(hits.map(function (elt) {
-      var attrValue = _ember.default.$(elt).attr(piece.matchBy);
+      var attrValue = Ember.$(elt).attr(piece.matchBy);
 
       // if there is no match for a particular item just skip it
       if (attrValue === "" || context.newElement.find(selector(attrValue)).length === 0) {
@@ -90548,7 +91348,7 @@ define("ember-resolver/features", [], function () {
     });
   }
 });
-;define("liquid-fire/transitions/scroll-then", ["exports", "ember", "liquid-fire/is-browser"], function (exports, _ember, _isBrowser) {
+;define("liquid-fire/transitions/scroll-then", ["exports", "liquid-fire/is-browser"], function (exports, _isBrowser) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -90563,7 +91363,7 @@ define("ember-resolver/features", [], function () {
     var _this = this;
 
     if ((0, _isBrowser.default)()) {
-      _ember.default.assert("You must provide a transition name as the first argument to scrollThen. Example: this.use('scrollThen', 'toLeft')", 'string' === typeof nextTransitionName);
+      Ember.assert("You must provide a transition name as the first argument to scrollThen. Example: this.use('scrollThen', 'toLeft')", 'string' === typeof nextTransitionName);
 
       var el = document.getElementsByTagName('html');
       var nextTransition = this.lookup(nextTransitionName);
@@ -90571,10 +91371,10 @@ define("ember-resolver/features", [], function () {
         options = {};
       }
 
-      _ember.default.assert("The second argument to scrollThen is passed to Velocity's scroll function and must be an object", 'object' === (typeof options === "undefined" ? "undefined" : _typeof(options)));
+      Ember.assert("The second argument to scrollThen is passed to Velocity's scroll function and must be an object", 'object' === (typeof options === "undefined" ? "undefined" : _typeof(options)));
 
       // set scroll options via: this.use('scrollThen', 'ToLeft', {easing: 'spring'})
-      options = _ember.default.merge({ duration: 500, offset: 0 }, options);
+      options = Ember.merge({ duration: 500, offset: 0 }, options);
 
       // additional args can be passed through after the scroll options object
       // like so: this.use('scrollThen', 'moveOver', {duration: 100}, 'x', -1);
@@ -90635,7 +91435,7 @@ define("ember-resolver/features", [], function () {
     return _moveOver.default.call(this, 'y', -1, opts);
   };
 });
-;define('liquid-fire/transitions/wait', ['exports', 'ember'], function (exports, _ember) {
+;define('liquid-fire/transitions/wait', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -90647,7 +91447,7 @@ define("ember-resolver/features", [], function () {
 
     var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    return new _ember.default.RSVP.Promise(function (resolve) {
+    return new Ember.RSVP.Promise(function (resolve) {
       setTimeout(function () {
         resolve(_this.lookup(opts.then || 'default').call(_this));
       }, ms);
@@ -90698,98 +91498,8 @@ define("ember-resolver/features", [], function () {
   VCSS.Normalizations.registered.outerWidth = outerDimension('width');
   VCSS.Normalizations.registered.outerHeight = outerDimension('height');
 });
-;define('ember-data/-debug/index', ['exports', 'ember'], function (exports, _ember) {
-  'use strict';
+;define('ember-data/-private', ['exports', 'ember-inflector', 'ember-data/-debug', 'ember-data/version'], function (exports, emberInflector, emberData_Debug, VERSION) { 'use strict';
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.assert = assert;
-  exports.debug = debug;
-  exports.deprecate = deprecate;
-  exports.info = info;
-  exports.runInDebug = runInDebug;
-  exports.instrument = instrument;
-  exports.warn = warn;
-  exports.debugSeal = debugSeal;
-  exports.assertPolymorphicType = assertPolymorphicType;
-  function assert() {
-    return _ember.default.assert.apply(_ember.default, arguments);
-  }
-
-  function debug() {
-    return _ember.default.debug.apply(_ember.default, arguments);
-  }
-
-  function deprecate() {
-    return _ember.default.deprecate.apply(_ember.default, arguments);
-  }
-
-  function info() {
-    return _ember.default.info.apply(_ember.default, arguments);
-  }
-
-  function runInDebug() {
-    return _ember.default.runInDebug.apply(_ember.default, arguments);
-  }
-
-  function instrument(method) {
-    return method();
-  }
-
-  function warn() {
-    return _ember.default.warn.apply(_ember.default, arguments);
-  }
-
-  function debugSeal() {
-    return _ember.default.debugSeal.apply(_ember.default, arguments);
-  }
-
-  function checkPolymorphic(modelClass, addedModelClass) {
-    if (modelClass.__isMixin) {
-      //TODO Need to do this in order to support mixins, should convert to public api
-      //once it exists in Ember
-      return modelClass.__mixin.detect(addedModelClass.PrototypeMixin);
-    }
-    if (_ember.default.MODEL_FACTORY_INJECTIONS) {
-      modelClass = modelClass.superclass;
-    }
-    return modelClass.detect(addedModelClass);
-  }
-
-  /*
-    Assert that `addedRecord` has a valid type so it can be added to the
-    relationship of the `record`.
-  
-    The assert basically checks if the `addedRecord` can be added to the
-    relationship (specified via `relationshipMeta`) of the `record`.
-  
-    This utility should only be used internally, as both record parameters must
-    be an InternalModel and the `relationshipMeta` needs to be the meta
-    information about the relationship, retrieved via
-    `record.relationshipFor(key)`.
-  
-    @method assertPolymorphicType
-    @param {InternalModel} internalModel
-    @param {RelationshipMeta} relationshipMeta retrieved via
-           `record.relationshipFor(key)`
-    @param {InternalModel} addedRecord record which
-           should be added/set for the relationship
-  */
-  function assertPolymorphicType(parentInternalModel, relationshipMeta, addedInternalModel) {
-    var addedModelName = addedInternalModel.modelName;
-    var parentModelName = parentInternalModel.modelName;
-    var key = relationshipMeta.key;
-    var relationshipModelName = relationshipMeta.type;
-    var relationshipClass = parentInternalModel.store.modelFor(relationshipModelName);
-    var assertionMessage = 'You cannot add a record of modelClass \'' + addedModelName + '\' to the \'' + parentModelName + '.' + key + '\' relationship (only \'' + relationshipModelName + '\' allowed)';
-
-    assert(assertionMessage, checkPolymorphic(relationshipClass, addedInternalModel.modelClass));
-  }
-});
-;define('ember-data/-private', ['exports', 'ember', 'ember-data/-debug', 'ember-inflector', 'ember-data/version'], function (exports, Ember, emberData_Debug, emberInflector, VERSION) { 'use strict';
-
-Ember = 'default' in Ember ? Ember['default'] : Ember;
 VERSION = 'default' in VERSION ? VERSION['default'] : VERSION;
 
 var get$1 = Ember.get;
@@ -90898,7 +91608,8 @@ function proxyToContent(method) {
 
 var PromiseManyArray = PromiseArray.extend({
   reload: function reload() {
-    emberData_Debug.assert('You are trying to reload an async manyArray before it has been created', get$1(this, 'content'));
+    (true && !(get$1(this, 'content')) && Ember.assert('You are trying to reload an async manyArray before it has been created', get$1(this, 'content')));
+
     this.set('promise', this.get('content').reload());
     return this;
   },
@@ -91013,10 +91724,11 @@ var Errors = Ember.ArrayProxy.extend(Ember.Evented, {
     @deprecated
   */
   registerHandlers: function registerHandlers(target, becameInvalid, becameValid) {
-    emberData_Debug.deprecate('Record errors will no longer be evented.', false, {
+    (true && !(false) && Ember.deprecate('Record errors will no longer be evented.', false, {
       id: 'ds.errors.registerHandlers',
       until: '3.0.0'
-    });
+    }));
+
 
     this._registerHandlers(target, becameInvalid, becameValid);
   },
@@ -91133,9 +91845,10 @@ var Errors = Ember.ArrayProxy.extend(Ember.Evented, {
     @deprecated
   */
   add: function add(attribute, messages) {
-    emberData_Debug.warn('Interacting with a record errors object will no longer change the record state.', false, {
+    (true && Ember.warn('Interacting with a record errors object will no longer change the record state.', false, {
       id: 'ds.errors.add'
-    });
+    }));
+
 
     var wasEmpty = get$2(this, 'isEmpty');
 
@@ -91217,9 +91930,10 @@ var Errors = Ember.ArrayProxy.extend(Ember.Evented, {
     @deprecated
   */
   remove: function remove(attribute) {
-    emberData_Debug.warn('Interacting with a record errors object will no longer change the record state.', false, {
+    (true && Ember.warn('Interacting with a record errors object will no longer change the record state.', false, {
       id: 'ds.errors.remove'
-    });
+    }));
+
 
     if (get$2(this, 'isEmpty')) {
       return;
@@ -91270,9 +91984,10 @@ var Errors = Ember.ArrayProxy.extend(Ember.Evented, {
     @deprecated
   */
   clear: function clear() {
-    emberData_Debug.warn('Interacting with a record errors object will no longer change the record state.', false, {
+    (true && Ember.warn('Interacting with a record errors object will no longer change the record state.', false, {
       id: 'ds.errors.clear'
-    });
+    }));
+
 
     if (get$2(this, 'isEmpty')) {
       return;
@@ -91340,11 +92055,6 @@ function isEnabled() {
   return (_Ember$FEATURES = Ember.FEATURES).isEnabled.apply(_Ember$FEATURES, arguments);
 }
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/**
-  @module ember-data
-*/
 /*
   This file encapsulates the various states that a record can transition
   through during its lifecycle.
@@ -91564,6 +92274,9 @@ function _didSetProperty(internalModel, context) {
 //   but the adapter has not yet acknowledged success.
 // `invalid`: the record has invalid information and cannot be
 //   sent to the adapter yet.
+/**
+  @module ember-data
+*/
 var DirtyState = {
   initialState: 'uncommitted',
 
@@ -91694,7 +92407,7 @@ function deepClone(object) {
 
   for (var prop in object) {
     value = object[prop];
-    if (value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
+    if (value && typeof value === 'object') {
       clone[prop] = deepClone(value);
     } else {
       clone[prop] = value;
@@ -91757,7 +92470,7 @@ createdState.uncommitted.pushedData = function (internalModel) {
 createdState.uncommitted.propertyWasReset = function () {};
 
 function assertAgainstUnloadRecord(internalModel) {
-  emberData_Debug.assert("You can only unload a record which is not inFlight. `" + internalModel + "`", false);
+  (true && !(false) && Ember.assert("You can only unload a record which is not inFlight. `" + internalModel + "`", false));
 }
 
 updatedState.inFlight.unloadRecord = assertAgainstUnloadRecord;
@@ -92043,7 +92756,7 @@ function wireState(object, parent, name) {
     if (!object.hasOwnProperty(prop) || prop === 'parentState' || prop === 'stateName') {
       continue;
     }
-    if (_typeof(object[prop]) === 'object') {
+    if (typeof object[prop] === 'object') {
       object[prop] = wireState(object[prop], object, name + '.' + prop);
     }
   }
@@ -92091,9 +92804,9 @@ function relationshipFromMeta(meta) {
     isRelationship: true
   };
 
-  emberData_Debug.runInDebug(function () {
-    return result.parentType = meta.parentType;
-  });
+  {
+    result.parentType = meta.parentType;
+  }
 
   return result;
 }
@@ -92148,10 +92861,12 @@ var relatedTypesDescriptor = Ember.computed(function () {
       meta.key = name;
       modelName = typeForRelationshipMeta(meta);
 
-      emberData_Debug.assert('You specified a hasMany (' + meta.type + ') on ' + meta.parentType + ' but ' + meta.type + ' was not found.', modelName);
+      (true && !(modelName) && Ember.assert('You specified a hasMany (' + meta.type + ') on ' + meta.parentType + ' but ' + meta.type + ' was not found.', modelName));
+
 
       if (!types.includes(modelName)) {
-        emberData_Debug.assert('Trying to sideload ' + name + ' on ' + _this.toString() + ' but the type doesn\'t exist.', !!modelName);
+        (true && !(!!modelName) && Ember.assert('Trying to sideload ' + name + ' on ' + _this.toString() + ' but the type doesn\'t exist.', !!modelName));
+
         types.push(modelName);
       }
     }
@@ -92835,8 +93550,8 @@ var Model = Ember.Object.extend(Ember.Evented, {
       // Error callback
     });
     ```
-    If you pass an object on the `adapterOptions` property of the options
-   argument it will be passed to you adapter via the snapshot
+    If you pass an object using the `adapterOptions` property of the options
+   argument it will be passed to your adapter via the snapshot.
      ```js
     record.save({ adapterOptions: { subscribe: false } });
     ```
@@ -92922,7 +93637,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
     this._super.apply(this, arguments);
   },
   attr: function attr() {
-    emberData_Debug.assert("The `attr` method is not available on DS.Model, a DS.Snapshot was probably expected. Are you passing a DS.Model instead of a DS.Snapshot to your serializer?", false);
+    (true && !(false) && Ember.assert("The `attr` method is not available on DS.Model, a DS.Snapshot was probably expected. Are you passing a DS.Model instead of a DS.Snapshot to your serializer?", false));
   },
 
 
@@ -93172,7 +93887,7 @@ Object.defineProperty(Model.prototype, 'data', {
   }
 });
 
-emberData_Debug.runInDebug(function () {
+{
   Model.reopen({
     init: function init() {
       this._super.apply(this, arguments);
@@ -93182,7 +93897,7 @@ emberData_Debug.runInDebug(function () {
       }
     }
   });
-});
+}
 
 Model.reopenClass({
   isModel: true,
@@ -93335,15 +94050,16 @@ Model.reopenClass({
       inverseName = options.inverse;
       inverse = Ember.get(inverseType, 'relationshipsByName').get(inverseName);
 
-      emberData_Debug.assert("We found no inverse relationships by the name of '" + inverseName + "' on the '" + inverseType.modelName + "' model. This is most likely due to a missing attribute on your model definition.", !Ember.isNone(inverse));
+      (true && !(!Ember.isNone(inverse)) && Ember.assert("We found no inverse relationships by the name of '" + inverseName + "' on the '" + inverseType.modelName + "' model. This is most likely due to a missing attribute on your model definition.", !Ember.isNone(inverse)));
+
 
       inverseKind = inverse.kind;
     } else {
       //No inverse was specified manually, we need to use a heuristic to guess one
       if (propertyMeta.parentType && propertyMeta.type === propertyMeta.parentType.modelName) {
-        emberData_Debug.warn('Detected a reflexive relationship by the name of \'' + name + '\' without an inverse option. Look at http://emberjs.com/guides/models/defining-models/#toc_reflexive-relation for how to explicitly specify inverses.', false, {
+        (true && Ember.warn('Detected a reflexive relationship by the name of \'' + name + '\' without an inverse option. Look at http://emberjs.com/guides/models/defining-models/#toc_reflexive-relation for how to explicitly specify inverses.', false, {
           id: 'ds.model.reflexive-relationship-without-inverse'
-        });
+        }));
       }
 
       var possibleRelationships = findPossibleInverses(this, inverseType, name);
@@ -93357,13 +94073,15 @@ Model.reopenClass({
         return name === optionsForRelationship.inverse;
       });
 
-      emberData_Debug.assert("You defined the '" + name + "' relationship on " + this + ", but you defined the inverse relationships of type " + inverseType.toString() + " multiple times. Look at http://emberjs.com/guides/models/defining-models/#toc_explicit-inverses for how to explicitly specify inverses", filteredRelationships.length < 2);
+      (true && !(filteredRelationships.length < 2) && Ember.assert("You defined the '" + name + "' relationship on " + this + ", but you defined the inverse relationships of type " + inverseType.toString() + " multiple times. Look at http://emberjs.com/guides/models/defining-models/#toc_explicit-inverses for how to explicitly specify inverses", filteredRelationships.length < 2));
+
 
       if (filteredRelationships.length === 1) {
         possibleRelationships = filteredRelationships;
       }
 
-      emberData_Debug.assert("You defined the '" + name + "' relationship on " + this + ", but multiple possible inverse relationships of type " + this + " were found on " + inverseType + ". Look at http://emberjs.com/guides/models/defining-models/#toc_explicit-inverses for how to explicitly specify inverses", possibleRelationships.length === 1);
+      (true && !(possibleRelationships.length === 1) && Ember.assert("You defined the '" + name + "' relationship on " + this + ", but multiple possible inverse relationships of type " + this + " were found on " + inverseType + ". Look at http://emberjs.com/guides/models/defining-models/#toc_explicit-inverses for how to explicitly specify inverses", possibleRelationships.length === 1));
+
 
       inverseName = possibleRelationships[0].name;
       inverseKind = possibleRelationships[0].kind;
@@ -93651,7 +94369,8 @@ Model.reopenClass({
 
     this.eachComputedProperty(function (name, meta) {
       if (meta.isAttribute) {
-        emberData_Debug.assert("You may not set `id` as an attribute on your model. Please remove any lines that look like: `id: DS.attr('<type>')` from " + _this3.toString(), name !== 'id');
+        (true && !(name !== 'id') && Ember.assert("You may not set `id` as an attribute on your model. Please remove any lines that look like: `id: DS.attr('<type>')` from " + _this3.toString(), name !== 'id'));
+
 
         meta.name = name;
         map.set(name, meta);
@@ -93794,7 +94513,8 @@ if (Ember.setOwner) {
     configurable: true,
     enumerable: false,
     get: function get() {
-      emberData_Debug.deprecate('Using the injected `container` is deprecated. Please use the `getOwner` helper instead to access the owner of this object.', false, { id: 'ember-application.injected-container', until: '3.0.0' });
+      (true && !(false) && Ember.deprecate('Using the injected `container` is deprecated. Please use the `getOwner` helper instead to access the owner of this object.', false, { id: 'ember-application.injected-container', until: '3.0.0' }));
+
 
       return this.store.container;
     }
@@ -93823,14 +94543,14 @@ if (isEnabled('ds-rollback-attribute')) {
   });
 }
 
-emberData_Debug.runInDebug(function () {
+{
   Model.reopen({
     // This is a temporary solution until we refactor DS.Model to not
     // rely on the data property.
     willMergeMixin: function willMergeMixin(props) {
       var constructor = this.constructor;
-      emberData_Debug.assert('`' + intersection(Object.keys(props), RESERVED_MODEL_PROPS)[0] + '` is a reserved property name on DS.Model objects. Please choose a different property name for ' + constructor.toString(), !intersection(Object.keys(props), RESERVED_MODEL_PROPS)[0]);
-      emberData_Debug.assert("You may not set `id` as an attribute on your model. Please remove any lines that look like: `id: DS.attr('<type>')` from " + constructor.toString(), Object.keys(props).indexOf('id') === -1);
+      (true && !(!intersection(Object.keys(props), RESERVED_MODEL_PROPS)[0]) && Ember.assert('`' + intersection(Object.keys(props), RESERVED_MODEL_PROPS)[0] + '` is a reserved property name on DS.Model objects. Please choose a different property name for ' + constructor.toString(), !intersection(Object.keys(props), RESERVED_MODEL_PROPS)[0]));
+      (true && !(Object.keys(props).indexOf('id') === -1) && Ember.assert("You may not set `id` as an attribute on your model. Please remove any lines that look like: `id: DS.attr('<type>')` from " + constructor.toString(), Object.keys(props).indexOf('id') === -1));
     },
 
 
@@ -93868,7 +94588,7 @@ emberData_Debug.runInDebug(function () {
       }
     }
   });
-});
+}
 
 var EmberError$1 = Ember.Error;
 
@@ -93971,7 +94691,8 @@ function extendFn(ErrorClass) {
 
 function extend(ParentErrorClass, defaultMessage) {
   var ErrorClass = function ErrorClass(errors, message) {
-    emberData_Debug.assert('`AdapterError` expects json-api formatted errors array.', Array.isArray(errors || []));
+    (true && !(Array.isArray(errors || [])) && Ember.assert('`AdapterError` expects json-api formatted errors array.', Array.isArray(errors || [])));
+
     ParentErrorClass.call(this, errors, message || defaultMessage);
   };
   ErrorClass.prototype = Object.create(ParentErrorClass.prototype);
@@ -94377,8 +95098,6 @@ OrderedSet.prototype.addWithIndex = function (obj, idx) {
   return this;
 };
 
-var _typeof$3 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 /*
   This method normalizes a link to an "links object". If the passed link is
   already an object it's returned without any modifications.
@@ -94392,7 +95111,7 @@ var _typeof$3 = typeof Symbol === "function" && typeof Symbol.iterator === "symb
   @for DS
 */
 function _normalizeLink(link) {
-  switch (typeof link === 'undefined' ? 'undefined' : _typeof$3(link)) {
+  switch (typeof link) {
     case 'object':
       return link;
     case 'string':
@@ -94401,11 +95120,11 @@ function _normalizeLink(link) {
   return null;
 }
 
-var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* global heimdall */
+
 
 function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/* global heimdall */
 var guidFor = Ember.guidFor;
 
 var Relationship = function () {
@@ -94432,9 +95151,14 @@ var Relationship = function () {
     this.hasLoaded = false;
   }
 
-  Relationship.prototype.removeInverseRelationships = function removeInverseRelationships() {
-    var _this = this;
+  Relationship.prototype._inverseIsAsync = function _inverseIsAsync() {
+    if (!this.inverseKey || !this.inverseInternalModel) {
+      return false;
+    }
+    return this.inverseInternalModel._relationships.get(this.inverseKey).isAsync;
+  };
 
+  Relationship.prototype.removeInverseRelationships = function removeInverseRelationships() {
     if (!this.inverseKey) {
       return;
     }
@@ -94442,12 +95166,13 @@ var Relationship = function () {
     var allMembers =
     // we actually want a union of members and canonicalMembers
     // they should be disjoint but currently are not due to a bug
-    this.members.toArray().concat(this.canonicalMembers.toArray());
+    this.members.list.concat(this.canonicalMembers.list);
 
-    allMembers.forEach(function (inverseInternalModel) {
-      var relationship = inverseInternalModel._relationships.get(_this.inverseKey);
+    for (var i = 0; i < allMembers.length; i++) {
+      var inverseInternalModel = allMembers[i];
+      var relationship = inverseInternalModel._relationships.get(this.inverseKey);
       relationship.inverseDidDematerialize();
-    });
+    }
   };
 
   Relationship.prototype.inverseDidDematerialize = function inverseDidDematerialize() {};
@@ -94472,18 +95197,18 @@ var Relationship = function () {
   };
 
   Relationship.prototype.removeInternalModels = function removeInternalModels(internalModels) {
-    var _this2 = this;
+    var _this = this;
 
     internalModels.forEach(function (internalModel) {
-      return _this2.removeInternalModel(internalModel);
+      return _this.removeInternalModel(internalModel);
     });
   };
 
   Relationship.prototype.addInternalModels = function addInternalModels(internalModels, idx) {
-    var _this3 = this;
+    var _this2 = this;
 
     internalModels.forEach(function (internalModel) {
-      _this3.addInternalModel(internalModel, idx);
+      _this2.addInternalModel(internalModel, idx);
       if (idx !== undefined) {
         idx++;
       }
@@ -94526,7 +95251,7 @@ var Relationship = function () {
       var _relationships = internalModel._implicitRelationships;
       var _relationship = _relationships[this.inverseKeyForImplicit];
       if (!_relationship) {
-        _relationship = _relationships[this.inverseKeyForImplicit] = new Relationship(this.store, internalModel, this.key, { options: {} });
+        _relationship = _relationships[this.inverseKeyForImplicit] = new Relationship(this.store, internalModel, this.key, { options: { async: this.isAsync } });
       }
       _relationship.addCanonicalInternalModel(this.internalModel);
     }
@@ -94564,7 +95289,7 @@ var Relationship = function () {
         internalModel._relationships.get(this.inverseKey).addInternalModel(this.internalModel);
       } else {
         if (!internalModel._implicitRelationships[this.inverseKeyForImplicit]) {
-          internalModel._implicitRelationships[this.inverseKeyForImplicit] = new Relationship(this.store, internalModel, this.key, { options: {} });
+          internalModel._implicitRelationships[this.inverseKeyForImplicit] = new Relationship(this.store, internalModel, this.key, { options: { async: this.isAsync } });
         }
         internalModel._implicitRelationships[this.inverseKeyForImplicit].addInternalModel(this.internalModel);
       }
@@ -94622,7 +95347,7 @@ var Relationship = function () {
 
 
   Relationship.prototype.removeCompletelyFromInverse = function removeCompletelyFromInverse() {
-    var _this4 = this;
+    var _this3 = this;
 
     if (!this.inverseKey) {
       return;
@@ -94637,7 +95362,7 @@ var Relationship = function () {
       var id = guidFor(inverseInternalModel);
 
       if (seen[id] === undefined) {
-        var relationship = inverseInternalModel._relationships.get(_this4.inverseKey);
+        var relationship = inverseInternalModel._relationships.get(_this3.inverseKey);
         relationship.removeCompletelyFromOwn(internalModel);
         seen[id] = true;
       }
@@ -94687,15 +95412,19 @@ var Relationship = function () {
     this.store._updateRelationshipState(this);
   };
 
-  Relationship.prototype.updateLink = function updateLink(link) {
-    emberData_Debug.warn('You pushed a record of type \'' + this.internalModel.modelName + '\' with a relationship \'' + this.key + '\' configured as \'async: false\'. You\'ve included a link but no primary data, this may be an error in your payload.', this.isAsync || this.hasData, {
+  Relationship.prototype.updateLink = function updateLink(link, initial) {
+    (true && Ember.warn('You pushed a record of type \'' + this.internalModel.modelName + '\' with a relationship \'' + this.key + '\' configured as \'async: false\'. You\'ve included a link but no primary data, this may be an error in your payload.', this.isAsync || this.hasData, {
       id: 'ds.store.push-link-for-sync-relationship'
-    });
-    emberData_Debug.assert('You have pushed a record of type \'' + this.internalModel.modelName + '\' with \'' + this.key + '\' as a link, but the value of that link is not a string.', typeof link === 'string' || link === null);
+    }));
+    (true && !(typeof link === 'string' || link === null) && Ember.assert('You have pushed a record of type \'' + this.internalModel.modelName + '\' with \'' + this.key + '\' as a link, but the value of that link is not a string.', typeof link === 'string' || link === null));
+
 
     this.link = link;
     this.linkPromise = null;
-    this.internalModel.notifyPropertyChange(this.key);
+
+    if (!initial) {
+      this.internalModel.notifyPropertyChange(this.key);
+    }
   };
 
   Relationship.prototype.findLink = function findLink() {
@@ -94798,6 +95527,8 @@ var Relationship = function () {
 
   Relationship.prototype.updateData = function updateData() {};
 
+  Relationship.prototype.destroy = function destroy() {};
+
   _createClass$4(Relationship, [{
     key: 'parentType',
     get: function get() {
@@ -94837,8 +95568,8 @@ function _objectIsAlive(object) {
 
 /**
   @namespace
-  @method diff-array
-  @for DS
+  @method diffArray
+  @private
   @param {Array} oldArray the old array
   @param {Array} newArray the new array
   @return {hash} {
@@ -94894,9 +95625,6 @@ function diffArray(oldArray, newArray) {
   };
 }
 
-/**
-  @module ember-data
-*/
 var get$5 = Ember.get;
 
 /**
@@ -95159,7 +95887,8 @@ var ManyArray = Ember.Object.extend(Ember.MutableArray, Ember.Evented, {
     var store = get$5(this, 'store');
     var type = get$5(this, 'type');
 
-    emberData_Debug.assert('You cannot add \'' + type.modelName + '\' records to this polymorphic relationship.', !get$5(this, 'isPolymorphic'));
+    (true && !(!get$5(this, 'isPolymorphic')) && Ember.assert('You cannot add \'' + type.modelName + '\' records to this polymorphic relationship.', !get$5(this, 'isPolymorphic')));
+
     var record = store.createRecord(type.modelName, hash);
     this.pushObject(record);
 
@@ -95367,33 +96096,36 @@ var ManyRelationship = function (_Relationship) {
   };
 
   ManyRelationship.prototype.setInitialInternalModels = function setInitialInternalModels(internalModels) {
-    var _this2 = this;
-
-    if (!internalModels) {
+    if (Array.isArray(internalModels) === false || internalModels.length === 0) {
       return;
     }
 
-    var args = [0, this.canonicalState.length].concat(internalModels);
-    this.canonicalState.splice.apply(this.canonicalState, args);
-    internalModels.forEach(function (internalModel) {
-      _this2.canonicalMembers.add(internalModel);
-      _this2.members.add(internalModel);
-      _this2.setupInverseRelationship(internalModel);
-    });
+    for (var i = 0; i < internalModels.length; i++) {
+      var internalModel = internalModels[i];
+      if (this.canonicalMembers.has(internalModel)) {
+        continue;
+      }
+
+      this.canonicalMembers.add(internalModel);
+      this.members.add(internalModel);
+      this.setupInverseRelationship(internalModel);
+    }
+
+    this.canonicalState = this.canonicalMembers.toArray();
   };
 
   ManyRelationship.prototype.fetchLink = function fetchLink() {
-    var _this3 = this;
+    var _this2 = this;
 
     return this.store.findHasMany(this.internalModel, this.link, this.relationshipMeta).then(function (records) {
       if (records.hasOwnProperty('meta')) {
-        _this3.updateMeta(records.meta);
+        _this2.updateMeta(records.meta);
       }
-      _this3.store._backburner.join(function () {
-        _this3.updateInternalModelsFromAdapter(records);
-        _this3.manyArray.set('isLoaded', true);
+      _this2.store._backburner.join(function () {
+        _this2.updateInternalModelsFromAdapter(records);
+        _this2.manyArray.set('isLoaded', true);
       });
-      return _this3.manyArray;
+      return _this2.manyArray;
     });
   };
 
@@ -95416,7 +96148,7 @@ var ManyRelationship = function (_Relationship) {
   };
 
   ManyRelationship.prototype.getRecords = function getRecords() {
-    var _this4 = this;
+    var _this3 = this;
 
     //TODO(Igor) sync server here, once our syncing is not stupid
     var manyArray = this.manyArray;
@@ -95427,7 +96159,7 @@ var ManyRelationship = function (_Relationship) {
           promise = this.findRecords();
         } else {
           promise = this.findLink().then(function () {
-            return _this4.findRecords();
+            return _this3.findRecords();
           });
         }
       } else {
@@ -95435,10 +96167,11 @@ var ManyRelationship = function (_Relationship) {
       }
       return this._updateLoadingPromise(promise, manyArray);
     } else {
-      emberData_Debug.assert('You looked up the \'' + this.key + '\' relationship on a \'' + this.internalModel.type.modelName + '\' with id ' + this.internalModel.id + ' but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (\'DS.hasMany({ async: true })\')', manyArray.isEvery('isEmpty', false));
+      (true && !(manyArray.isEvery('isEmpty', false)) && Ember.assert('You looked up the \'' + this.key + '\' relationship on a \'' + this.internalModel.type.modelName + '\' with id ' + this.internalModel.id + ' but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (\'DS.hasMany({ async: true })\')', manyArray.isEvery('isEmpty', false)));
 
       //TODO(Igor) WTF DO I DO HERE?
       // TODO @runspired equal WTFs to Igor
+
       if (!manyArray.get('isDestroyed')) {
         manyArray.set('isLoaded', true);
       }
@@ -95452,6 +96185,20 @@ var ManyRelationship = function (_Relationship) {
       this.setInitialInternalModels(internalModels);
     } else {
       this.updateInternalModelsFromAdapter(internalModels);
+    }
+  };
+
+  ManyRelationship.prototype.destroy = function destroy() {
+    _Relationship.prototype.destroy.call(this);
+    var manyArray = this._manyArray;
+    if (manyArray) {
+      manyArray.destroy();
+    }
+
+    var proxy = this.__loadingPromise;
+
+    if (proxy) {
+      proxy.destroy();
     }
   };
 
@@ -95609,7 +96356,8 @@ var BelongsToRelationship = function (_Relationship) {
 
   BelongsToRelationship.prototype.setRecordPromise = function setRecordPromise(newPromise) {
     var content = newPromise.get && newPromise.get('content');
-    emberData_Debug.assert("You passed in a promise that did not originate from an EmberData relationship. You can only pass promises that come from a belongsTo or hasMany relationship to the get call.", content !== undefined);
+    (true && !(content !== undefined) && Ember.assert("You passed in a promise that did not originate from an EmberData relationship. You can only pass promises that come from a belongsTo or hasMany relationship to the get call.", content !== undefined));
+
     this.setInternalModel(content ? content._internalModel : content);
   };
 
@@ -95680,7 +96428,8 @@ var BelongsToRelationship = function (_Relationship) {
         return null;
       }
       var toReturn = this.inverseInternalModel.getRecord();
-      emberData_Debug.assert("You looked up the '" + this.key + "' relationship on a '" + this.internalModel.modelName + "' with id " + this.internalModel.id + " but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (`DS.belongsTo({ async: true })`)", toReturn === null || !toReturn.get('isEmpty'));
+      (true && !(toReturn === null || !toReturn.get('isEmpty')) && Ember.assert("You looked up the '" + this.key + "' relationship on a '" + this.internalModel.modelName + "' with id " + this.internalModel.id + " but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (`DS.belongsTo({ async: true })`)", toReturn === null || !toReturn.get('isEmpty')));
+
       return toReturn;
     }
   };
@@ -95701,7 +96450,8 @@ var BelongsToRelationship = function (_Relationship) {
   };
 
   BelongsToRelationship.prototype.updateData = function updateData(data, initial) {
-    emberData_Debug.assert('Ember Data expected the data for the ' + this.key + ' relationship on a ' + this.internalModel.toString() + ' to be in a JSON API format and include an `id` and `type` property but it found ' + Ember.inspect(data) + '. Please check your serializer and make sure it is serializing the relationship payload into a JSON API format.', data === null || data.id !== undefined && data.type !== undefined);
+    (true && !(data === null || data.id !== undefined && data.type !== undefined) && Ember.assert('Ember Data expected the data for the ' + this.key + ' relationship on a ' + this.internalModel.toString() + ' to be in a JSON API format and include an `id` and `type` property but it found ' + Ember.inspect(data) + '. Please check your serializer and make sure it is serializing the relationship payload into a JSON API format.', data === null || data.id !== undefined && data.type !== undefined));
+
     var internalModel = this.store._pushResourceIdentifier(this, data);
     if (initial) {
       this.setInitialCanonicalInternalModel(internalModel);
@@ -95732,9 +96482,7 @@ function createRelationshipFor(internalModel, relationshipMeta, store) {
   if (shouldFindInverse(relationshipMeta)) {
     inverse = internalModel.type.inverseFor(relationshipMeta.key, store);
   } else {
-    emberData_Debug.runInDebug(function () {
-      internalModel.type.typeForRelationship(relationshipMeta.key, store);
-    });
+    internalModel.type.typeForRelationship(relationshipMeta.key, store);
   }
 
   if (inverse) {
@@ -95761,6 +96509,13 @@ var Relationships = function () {
 
   Relationships.prototype.has = function has(key) {
     return !!this.initializedRelationships[key];
+  };
+
+  Relationships.prototype.forEach = function forEach(cb) {
+    var rels = this.initializedRelationships;
+    Object.keys(rels).forEach(function (name) {
+      cb(name, rels[name]);
+    });
   };
 
   Relationships.prototype.get = function get(key) {
@@ -95801,10 +96556,6 @@ var Relationships = function () {
 var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
-  @module ember-data
-*/
 
 var get$7 = Ember.get;
 
@@ -96559,7 +97310,7 @@ BelongsToReference.prototype.link = function () {
     ```
 
    @method meta
-   @return {Object} The meta information for the belongs-oo relationship.
+   @return {Object} The meta information for the belongs-to relationship.
 */
 BelongsToReference.prototype.meta = function () {
   return this.belongsToRelationship.meta;
@@ -96617,10 +97368,10 @@ BelongsToReference.prototype.push = function (objectOrPromise) {
 
     if (data instanceof Model) {
       if (isEnabled('ds-overhaul-references')) {
-        emberData_Debug.deprecate("BelongsToReference#push(DS.Model) is deprecated. Update relationship via `model.set('relationshipName', value)` instead.", false, {
+        (true && !(false) && Ember.deprecate("BelongsToReference#push(DS.Model) is deprecated. Update relationship via `model.set('relationshipName', value)` instead.", false, {
           id: 'ds.references.belongs-to.push-record',
           until: '3.0'
-        });
+        }));
       }
       record = data;
     } else {
@@ -96784,8 +97535,6 @@ BelongsToReference.prototype.reload = function () {
   });
 };
 
-var _typeof$4 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var resolve = Ember.RSVP.resolve;
 var get$9 = Ember.get;
 
@@ -96925,7 +97674,7 @@ HasManyReference.prototype.link = function () {
    commentsRef.ids(); // ['1']
    ```
 
-   @method remoteType
+   @method ids
    @return {Array} The ids in this has-many relationship
 */
 HasManyReference.prototype.ids = function () {
@@ -96937,8 +97686,7 @@ HasManyReference.prototype.ids = function () {
 };
 
 /**
-   The link Ember Data will use to fetch or reload this has-many
-   relationship.
+   The meta data for the has-many relationship.
 
    Example
 
@@ -97029,22 +97777,22 @@ HasManyReference.prototype.push = function (objectOrPromise) {
     var array = payload;
 
     if (isEnabled("ds-overhaul-references")) {
-      emberData_Debug.deprecate("HasManyReference#push(array) is deprecated. Push a JSON-API document instead.", !Array.isArray(payload), {
+      (true && !(!Array.isArray(payload)) && Ember.deprecate("HasManyReference#push(array) is deprecated. Push a JSON-API document instead.", !Array.isArray(payload), {
         id: 'ds.references.has-many.push-array',
         until: '3.0'
-      });
+      }));
     }
 
     var useLegacyArrayPush = true;
-    if ((typeof payload === 'undefined' ? 'undefined' : _typeof$4(payload)) === "object" && payload.data) {
+    if (typeof payload === "object" && payload.data) {
       array = payload.data;
       useLegacyArrayPush = array.length && array[0].data;
 
       if (isEnabled('ds-overhaul-references')) {
-        emberData_Debug.deprecate("HasManyReference#push() expects a valid JSON-API document.", !useLegacyArrayPush, {
+        (true && !(!useLegacyArrayPush) && Ember.deprecate("HasManyReference#push() expects a valid JSON-API document.", !useLegacyArrayPush, {
           id: 'ds.references.has-many.push-invalid-json-api',
           until: '3.0'
-        });
+        }));
       }
     }
 
@@ -97057,10 +97805,10 @@ HasManyReference.prototype.push = function (objectOrPromise) {
       internalModels = array.map(function (obj) {
         var record = _this.store.push(obj);
 
-        emberData_Debug.runInDebug(function () {
+        {
           var relationshipMeta = _this.hasManyRelationship.relationshipMeta;
           emberData_Debug.assertPolymorphicType(_this.internalModel, relationshipMeta, record._internalModel);
-        });
+        }
 
         return record._internalModel;
       });
@@ -97068,12 +97816,12 @@ HasManyReference.prototype.push = function (objectOrPromise) {
       var records = _this.store.push(payload);
       internalModels = Ember.A(records).mapBy('_internalModel');
 
-      emberData_Debug.runInDebug(function () {
+      {
         internalModels.forEach(function (internalModel) {
           var relationshipMeta = _this.hasManyRelationship.relationshipMeta;
           emberData_Debug.assertPolymorphicType(_this.internalModel, relationshipMeta, internalModel);
         });
-      });
+      }
     }
 
     _this.hasManyRelationship.computeChanges(internalModels);
@@ -97224,8 +97972,6 @@ HasManyReference.prototype.reload = function () {
   return this.hasManyRelationship.reload();
 };
 
-var _typeof$2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -97278,6 +98024,14 @@ function areAllModelsUnloaded(internalModels) {
   return true;
 }
 
+function destroyRelationship(rel) {
+  if (rel._inverseIsAsync()) {
+    rel.removeInternalModelFromInverse(rel.inverseInternalModel);
+    rel.removeInverseRelationships();
+  } else {
+    rel.removeCompletelyFromInverse();
+  }
+}
 // this (and all heimdall instrumentation) will be stripped by a babel transform
 //  https://github.com/heimdalljs/babel5-plugin-strip-heimdall
 
@@ -97408,7 +98162,7 @@ var InternalModel = function () {
         adapterError: this.error
       };
 
-      if ((typeof properties === 'undefined' ? 'undefined' : _typeof$2(properties)) === 'object' && properties !== null) {
+      if (typeof properties === 'object' && properties !== null) {
         assign(createOptions, properties);
       }
 
@@ -97429,7 +98183,6 @@ var InternalModel = function () {
 
   InternalModel.prototype.resetRecord = function resetRecord() {
     this._record = null;
-    this.dataHasInitialized = false;
     this.isReloading = false;
     this.error = null;
     this.currentState = RootState$1.empty;
@@ -97502,17 +98255,9 @@ var InternalModel = function () {
 
 
   InternalModel.prototype._directlyRelatedInternalModels = function _directlyRelatedInternalModels() {
-    var _this = this;
-
     var array = [];
-    this.type.eachRelationship(function (key, relationship) {
-      if (_this._relationships.has(key)) {
-        var _relationship = _this._relationships.get(key);
-        var localRelationships = _relationship.members.toArray();
-        var serverRelationships = _relationship.canonicalMembers.toArray();
-
-        array = array.concat(localRelationships, serverRelationships);
-      }
+    this._relationships.forEach(function (name, rel) {
+      array = array.concat(rel.members.list, rel.canonicalMembers.list);
     });
     return array;
   };
@@ -97539,7 +98284,8 @@ var InternalModel = function () {
       var related = node._directlyRelatedInternalModels();
       for (var i = 0; i < related.length; ++i) {
         var internalModel = related[i];
-        emberData_Debug.assert('Internal Error: seen a future bfs iteration', internalModel._bfsId <= bfsId);
+        (true && !(internalModel._bfsId <= bfsId) && Ember.assert('Internal Error: seen a future bfs iteration', internalModel._bfsId <= bfsId));
+
         if (internalModel._bfsId < bfsId) {
           queue.push(internalModel);
           internalModel._bfsId = bfsId;
@@ -97562,19 +98308,55 @@ var InternalModel = function () {
 
 
   InternalModel.prototype.unloadRecord = function unloadRecord() {
+    if (this.isDestroyed) {
+      return;
+    }
     this.send('unloadRecord');
     this.dematerializeRecord();
+
     if (this._scheduledDestroy === null) {
       this._scheduledDestroy = run.schedule('destroy', this, '_checkForOrphanedInternalModels');
     }
   };
 
+  InternalModel.prototype.hasScheduledDestroy = function hasScheduledDestroy() {
+    return !!this._scheduledDestroy;
+  };
+
   InternalModel.prototype.cancelDestroy = function cancelDestroy() {
-    emberData_Debug.assert('You cannot cancel the destruction of an InternalModel once it has already been destroyed', !this.isDestroyed);
+    (true && !(!this.isDestroyed) && Ember.assert('You cannot cancel the destruction of an InternalModel once it has already been destroyed', !this.isDestroyed));
+
 
     this._isDematerializing = false;
     run.cancel(this._scheduledDestroy);
     this._scheduledDestroy = null;
+  };
+
+  // typically, we prefer to async destroy this lets us batch cleanup work.
+  // Unfortunately, some scenarios where that is not possible. Such as:
+  //
+  // ```js
+  // const record = store.find(‘record’, 1);
+  // record.unloadRecord();
+  // store.createRecord(‘record’, 1);
+  // ```
+  //
+  // In those scenarios, we make that model's cleanup work, sync.
+  //
+
+
+  InternalModel.prototype.destroySync = function destroySync() {
+    if (this._isDematerializing) {
+      this.cancelDestroy();
+    }
+    this._checkForOrphanedInternalModels();
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
+    // just in-case we are not one of the orphaned, we should still
+    // still destroy ourselves
+    this.destroy();
   };
 
   InternalModel.prototype._checkForOrphanedInternalModels = function _checkForOrphanedInternalModels() {
@@ -97604,9 +98386,15 @@ var InternalModel = function () {
   };
 
   InternalModel.prototype.destroy = function destroy() {
-    emberData_Debug.assert("Cannot destroy an internalModel while its record is materialized", !this._record || this._record.get('isDestroyed') || this._record.get('isDestroying'));
+    (true && !(!this._record || this._record.get('isDestroyed') || this._record.get('isDestroying')) && Ember.assert("Cannot destroy an internalModel while its record is materialized", !this._record || this._record.get('isDestroyed') || this._record.get('isDestroying')));
+
 
     this.store._internalModelDestroyed(this);
+
+    this._relationships.forEach(function (name, rel) {
+      return rel.destroy();
+    });
+
     this._isDestroyed = true;
   };
 
@@ -97632,18 +98420,6 @@ var InternalModel = function () {
 
     if (this.hasRecord) {
       this._record._notifyProperties(changedKeys);
-    }
-    this.didInitializeData();
-  };
-
-  InternalModel.prototype.becameReady = function becameReady() {
-    this.store.recordArrayManager.recordWasLoaded(this);
-  };
-
-  InternalModel.prototype.didInitializeData = function didInitializeData() {
-    if (!this.dataHasInitialized) {
-      this.becameReady();
-      this.dataHasInitialized = true;
     }
   };
 
@@ -97674,7 +98450,6 @@ var InternalModel = function () {
 
   InternalModel.prototype.loadedData = function loadedData() {
     this.send('loadedData');
-    this.didInitializeData();
   };
 
   /*
@@ -97826,14 +98601,6 @@ var InternalModel = function () {
       this.didCleanError();
     }
 
-    //Eventually rollback will always work for relationships
-    //For now we support it only out of deleted state, because we
-    //have an explicit way of knowing when the server acked the relationship change
-    if (this.isDeleted()) {
-      //TODO: Should probably move this to the state machine somehow
-      this.becameReady();
-    }
-
     if (this.isNew()) {
       this.removeFromInverseRelationships(true);
     }
@@ -97971,18 +98738,12 @@ var InternalModel = function () {
 
 
   InternalModel.prototype.removeFromInverseRelationships = function removeFromInverseRelationships() {
-    var _this2 = this;
-
     var isNew = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-    this.eachRelationship(function (name) {
-      if (_this2._relationships.has(name)) {
-        var rel = _this2._relationships.get(name);
-
-        rel.removeCompletelyFromInverse();
-        if (isNew === true) {
-          rel.clear();
-        }
+    this._relationships.forEach(function (name, rel) {
+      rel.removeCompletelyFromInverse();
+      if (isNew === true) {
+        rel.clear();
       }
     });
 
@@ -98006,19 +98767,19 @@ var InternalModel = function () {
 
 
   InternalModel.prototype.destroyRelationships = function destroyRelationships() {
-    var _this3 = this;
-
-    this.eachRelationship(function (name, relationship) {
-      if (_this3._relationships.has(name)) {
-        var rel = _this3._relationships.get(name);
-        rel.removeInverseRelationships();
-      }
+    var relationships = this._relationships;
+    relationships.forEach(function (name, rel) {
+      return destroyRelationship(rel);
     });
 
     var implicitRelationships = this._implicitRelationships;
     this.__implicitRelationships = null;
     Object.keys(implicitRelationships).forEach(function (key) {
-      implicitRelationships[key].removeInverseRelationships();
+      var rel = implicitRelationships[key];
+
+      destroyRelationship(rel);
+
+      rel.destroy();
     });
   };
 
@@ -98038,16 +98799,16 @@ var InternalModel = function () {
 
 
   InternalModel.prototype.preloadData = function preloadData(preload) {
-    var _this4 = this;
+    var _this = this;
 
     //TODO(Igor) consider the polymorphic case
     Object.keys(preload).forEach(function (key) {
       var preloadValue = get$4(preload, key);
-      var relationshipMeta = _this4.modelClass.metaForProperty(key);
+      var relationshipMeta = _this.modelClass.metaForProperty(key);
       if (relationshipMeta.isRelationship) {
-        _this4._preloadRelationship(key, preloadValue);
+        _this._preloadRelationship(key, preloadValue);
       } else {
-        _this4._data[key] = preloadValue;
+        _this._data[key] = preloadValue;
       }
     });
   };
@@ -98063,7 +98824,8 @@ var InternalModel = function () {
   };
 
   InternalModel.prototype._preloadHasMany = function _preloadHasMany(key, preloadValue, modelClass) {
-    emberData_Debug.assert("You need to pass in an array to set a hasMany property on a record", Array.isArray(preloadValue));
+    (true && !(Array.isArray(preloadValue)) && Ember.assert("You need to pass in an array to set a hasMany property on a record", Array.isArray(preloadValue)));
+
     var recordsToSet = new Array(preloadValue.length);
 
     for (var i = 0; i < preloadValue.length; i++) {
@@ -98106,7 +98868,8 @@ var InternalModel = function () {
   };
 
   InternalModel.prototype.setId = function setId(id) {
-    emberData_Debug.assert('A record\'s id cannot be changed once it is in the loaded state', this.id === null || this.id === id || this.isNew());
+    (true && !(this.id === null || this.id === id || this.isNew()) && Ember.assert('A record\'s id cannot be changed once it is in the loaded state', this.id === null || this.id === id || this.isNew()));
+
     this.id = id;
     if (this._record.get('id') !== id) {
       this._record.set('id', id);
@@ -98316,20 +99079,19 @@ var InternalModel = function () {
   };
 
   InternalModel.prototype.referenceFor = function referenceFor(kind, name) {
-    var _this5 = this;
-
     var reference = this.references[name];
 
     if (!reference) {
       var relationship = this._relationships.get(name);
 
-      emberData_Debug.runInDebug(function () {
-        var modelName = _this5.modelName;
-        emberData_Debug.assert('There is no ' + kind + ' relationship named \'' + name + '\' on a model of modelClass \'' + modelName + '\'', relationship);
+      {
+        var modelName = this.modelName;
+        (true && !(relationship) && Ember.assert('There is no ' + kind + ' relationship named \'' + name + '\' on a model of modelClass \'' + modelName + '\'', relationship));
+
 
         var actualRelationshipKind = relationship.relationshipMeta.kind;
-        emberData_Debug.assert('You tried to get the \'' + name + '\' relationship on a \'' + modelName + '\' via record.' + kind + '(\'' + name + '\'), but the relationship is of kind \'' + actualRelationshipKind + '\'. Use record.' + actualRelationshipKind + '(\'' + name + '\') instead.', actualRelationshipKind === kind);
-      });
+        (true && !(actualRelationshipKind === kind) && Ember.assert('You tried to get the \'' + name + '\' relationship on a \'' + modelName + '\' via record.' + kind + '(\'' + name + '\'), but the relationship is of kind \'' + actualRelationshipKind + '\'. Use record.' + actualRelationshipKind + '(\'' + name + '\') instead.', actualRelationshipKind === kind));
+      }
 
       if (kind === "belongsTo") {
         reference = new BelongsToReference(this.store, this, relationship);
@@ -98534,16 +99296,18 @@ var InternalModelMap = function () {
   };
 
   InternalModelMap.prototype.set = function set(id, internalModel) {
-    emberData_Debug.assert('You cannot index an internalModel by an empty id\'', id);
-    emberData_Debug.assert('You cannot set an index for an internalModel to something other than an internalModel', internalModel instanceof InternalModel);
-    emberData_Debug.assert('You cannot set an index for an internalModel that is not in the InternalModelMap', this.contains(internalModel));
-    emberData_Debug.assert('You cannot update the id index of an InternalModel once set. Attempted to update ' + id + '.', !this.has(id) || this.get(id) === internalModel);
+    (true && !(id) && Ember.assert('You cannot index an internalModel by an empty id\'', id));
+    (true && !(internalModel instanceof InternalModel) && Ember.assert('You cannot set an index for an internalModel to something other than an internalModel', internalModel instanceof InternalModel));
+    (true && !(this.contains(internalModel)) && Ember.assert('You cannot set an index for an internalModel that is not in the InternalModelMap', this.contains(internalModel)));
+    (true && !(!this.has(id) || this.get(id) === internalModel) && Ember.assert('You cannot update the id index of an InternalModel once set. Attempted to update ' + id + '.', !this.has(id) || this.get(id) === internalModel));
+
 
     this._idToModel[id] = internalModel;
   };
 
   InternalModelMap.prototype.add = function add(internalModel, id) {
-    emberData_Debug.assert('You cannot re-add an already present InternalModel to the InternalModelMap.', !this.contains(internalModel));
+    (true && !(!this.contains(internalModel)) && Ember.assert('You cannot re-add an already present InternalModel to the InternalModelMap.', !this.contains(internalModel)));
+
 
     if (id) {
       this._idToModel[id] = internalModel;
@@ -98599,10 +99363,11 @@ var InternalModelMap = function () {
   _createClass(InternalModelMap, [{
     key: 'idToRecord',
     get: function get() {
-      emberData_Debug.deprecate('Use of InternalModelMap.idToRecord is deprecated, use InternalModelMap.get(id) instead.', false, {
+      (true && !(false) && Ember.deprecate('Use of InternalModelMap.idToRecord is deprecated, use InternalModelMap.get(id) instead.', false, {
         id: 'ds.record-map.idToRecord',
         until: '2.13'
-      });
+      }));
+
       return this._idToModel;
     }
   }, {
@@ -98698,8 +99463,6 @@ var IdentityMap = function () {
   return IdentityMap;
 }();
 
-var _typeof$5 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 /*
   This is a helper method that validates a JSON API top-level document
 
@@ -98712,7 +99475,7 @@ var _typeof$5 = typeof Symbol === "function" && typeof Symbol.iterator === "symb
 */
 function validateDocumentStructure(doc) {
   var errors = [];
-  if (!doc || (typeof doc === 'undefined' ? 'undefined' : _typeof$5(doc)) !== 'object') {
+  if (!doc || typeof doc !== 'object') {
     errors.push('Top level of a JSON API document must be an object');
   } else {
     if (!('data' in doc) && !('errors' in doc) && !('meta' in doc)) {
@@ -98723,12 +99486,12 @@ function validateDocumentStructure(doc) {
       }
     }
     if ('data' in doc) {
-      if (!(doc.data === null || Array.isArray(doc.data) || _typeof$5(doc.data) === 'object')) {
+      if (!(doc.data === null || Array.isArray(doc.data) || typeof doc.data === 'object')) {
         errors.push('data must be null, an object, or an array');
       }
     }
     if ('meta' in doc) {
-      if (_typeof$5(doc.meta) !== 'object') {
+      if (typeof doc.meta !== 'object') {
         errors.push('meta must be an object');
       }
     }
@@ -98738,17 +99501,17 @@ function validateDocumentStructure(doc) {
       }
     }
     if ('links' in doc) {
-      if (_typeof$5(doc.links) !== 'object') {
+      if (typeof doc.links !== 'object') {
         errors.push('links must be an object');
       }
     }
     if ('jsonapi' in doc) {
-      if (_typeof$5(doc.jsonapi) !== 'object') {
+      if (typeof doc.jsonapi !== 'object') {
         errors.push('jsonapi must be an object');
       }
     }
     if ('included' in doc) {
-      if (_typeof$5(doc.included) !== 'object') {
+      if (typeof doc.included !== 'object') {
         errors.push('included must be an array');
       }
     }
@@ -98772,10 +99535,11 @@ function validateDocumentStructure(doc) {
 function normalizeResponseHelper(serializer, store, modelClass, payload, id, requestType) {
   var normalizedResponse = serializer.normalizeResponse(store, modelClass, payload, id, requestType);
   var validationErrors = [];
-  emberData_Debug.runInDebug(function () {
+  {
     validationErrors = validateDocumentStructure(normalizedResponse);
-  });
-  emberData_Debug.assert('normalizeResponse must return a valid JSON API document:\n\t* ' + validationErrors.join('\n\t* '), Ember.isEmpty(validationErrors));
+  }
+  (true && !(Ember.isEmpty(validationErrors)) && Ember.assert('normalizeResponse must return a valid JSON API document:\n\t* ' + validationErrors.join('\n\t* '), Ember.isEmpty(validationErrors)));
+
 
   return normalizedResponse;
 }
@@ -98842,7 +99606,6 @@ function _classCallCheck$9(instance, Constructor) { if (!(instance instanceof Co
   @class RelationshipPayloads
   @private
 */
-
 var RelationshipPayloads = function () {
   function RelationshipPayloads(store, modelName, relationshipName, relationshipMeta, inverseModelName, inverseRelationshipName, inverseRelationshipMeta) {
     _classCallCheck$9(this, RelationshipPayloads);
@@ -98897,7 +99660,8 @@ var RelationshipPayloads = function () {
     if (this._isLHS(modelName, relationshipName)) {
       return this._lhsPayloads[id];
     } else {
-      emberData_Debug.assert(modelName + ':' + relationshipName + ' is not either side of this relationship, ' + this._lhsModelName + ':' + this._lhsRelationshipName + '<->' + this._rhsModelName + ':' + this._rhsRelationshipName, this._isRHS(modelName, relationshipName));
+      (true && !(this._isRHS(modelName, relationshipName)) && Ember.assert(modelName + ':' + relationshipName + ' is not either side of this relationship, ' + this._lhsModelName + ':' + this._lhsRelationshipName + '<->' + this._rhsModelName + ':' + this._rhsRelationshipName, this._isRHS(modelName, relationshipName)));
+
       return this._rhsPayloads[id];
     }
   };
@@ -98926,7 +99690,8 @@ var RelationshipPayloads = function () {
     if (this._isLHS(modelName, relationshipName)) {
       delete this._lhsPayloads[id];
     } else {
-      emberData_Debug.assert(modelName + ':' + relationshipName + ' is not either side of this relationship, ' + this._lhsModelName + ':' + this._lhsRelationshipName + '<->' + this._rhsModelName + ':' + this._rhsRelationshipName, this._isRHS(modelName, relationshipName));
+      (true && !(this._isRHS(modelName, relationshipName)) && Ember.assert(modelName + ':' + relationshipName + ' is not either side of this relationship, ' + this._lhsModelName + ':' + this._lhsRelationshipName + '<->' + this._rhsModelName + ':' + this._rhsRelationshipName, this._isRHS(modelName, relationshipName)));
+
       delete this._rhsPayloads[id];
     }
   };
@@ -98986,7 +99751,8 @@ var RelationshipPayloads = function () {
         inverseIdToPayloads = this._rhsPayloads;
         inverseIsMany = this._rhsRelationshipIsMany;
       } else {
-        emberData_Debug.assert(modelName + ':' + relationshipName + ' is not either side of this relationship, ' + this._lhsModelName + ':' + this._lhsRelationshipName + '<->' + this._rhsModelName + ':' + this._rhsRelationshipName, this._isRHS(modelName, relationshipName));
+        (true && !(this._isRHS(modelName, relationshipName)) && Ember.assert(modelName + ':' + relationshipName + ' is not either side of this relationship, ' + this._lhsModelName + ':' + this._lhsRelationshipName + '<->' + this._rhsModelName + ':' + this._rhsRelationshipName, this._isRHS(modelName, relationshipName)));
+
         previousPayload = this._rhsPayloads[id];
         idToPayloads = this._rhsPayloads;
         inverseIdToPayloads = this._lhsPayloads;
@@ -99028,7 +99794,13 @@ var RelationshipPayloads = function () {
       // Then we will initially have set user:2 as having helicopter:1, which we
       // need to remove before adding helicopter:1 to user:4
       //
-      this._removeInverse(id, previousPayload, inverseIdToPayloads);
+      // only remove relationship information before adding if there is relationshipData.data
+      // * null is considered new information "empty", and it should win
+      // * undefined is NOT considered new information, we should keep original state
+      // * anything else is considered new information, and it should win
+      if (relationshipData.data !== undefined) {
+        this._removeInverse(id, previousPayload, inverseIdToPayloads);
+      }
       idToPayloads[id] = relationshipData;
       this._populateInverse(relationshipData, inverseRelationshipData, inverseIdToPayloads, inverseIsMany);
     }
@@ -99422,14 +100194,15 @@ function _find(adapter, store, modelClass, id, internalModel, options) {
   promise = _guard(promise, _bind(_objectIsAlive, store));
 
   return promise.then(function (adapterPayload) {
-    emberData_Debug.assert('You made a \'findRecord\' request for a \'' + modelName + '\' with id \'' + id + '\', but the adapter\'s response did not have any data', payloadIsNotBlank(adapterPayload));
+    (true && !(payloadIsNotBlank(adapterPayload)) && Ember.assert('You made a \'findRecord\' request for a \'' + modelName + '\' with id \'' + id + '\', but the adapter\'s response did not have any data', payloadIsNotBlank(adapterPayload)));
+
     var serializer = serializerForAdapter(store, adapter, modelName);
     var payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, id, 'findRecord');
-    emberData_Debug.assert('Ember Data expected the primary data returned from a \'findRecord\' response to be an object but instead it found an array.', !Array.isArray(payload.data));
-
-    emberData_Debug.warn('You requested a record of type \'' + modelName + '\' with id \'' + id + '\' but the adapter returned a payload with primary data having an id of \'' + payload.data.id + '\'. Use \'store.findRecord()\' when the requested id is the same as the one returned by the adapter. In other cases use \'store.queryRecord()\' instead http://emberjs.com/api/data/classes/DS.Store.html#method_queryRecord', payload.data.id === id, {
+    (true && !(!Array.isArray(payload.data)) && Ember.assert('Ember Data expected the primary data returned from a \'findRecord\' response to be an object but instead it found an array.', !Array.isArray(payload.data)));
+    (true && Ember.warn('You requested a record of type \'' + modelName + '\' with id \'' + id + '\' but the adapter returned a payload with primary data having an id of \'' + payload.data.id + '\'. Use \'store.findRecord()\' when the requested id is the same as the one returned by the adapter. In other cases use \'store.queryRecord()\' instead http://emberjs.com/api/data/classes/DS.Store.html#method_queryRecord', payload.data.id === id, {
       id: 'ds.store.findRecord.id-mismatch'
-    });
+    }));
+
 
     return store._push(payload);
   }, function (error) {
@@ -99456,7 +100229,8 @@ function _findMany(adapter, store, modelName, ids, internalModels) {
   promise = _guard(promise, _bind(_objectIsAlive, store));
 
   return promise.then(function (adapterPayload) {
-    emberData_Debug.assert('You made a \'findMany\' request for \'' + modelName + '\' records with ids \'[' + ids + ']\', but the adapter\'s response did not have any data', payloadIsNotBlank(adapterPayload));
+    (true && !(payloadIsNotBlank(adapterPayload)) && Ember.assert('You made a \'findMany\' request for \'' + modelName + '\' records with ids \'[' + ids + ']\', but the adapter\'s response did not have any data', payloadIsNotBlank(adapterPayload)));
+
     var serializer = serializerForAdapter(store, adapter, modelName);
     var payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'findMany');
     return store._push(payload);
@@ -99474,7 +100248,8 @@ function _findHasMany(adapter, store, internalModel, link, relationship) {
   promise = _guard(promise, _bind(_objectIsAlive, internalModel));
 
   return promise.then(function (adapterPayload) {
-    emberData_Debug.assert('You made a \'findHasMany\' request for a ' + internalModel.modelName + '\'s \'' + relationship.key + '\' relationship, using link \'' + link + '\' , but the adapter\'s response did not have any data', payloadIsNotBlank(adapterPayload));
+    (true && !(payloadIsNotBlank(adapterPayload)) && Ember.assert('You made a \'findHasMany\' request for a ' + internalModel.modelName + '\'s \'' + relationship.key + '\' relationship, using link \'' + link + '\' , but the adapter\'s response did not have any data', payloadIsNotBlank(adapterPayload)));
+
     var serializer = serializerForAdapter(store, adapter, relationship.type);
     var payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'findHasMany');
     var internalModelArray = store._push(payload);
@@ -99517,7 +100292,8 @@ function _findAll(adapter, store, modelName, sinceToken, options) {
   promise = _guard(promise, _bind(_objectIsAlive, store));
 
   return promise.then(function (adapterPayload) {
-    emberData_Debug.assert('You made a \'findAll\' request for \'' + modelName + '\' records, but the adapter\'s response did not have any data', payloadIsNotBlank(adapterPayload));
+    (true && !(payloadIsNotBlank(adapterPayload)) && Ember.assert('You made a \'findAll\' request for \'' + modelName + '\' records, but the adapter\'s response did not have any data', payloadIsNotBlank(adapterPayload)));
+
     var serializer = serializerForAdapter(store, adapter, modelName);
     var payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'findAll');
 
@@ -99530,7 +100306,14 @@ function _findAll(adapter, store, modelName, sinceToken, options) {
 
 function _query(adapter, store, modelName, query, recordArray) {
   var modelClass = store.modelFor(modelName); // adapter.query needs the class
-  var promise = adapter.query(store, modelClass, query, recordArray);
+
+  var promise = void 0;
+  if (adapter.query.length > 3) {
+    recordArray = recordArray || store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query);
+    promise = adapter.query(store, modelClass, query, recordArray);
+  } else {
+    promise = adapter.query(store, modelClass, query);
+  }
 
   var label = 'DS: Handle Adapter#query of ' + modelClass;
 
@@ -99544,8 +100327,13 @@ function _query(adapter, store, modelName, query, recordArray) {
 
     var internalModels = store._push(payload);
 
-    emberData_Debug.assert('The response to store.query is expected to be an array but it was a single record. Please wrap your response in an array or use `store.queryRecord` to query for a single record.', Array.isArray(internalModels));
-    recordArray._setInternalModels(internalModels, payload);
+    (true && !(Array.isArray(internalModels)) && Ember.assert('The response to store.query is expected to be an array but it was a single record. Please wrap your response in an array or use `store.queryRecord` to query for a single record.', Array.isArray(internalModels)));
+
+    if (recordArray) {
+      recordArray._setInternalModels(internalModels, payload);
+    } else {
+      recordArray = store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query, internalModels, payload);
+    }
 
     return recordArray;
   }, null, 'DS: Extract payload of query ' + modelName);
@@ -99563,9 +100351,10 @@ function _queryRecord(adapter, store, modelName, query) {
     var serializer = serializerForAdapter(store, adapter, modelName);
     var payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'queryRecord');
 
-    emberData_Debug.assert('Expected the primary data returned by the serializer for a \'queryRecord\' response to be a single object or null but instead it was an array.', !Array.isArray(payload.data), {
+    (true && !(!Array.isArray(payload.data)) && Ember.assert('Expected the primary data returned by the serializer for a \'queryRecord\' response to be a single object or null but instead it was an array.', !Array.isArray(payload.data), {
       id: 'ds.store.queryRecord-array-response'
-    });
+    }));
+
 
     return store._push(payload);
   }, null, 'DS: Extract payload of queryRecord ' + modelName);
@@ -99746,13 +100535,9 @@ var SnapshotRecordArray = function () {
   return SnapshotRecordArray;
 }();
 
-/**
-  @module ember-data
-*/
-
 var computed$2 = Ember.computed;
 var get$11 = Ember.get;
-var set$3 = Ember.set;
+var set$4 = Ember.set;
 var Promise$4 = Ember.RSVP.Promise;
 
 /**
@@ -99971,8 +100756,8 @@ var RecordArray = Ember.ArrayProxy.extend(Ember.Evented, {
     //   * the exception being: if an dominator has a reference to this object,
     //     and must be informed to release e.g. e.g. removing itself from th
     //     recordArrayMananger
-    set$3(this, 'content', null);
-    set$3(this, 'length', 0);
+    set$4(this, 'content', null);
+    set$4(this, 'length', 0);
     this._super.apply(this, arguments);
   },
 
@@ -100159,11 +100944,7 @@ var AdapterPopulatedRecordArray = RecordArray.extend({
       links: cloneNull(payload.links)
     });
 
-    for (var i = 0, l = internalModels.length; i < l; i++) {
-      var internalModel = internalModels[i];
-
-      internalModel._recordArrays.add(this);
-    }
+    associateWithRecordArray(internalModels, this);
 
     // TODO: should triggering didLoad event be the last action of the runLoop?
     Ember.run.once(this, 'trigger', 'didLoad');
@@ -100176,11 +100957,8 @@ var AdapterPopulatedRecordArray = RecordArray.extend({
 
 function _classCallCheck$10(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
-  @module ember-data
-*/
-
 var get$10 = Ember.get;
+var set$3 = Ember.set;
 var emberRun$1 = Ember.run;
 
 /**
@@ -100259,63 +101037,22 @@ var RecordArrayManager = function () {
         }
       }
 
-      // TODO: skip if it only changed
-      // process liveRecordArrays
-      if (this._liveRecordArrays[modelName]) {
-        this.updateLiveRecordArray(modelName, internalModels);
+      var array = this._liveRecordArrays[modelName];
+      if (array) {
+        // TODO: skip if it only changed
+        // process liveRecordArrays
+        this.updateLiveRecordArray(array, internalModels);
       }
 
       // process adapterPopulatedRecordArrays
       if (modelsToRemove.length > 0) {
-        this.removeFromAdapterPopulatedRecordArrays(modelsToRemove);
+        removeFromAdapterPopulatedRecordArrays(modelsToRemove);
       }
     }
   };
 
-  RecordArrayManager.prototype.updateLiveRecordArray = function updateLiveRecordArray(modelName, internalModels) {
-    var array = this.liveRecordArrayFor(modelName);
-
-    var modelsToAdd = [];
-    var modelsToRemove = [];
-
-    for (var i = 0; i < internalModels.length; i++) {
-      var internalModel = internalModels[i];
-      var isDeleted = internalModel.isHiddenFromRecordArrays();
-      var recordArrays = internalModel._recordArrays;
-
-      if (!isDeleted && !internalModel.isEmpty()) {
-        if (!recordArrays.has(array)) {
-          modelsToAdd.push(internalModel);
-          recordArrays.add(array);
-        }
-      }
-
-      if (isDeleted) {
-        modelsToRemove.push(internalModel);
-        recordArrays.delete(array);
-      }
-    }
-
-    if (modelsToAdd.length > 0) {
-      array._pushInternalModels(modelsToAdd);
-    }
-    if (modelsToRemove.length > 0) {
-      array._removeInternalModels(modelsToRemove);
-    }
-  };
-
-  RecordArrayManager.prototype.removeFromAdapterPopulatedRecordArrays = function removeFromAdapterPopulatedRecordArrays(internalModels) {
-    for (var i = 0; i < internalModels.length; i++) {
-      var internalModel = internalModels[i];
-      var list = internalModel._recordArrays.list;
-
-      for (var j = 0; j < list.length; j++) {
-        // TODO: group by arrays, so we can batch remove
-        list[j]._removeInternalModels([internalModel]);
-      }
-
-      internalModel._recordArrays.clear();
-    }
+  RecordArrayManager.prototype.updateLiveRecordArray = function updateLiveRecordArray(array, internalModels) {
+    return _updateLiveRecordArray(array, internalModels);
   };
 
   /**
@@ -100361,8 +101098,9 @@ var RecordArrayManager = function () {
   // TODO: remove, utilize existing flush code but make it flush sync based on 1 modelName
 
 
-  RecordArrayManager.prototype.syncLiveRecordArray = function syncLiveRecordArray(array, modelName) {
-    emberData_Debug.assert('recordArrayManger.syncLiveRecordArray expects modelName not modelClass as the second param', typeof modelName === 'string');
+  RecordArrayManager.prototype._syncLiveRecordArray = function _syncLiveRecordArray(array, modelName) {
+    (true && !(typeof modelName === 'string') && Ember.assert("recordArrayManger.syncLiveRecordArray expects modelName not modelClass as the second param", typeof modelName === 'string'));
+
     var hasNoPotentialDeletions = Object.keys(this._pending).length === 0;
     var map = this.store._internalModelsFor(modelName);
     var hasNoInsertionsOrRemovals = get$10(map, 'length') === get$10(array, 'length');
@@ -100372,30 +101110,19 @@ var RecordArrayManager = function () {
       liveRecordArrays, and is capable of strategically flushing those changes and applying
       small diffs if desired.  However, until we've refactored recordArrayManager, this dirty
       check prevents us from unnecessarily wiping out live record arrays returned by peekAll.
-     */
+      */
     if (hasNoPotentialDeletions && hasNoInsertionsOrRemovals) {
       return;
     }
 
-    this.populateLiveRecordArray(array, map.models);
-  };
-
-  // TODO: remove, when syncLiveRecordArray is removed
-
-
-  RecordArrayManager.prototype.populateLiveRecordArray = function populateLiveRecordArray(array, internalModels) {
-
+    var internalModels = this._visibleInternalModelsByType(modelName);
     var modelsToAdd = [];
     for (var i = 0; i < internalModels.length; i++) {
       var internalModel = internalModels[i];
-
-      if (!internalModel.isHiddenFromRecordArrays()) {
-        var recordArrays = internalModel._recordArrays;
-
-        if (!recordArrays.has(array)) {
-          modelsToAdd.push(internalModel);
-          recordArrays.add(array);
-        }
+      var recordArrays = internalModel._recordArrays;
+      if (recordArrays.has(array) === false) {
+        recordArrays.add(array);
+        modelsToAdd.push(internalModel);
       }
     }
 
@@ -100415,12 +101142,19 @@ var RecordArrayManager = function () {
 
 
   RecordArrayManager.prototype.updateFilter = function updateFilter(array, modelName, filter) {
-    emberData_Debug.assert('recordArrayManger.updateFilter expects modelName not modelClass as the second param, received ' + modelName, typeof modelName === 'string');
+    (true && !(typeof modelName === 'string') && Ember.assert("recordArrayManger.updateFilter expects modelName not modelClass as the second param, received " + modelName, typeof modelName === 'string'));
 
     var modelMap = this.store._internalModelsFor(modelName);
     var internalModels = modelMap.models;
 
     this.updateFilterRecordArray(array, filter, internalModels);
+  };
+
+  RecordArrayManager.prototype._didUpdateAll = function _didUpdateAll(modelName) {
+    var recordArray = this._liveRecordArrays[modelName];
+    if (recordArray) {
+      set$3(recordArray, 'isUpdating', false);
+    }
   };
 
   /**
@@ -100433,11 +101167,36 @@ var RecordArrayManager = function () {
 
 
   RecordArrayManager.prototype.liveRecordArrayFor = function liveRecordArrayFor(modelName) {
-    emberData_Debug.assert('recordArrayManger.liveRecordArrayFor expects modelName not modelClass as the param', typeof modelName === 'string');
+    (true && !(typeof modelName === 'string') && Ember.assert("recordArrayManger.liveRecordArrayFor expects modelName not modelClass as the param", typeof modelName === 'string'));
 
-    return this._liveRecordArrays[modelName] || (this._liveRecordArrays[modelName] = this.createRecordArray(modelName));
+
+    var array = this._liveRecordArrays[modelName];
+
+    if (array) {
+      // if the array already exists, synchronize
+      this._syncLiveRecordArray(array, modelName);
+    } else {
+      // if the array is being newly created merely create it with its initial
+      // content already set. This prevents unneeded change events.
+      var internalModels = this._visibleInternalModelsByType(modelName);
+      array = this.createRecordArray(modelName, internalModels);
+      this._liveRecordArrays[modelName] = array;
+    }
+
+    return array;
   };
 
+  RecordArrayManager.prototype._visibleInternalModelsByType = function _visibleInternalModelsByType(modelName) {
+    var all = this.store._internalModelsFor(modelName)._models;
+    var visible = [];
+    for (var i = 0; i < all.length; i++) {
+      var model = all[i];
+      if (model.isHiddenFromRecordArrays() === false) {
+        visible.push(model);
+      }
+    }
+    return visible;
+  };
   /**
     Get the `DS.RecordArray` for a modelName, which contains all loaded records of
     given modelName.
@@ -100448,7 +101207,8 @@ var RecordArrayManager = function () {
 
 
   RecordArrayManager.prototype.filteredRecordArraysFor = function filteredRecordArraysFor(modelName) {
-    emberData_Debug.assert('recordArrayManger.filteredRecordArraysFor expects modelName not modelClass as the param', typeof modelName === 'string');
+    (true && !(typeof modelName === 'string') && Ember.assert("recordArrayManger.filteredRecordArraysFor expects modelName not modelClass as the param", typeof modelName === 'string'));
+
 
     return this._filteredRecordArrays[modelName] || (this._filteredRecordArrays[modelName] = []);
   };
@@ -100456,20 +101216,28 @@ var RecordArrayManager = function () {
     Create a `DS.RecordArray` for a modelName.
      @method createRecordArray
     @param {String} modelName
+    @param {Array} _content (optional|private)
     @return {DS.RecordArray}
   */
 
 
-  RecordArrayManager.prototype.createRecordArray = function createRecordArray(modelName) {
-    emberData_Debug.assert('recordArrayManger.createRecordArray expects modelName not modelClass as the param', typeof modelName === 'string');
+  RecordArrayManager.prototype.createRecordArray = function createRecordArray(modelName, content) {
+    (true && !(typeof modelName === 'string') && Ember.assert("recordArrayManger.createRecordArray expects modelName not modelClass as the param", typeof modelName === 'string'));
 
-    return RecordArray.create({
+
+    var array = RecordArray.create({
       modelName: modelName,
-      content: Ember.A(),
+      content: Ember.A(content || []),
       store: this.store,
       isLoaded: true,
       manager: this
     });
+
+    if (Array.isArray(content)) {
+      associateWithRecordArray(content, array);
+    }
+
+    return array;
   };
 
   /**
@@ -100483,7 +101251,7 @@ var RecordArrayManager = function () {
 
 
   RecordArrayManager.prototype.createFilteredRecordArray = function createFilteredRecordArray(modelName, filter, query) {
-    emberData_Debug.assert('recordArrayManger.createFilteredRecordArray expects modelName not modelClass as the first param, received ' + modelName, typeof modelName === 'string');
+    (true && !(typeof modelName === 'string') && Ember.assert("recordArrayManger.createFilteredRecordArray expects modelName not modelClass as the first param, received " + modelName, typeof modelName === 'string'));
 
     var array = FilteredRecordArray.create({
       query: query,
@@ -100508,16 +101276,34 @@ var RecordArrayManager = function () {
   */
 
 
-  RecordArrayManager.prototype.createAdapterPopulatedRecordArray = function createAdapterPopulatedRecordArray(modelName, query) {
-    emberData_Debug.assert('recordArrayManger.createAdapterPopulatedRecordArray expects modelName not modelClass as the first param, received ' + modelName, typeof modelName === 'string');
+  RecordArrayManager.prototype.createAdapterPopulatedRecordArray = function createAdapterPopulatedRecordArray(modelName, query, internalModels, payload) {
+    (true && !(typeof modelName === 'string') && Ember.assert("recordArrayManger.createAdapterPopulatedRecordArray expects modelName not modelClass as the first param, received " + modelName, typeof modelName === 'string'));
 
-    var array = AdapterPopulatedRecordArray.create({
-      modelName: modelName,
-      query: query,
-      content: Ember.A(),
-      store: this.store,
-      manager: this
-    });
+
+    var array = void 0;
+    if (Array.isArray(internalModels)) {
+      array = AdapterPopulatedRecordArray.create({
+        modelName: modelName,
+        query: query,
+        content: Ember.A(internalModels),
+        store: this.store,
+        manager: this,
+        isLoaded: true,
+        isUpdating: false,
+        meta: cloneNull(payload.meta),
+        links: cloneNull(payload.links)
+      });
+
+      associateWithRecordArray(internalModels, array);
+    } else {
+      array = AdapterPopulatedRecordArray.create({
+        modelName: modelName,
+        query: query,
+        content: Ember.A(),
+        store: this.store,
+        manager: this
+      });
+    }
 
     this._adapterPopulatedRecordArrays.push(array);
 
@@ -100537,7 +101323,8 @@ var RecordArrayManager = function () {
 
 
   RecordArrayManager.prototype.registerFilteredRecordArray = function registerFilteredRecordArray(array, modelName, filter) {
-    emberData_Debug.assert('recordArrayManger.registerFilteredRecordArray expects modelName not modelClass as the second param, received ' + modelName, typeof modelName === 'string');
+    (true && !(typeof modelName === 'string') && Ember.assert("recordArrayManger.registerFilteredRecordArray expects modelName not modelClass as the second param, received " + modelName, typeof modelName === 'string'));
+
 
     this.filteredRecordArraysFor(modelName).push(array);
     this.updateFilter(array, modelName, filter);
@@ -100621,10 +101408,60 @@ function remove(array, item) {
   return false;
 }
 
+function _updateLiveRecordArray(array, internalModels) {
+  var modelsToAdd = [];
+  var modelsToRemove = [];
+
+  for (var i = 0; i < internalModels.length; i++) {
+    var internalModel = internalModels[i];
+    var isDeleted = internalModel.isHiddenFromRecordArrays();
+    var recordArrays = internalModel._recordArrays;
+
+    if (!isDeleted && !internalModel.isEmpty()) {
+      if (!recordArrays.has(array)) {
+        modelsToAdd.push(internalModel);
+        recordArrays.add(array);
+      }
+    }
+
+    if (isDeleted) {
+      modelsToRemove.push(internalModel);
+      recordArrays.delete(array);
+    }
+  }
+
+  if (modelsToAdd.length > 0) {
+    array._pushInternalModels(modelsToAdd);
+  }
+  if (modelsToRemove.length > 0) {
+    array._removeInternalModels(modelsToRemove);
+  }
+}
+
+function removeFromAdapterPopulatedRecordArrays(internalModels) {
+  for (var i = 0; i < internalModels.length; i++) {
+    var internalModel = internalModels[i];
+    var list = internalModel._recordArrays.list;
+
+    for (var j = 0; j < list.length; j++) {
+      // TODO: group by arrays, so we can batch remove
+      list[j]._removeInternalModels([internalModel]);
+    }
+
+    internalModel._recordArrays.clear();
+  }
+}
+
+function associateWithRecordArray(internalModels, array) {
+  for (var i = 0, l = internalModels.length; i < l; i++) {
+    var internalModel = internalModels[i];
+    internalModel._recordArrays.add(array);
+  }
+}
+
 function _classCallCheck$12(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/* global heimdall */
-var set$4 = Ember.set;
+var set$5 = Ember.set;
 
 /*
  * The `ContainerInstanceCache` serves as a lazy cache for looking up
@@ -100673,7 +101510,7 @@ var ContainerInstanceCache = function () {
     var instance = this._instanceFor(preferredLookupKey) || this._findInstance(namespace, this._fallbacksFor(namespace, preferredKey));
     if (instance) {
       cache[preferredKey] = instance;
-      set$4(instance, 'store', this._store);
+      set$5(instance, 'store', this._store);
     }
 
     return cache[preferredKey];
@@ -100737,12 +101574,6 @@ var ContainerInstanceCache = function () {
 
   return ContainerInstanceCache;
 }();
-
-var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/**
-  @module ember-data
-*/
 
 var badIdFormatAssertion = '`id` passed to `findRecord()` has to be non-empty string or number';
 
@@ -100857,7 +101688,7 @@ var Store = void 0;
 
   Note: When creating a new record using any of the above methods
   Ember Data will update `DS.RecordArray`s such as those returned by
-  `store#peekAll()` or `store#findAll()`. This means any
+  `store#peekAll()`, `store#findAll()` or `store#filter()`. This means any
   data bindings or computed properties that depend on the RecordArray
   will automatically be synced to include the new or updated record
   values.
@@ -100940,10 +101771,10 @@ Store = Service.extend({
   */
   serialize: function serialize(record, options) {
     if (isEnabled('ds-deprecate-store-serialize')) {
-      emberData_Debug.deprecate('Use of store.serialize is deprecated, use record.serialize instead.', false, {
+      (true && !(false) && Ember.deprecate('Use of store.serialize is deprecated, use record.serialize instead.', false, {
         id: 'ds.store.serialize',
         until: '3.0'
-      });
+      }));
     }
     var snapshot = record._internalModel.createSnapshot();
     return snapshot.serialize(options);
@@ -100965,7 +101796,8 @@ Store = Service.extend({
   defaultAdapter: computed$1('adapter', function () {
     var adapter = get$3(this, 'adapter');
 
-    emberData_Debug.assert('You tried to set `adapter` property to an instance of `DS.Adapter`, where it should be a name', typeof adapter === 'string');
+    (true && !(typeof adapter === 'string') && Ember.assert('You tried to set `adapter` property to an instance of `DS.Adapter`, where it should be a name', typeof adapter === 'string'));
+
 
     return this.adapterFor(adapter);
   }),
@@ -100998,8 +101830,9 @@ Store = Service.extend({
     @return {DS.Model} record
   */
   createRecord: function createRecord(modelName, inputProperties) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s createRecord method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s createRecord method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
     var normalizedModelName = normalizeModelName(modelName);
     var properties = copy(inputProperties) || Object.create(null);
 
@@ -101104,12 +101937,13 @@ Store = Service.extend({
     // The default `model` hook in Ember.Route calls `find(modelName, id)`,
     // that's why we have to keep this method around even though `findRecord` is
     // the public way to get a record by modelName and id.
-    emberData_Debug.assert('Using store.find(type) has been removed. Use store.findAll(modelName) to retrieve all records for a given type.', arguments.length !== 1);
-    emberData_Debug.assert('Calling store.find(modelName, id, { preload: preload }) is no longer supported. Use store.findRecord(modelName, id, { preload: preload }) instead.', !options);
-    emberData_Debug.assert('You need to pass the model name and id to the store\'s find method', arguments.length === 2);
-    emberData_Debug.assert('You cannot pass \'' + id + '\' as id to the store\'s find method', typeof id === 'string' || typeof id === 'number');
-    emberData_Debug.assert('Calling store.find() with a query object is no longer supported. Use store.query() instead.', (typeof id === 'undefined' ? 'undefined' : _typeof$1(id)) !== 'object');
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(arguments.length !== 1) && Ember.assert('Using store.find(type) has been removed. Use store.findAll(modelName) to retrieve all records for a given type.', arguments.length !== 1));
+    (true && !(!options) && Ember.assert('Calling store.find(modelName, id, { preload: preload }) is no longer supported. Use store.findRecord(modelName, id, { preload: preload }) instead.', !options));
+    (true && !(arguments.length === 2) && Ember.assert('You need to pass the model name and id to the store\'s find method', arguments.length === 2));
+    (true && !(typeof id === 'string' || typeof id === 'number') && Ember.assert('You cannot pass \'' + id + '\' as id to the store\'s find method', typeof id === 'string' || typeof id === 'number'));
+    (true && !(typeof id !== 'object') && Ember.assert('Calling store.find() with a query object is no longer supported. Use store.query() instead.', typeof id !== 'object'));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
 
     var normalizedModelName = normalizeModelName(modelName);
 
@@ -101291,9 +102125,10 @@ Store = Service.extend({
     @return {Promise} promise
   */
   findRecord: function findRecord(modelName, id, options) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s findRecord method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
-    emberData_Debug.assert(badIdFormatAssertion, typeof id === 'string' && id.length > 0 || typeof id === 'number' && !isNaN(id));
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s findRecord method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+    (true && !(typeof id === 'string' && id.length > 0 || typeof id === 'number' && !isNaN(id)) && Ember.assert(badIdFormatAssertion, typeof id === 'string' && id.length > 0 || typeof id === 'number' && !isNaN(id)));
+
 
     var normalizedModelName = normalizeModelName(modelName);
 
@@ -101369,8 +102204,9 @@ Store = Service.extend({
     @return {Promise} promise
   */
   findByIds: function findByIds(modelName, ids) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s findByIds method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s findByIds method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
 
     var promises = new Array(ids.length);
 
@@ -101397,8 +102233,9 @@ Store = Service.extend({
     var modelName = internalModel.modelName;
     var adapter = this.adapterFor(modelName);
 
-    emberData_Debug.assert('You tried to find a record but you have no adapter (for ' + modelName + ')', adapter);
-    emberData_Debug.assert('You tried to find a record but your adapter (for ' + modelName + ') does not implement \'findRecord\'', typeof adapter.findRecord === 'function');
+    (true && !(adapter) && Ember.assert('You tried to find a record but you have no adapter (for ' + modelName + ')', adapter));
+    (true && !(typeof adapter.findRecord === 'function') && Ember.assert('You tried to find a record but your adapter (for ' + modelName + ') does not implement \'findRecord\'', typeof adapter.findRecord === 'function'));
+
 
     return _find(adapter, this, internalModel.type, internalModel.id, internalModel, options);
   },
@@ -101492,11 +102329,12 @@ Store = Service.extend({
       }
 
       if (missingInternalModels.length) {
-        emberData_Debug.warn('Ember Data expected to find records with the following ids in the adapter response but they were missing: ' + inspect(missingInternalModels.map(function (r) {
+        (true && Ember.warn('Ember Data expected to find records with the following ids in the adapter response but they were missing: ' + inspect(missingInternalModels.map(function (r) {
           return r.id;
         })), false, {
           id: 'ds.store.missing-records-from-adapter'
-        });
+        }));
+
         rejectInternalModels(missingInternalModels);
       }
     }
@@ -101555,7 +102393,7 @@ Store = Service.extend({
           var pair = seeking[groupedInternalModels[0].id];
           _fetchRecord(pair);
         } else {
-          emberData_Debug.assert("You cannot return an empty array from adapter's method groupRecordsForFindMany", false);
+          (true && !(false) && Ember.assert("You cannot return an empty array from adapter's method groupRecordsForFindMany", false));
         }
       }
     } else {
@@ -101619,8 +102457,9 @@ Store = Service.extend({
     @return {DS.Model|null} record
   */
   peekRecord: function peekRecord(modelName, id) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s peekRecord method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s peekRecord method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
     var normalizedModelName = normalizeModelName(modelName);
 
     if (this.hasRecordForId(normalizedModelName, id)) {
@@ -101647,9 +102486,10 @@ Store = Service.extend({
 
     var adapter = this.adapterFor(modelName);
 
-    emberData_Debug.assert('You cannot reload a record without an ID', id);
-    emberData_Debug.assert('You tried to reload a record but you have no adapter (for ' + modelName + ')', adapter);
-    emberData_Debug.assert('You tried to reload a record but your adapter does not implement \'findRecord\'', typeof adapter.findRecord === 'function' || typeof adapter.find === 'function');
+    (true && !(id) && Ember.assert('You cannot reload a record without an ID', id));
+    (true && !(adapter) && Ember.assert('You tried to reload a record but you have no adapter (for ' + modelName + ')', adapter));
+    (true && !(typeof adapter.findRecord === 'function' || typeof adapter.find === 'function') && Ember.assert('You tried to reload a record but your adapter does not implement \'findRecord\'', typeof adapter.findRecord === 'function' || typeof adapter.find === 'function'));
+
 
     return this._scheduleFetch(internalModel);
   },
@@ -101672,8 +102512,9 @@ Store = Service.extend({
     @return {Boolean}
   */
   hasRecordForId: function hasRecordForId(modelName, id) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s hasRecordForId method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s hasRecordForId method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
 
     var normalizedModelName = normalizeModelName(modelName);
 
@@ -101694,8 +102535,9 @@ Store = Service.extend({
     @return {DS.Model} record
   */
   recordForId: function recordForId(modelName, id) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s recordForId method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s recordForId method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
 
     return this._internalModelForId(modelName, id).getRecord();
   },
@@ -101703,15 +102545,16 @@ Store = Service.extend({
     var trueId = coerceId(id);
     var internalModel = this._internalModelsFor(modelName).get(trueId);
 
-    if (!internalModel) {
-      internalModel = this._buildInternalModel(modelName, trueId);
+    if (internalModel) {
+      if (internalModel.hasScheduledDestroy()) {
+        internalModel.destroySync();
+        return this._buildInternalModel(modelName, trueId);
+      } else {
+        return internalModel;
+      }
     } else {
-      // if we already have an internalModel, we need to ensure any async teardown is cancelled
-      //   since we want it again.
-      internalModel.cancelDestroy();
+      return this._buildInternalModel(modelName, trueId);
     }
-
-    return internalModel;
   },
   _internalModelDidReceiveRelationshipData: function _internalModelDidReceiveRelationshipData(modelName, id, relationshipData) {
     this._relationshipsPayloads.push(modelName, id, relationshipData);
@@ -101757,8 +102600,9 @@ Store = Service.extend({
   findHasMany: function findHasMany(internalModel, link, relationship) {
     var adapter = this.adapterFor(internalModel.modelName);
 
-    emberData_Debug.assert('You tried to load a hasMany relationship but you have no adapter (for ' + internalModel.modelName + ')', adapter);
-    emberData_Debug.assert('You tried to load a hasMany relationship from a specified \'link\' in the original payload but your adapter does not implement \'findHasMany\'', typeof adapter.findHasMany === 'function');
+    (true && !(adapter) && Ember.assert('You tried to load a hasMany relationship but you have no adapter (for ' + internalModel.modelName + ')', adapter));
+    (true && !(typeof adapter.findHasMany === 'function') && Ember.assert('You tried to load a hasMany relationship from a specified \'link\' in the original payload but your adapter does not implement \'findHasMany\'', typeof adapter.findHasMany === 'function'));
+
 
     return _findHasMany(adapter, this, internalModel, link, relationship);
   },
@@ -101775,8 +102619,9 @@ Store = Service.extend({
   findBelongsTo: function findBelongsTo(internalModel, link, relationship) {
     var adapter = this.adapterFor(internalModel.modelName);
 
-    emberData_Debug.assert('You tried to load a belongsTo relationship but you have no adapter (for ' + internalModel.modelName + ')', adapter);
-    emberData_Debug.assert('You tried to load a belongsTo relationship from a specified \'link\' in the original payload but your adapter does not implement \'findBelongsTo\'', typeof adapter.findBelongsTo === 'function');
+    (true && !(adapter) && Ember.assert('You tried to load a belongsTo relationship but you have no adapter (for ' + internalModel.modelName + ')', adapter));
+    (true && !(typeof adapter.findBelongsTo === 'function') && Ember.assert('You tried to load a belongsTo relationship from a specified \'link\' in the original payload but your adapter does not implement \'findBelongsTo\'', typeof adapter.findBelongsTo === 'function'));
+
 
     return _findBelongsTo(adapter, this, internalModel, link, relationship);
   },
@@ -101821,25 +102666,23 @@ Store = Service.extend({
     @return {Promise} promise
   */
   query: function query(modelName, _query2) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s query method', isPresent(modelName));
-    emberData_Debug.assert('You need to pass a query hash to the store\'s query method', _query2);
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s query method', isPresent(modelName)));
+    (true && !(_query2) && Ember.assert('You need to pass a query hash to the store\'s query method', _query2));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
 
     var normalizedModelName = normalizeModelName(modelName);
     return this._query(normalizedModelName, _query2);
   },
   _query: function _query$$1(modelName, query, array) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s query method', isPresent(modelName));
-    emberData_Debug.assert('You need to pass a query hash to the store\'s query method', query);
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
-
-    array = array || this.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query);
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s query method', isPresent(modelName)));
+    (true && !(query) && Ember.assert('You need to pass a query hash to the store\'s query method', query));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
 
     var adapter = this.adapterFor(modelName);
+    (true && !(adapter) && Ember.assert('You tried to load a query but you have no adapter (for ' + modelName + ')', adapter));
+    (true && !(typeof adapter.query === 'function') && Ember.assert('You tried to load a query but your adapter does not implement \'query\'', typeof adapter.query === 'function'));
 
-
-    emberData_Debug.assert('You tried to load a query but you have no adapter (for ' + modelName + ')', adapter);
-    emberData_Debug.assert('You tried to load a query but your adapter does not implement \'query\'', typeof adapter.query === 'function');
 
     var pA = promiseArray(_query(adapter, this, modelName, query, array));
 
@@ -101926,16 +102769,18 @@ Store = Service.extend({
     @return {Promise} promise which resolves with the found record or `null`
   */
   queryRecord: function queryRecord(modelName, query) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s queryRecord method', isPresent(modelName));
-    emberData_Debug.assert('You need to pass a query hash to the store\'s queryRecord method', query);
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s queryRecord method', isPresent(modelName)));
+    (true && !(query) && Ember.assert('You need to pass a query hash to the store\'s queryRecord method', query));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
 
     var normalizedModelName = normalizeModelName(modelName);
 
     var adapter = this.adapterFor(normalizedModelName);
 
-    emberData_Debug.assert('You tried to make a query but you have no adapter (for ' + normalizedModelName + ')', adapter);
-    emberData_Debug.assert('You tried to make a query but your adapter does not implement \'queryRecord\'', typeof adapter.queryRecord === 'function');
+    (true && !(adapter) && Ember.assert('You tried to make a query but you have no adapter (for ' + normalizedModelName + ')', adapter));
+    (true && !(typeof adapter.queryRecord === 'function') && Ember.assert('You tried to make a query but your adapter does not implement \'queryRecord\'', typeof adapter.queryRecord === 'function'));
+
 
     return promiseObject(_queryRecord(adapter, this, modelName, query).then(function (internalModel) {
       // the promise returned by store.queryRecord is expected to resolve with
@@ -102100,8 +102945,8 @@ Store = Service.extend({
     @return {Promise} promise
   */
   findAll: function findAll(modelName, options) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s findAll method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s findAll method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
 
     var normalizedModelName = normalizeModelName(modelName);
     var fetch = this._fetchAll(normalizedModelName, this.peekAll(normalizedModelName), options);
@@ -102123,8 +102968,9 @@ Store = Service.extend({
     var adapter = this.adapterFor(modelName);
     var sinceToken = this._internalModelsFor(modelName).metadata.since;
 
-    emberData_Debug.assert('You tried to load all records but you have no adapter (for ' + modelName + ')', adapter);
-    emberData_Debug.assert('You tried to load all records but your adapter does not implement \'findAll\'', typeof adapter.findAll === 'function');
+    (true && !(adapter) && Ember.assert('You tried to load all records but you have no adapter (for ' + modelName + ')', adapter));
+    (true && !(typeof adapter.findAll === 'function') && Ember.assert('You tried to load all records but your adapter does not implement \'findAll\'', typeof adapter.findAll === 'function'));
+
 
     if (options.reload) {
       set$1(array, 'isUpdating', true);
@@ -102157,12 +103003,11 @@ Store = Service.extend({
     @private
   */
   _didUpdateAll: function _didUpdateAll(modelName) {
-    var liveRecordArray = this.recordArrayManager.liveRecordArrayFor(modelName);
-
-    set$1(liveRecordArray, 'isUpdating', false);
+    this.recordArrayManager._didUpdateAll(modelName);
   },
   didUpdateAll: function didUpdateAll(modelName) {
-    emberData_Debug.deprecate('didUpdateAll was documented as private and will be removed in the next version of Ember Data.');
+    (true && !(false) && Ember.deprecate('didUpdateAll was documented as private and will be removed in the next version of Ember Data.', false, { id: 'ember-data.didUpdateAll', until: '2.17.0' }));
+
     return this._didUpdateAll(modelName);
   },
 
@@ -102187,14 +103032,11 @@ Store = Service.extend({
     @return {DS.RecordArray}
   */
   peekAll: function peekAll(modelName) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s peekAll method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s peekAll method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
     var normalizedModelName = normalizeModelName(modelName);
-    var liveRecordArray = this.recordArrayManager.liveRecordArrayFor(normalizedModelName);
-
-    this.recordArrayManager.syncLiveRecordArray(liveRecordArray, normalizedModelName);
-
-    return liveRecordArray;
+    return this.recordArrayManager.liveRecordArrayFor(normalizedModelName);
   },
 
 
@@ -102210,7 +103052,8 @@ Store = Service.extend({
    @param {String} modelName
   */
   unloadAll: function unloadAll(modelName) {
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, !modelName || typeof modelName === 'string');
+    (true && !(!modelName || typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, !modelName || typeof modelName === 'string'));
+
 
     if (arguments.length === 0) {
       this._identityMap.clear();
@@ -102266,11 +103109,12 @@ Store = Service.extend({
     @deprecated
   */
   filter: function filter(modelName, query, _filter) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s filter method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s filter method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
 
     if (!ENV.ENABLE_DS_FILTER) {
-      emberData_Debug.assert('The filter API has been moved to a plugin. To enable store.filter using an environment flag, or to use an alternative, you can visit the ember-data-filter addon page. https://github.com/ember-data/ember-data-filter', false);
+      (true && !(false) && Ember.assert('The filter API has been moved to a plugin. To enable store.filter using an environment flag, or to use an alternative, you can visit the ember-data-filter addon page. https://github.com/ember-data/ember-data-filter', false));
     }
 
     var promise = void 0;
@@ -102311,10 +103155,11 @@ Store = Service.extend({
     @return {boolean}
   */
   recordIsLoaded: function recordIsLoaded(modelName, id) {
-    emberData_Debug.deprecate('Use of recordIsLoaded is deprecated, use hasRecordForId instead.', false, {
+    (true && !(false) && Ember.deprecate('Use of recordIsLoaded is deprecated, use hasRecordForId instead.', false, {
       id: 'ds.store.recordIsLoaded',
       until: '3.0'
-    });
+    }));
+
     return this.hasRecordForId(modelName, id);
   },
 
@@ -102364,8 +103209,7 @@ Store = Service.extend({
       var operation = void 0;
 
       if (internalModel.currentState.stateName === 'root.deleted.saved') {
-        resolver.resolve();
-        continue;
+        return resolver.resolve();
       } else if (internalModel.isNew()) {
         operation = 'createRecord';
       } else if (internalModel.isDeleted()) {
@@ -102400,7 +103244,7 @@ Store = Service.extend({
       this.updateId(internalModel, data);
       this._setupRelationshipsForModel(internalModel, data);
     } else {
-      emberData_Debug.assert('Your ' + internalModel.modelName + ' record was saved to the server, but the response does not have an id and no id has been set client side. Records must have ids. Please update the server response to provide an id in the response or generate the id on the client side either before saving the record or while normalizing the response.', internalModel.id);
+      (true && !(internalModel.id) && Ember.assert('Your ' + internalModel.modelName + ' record was saved to the server, but the response does not have an id and no id has been set client side. Records must have ids. Please update the server response to provide an id in the response or generate the id on the client side either before saving the record or while normalizing the response.', internalModel.id));
     }
 
     //We first make sure the primary data has been updated
@@ -102452,17 +103296,25 @@ Store = Service.extend({
     var id = coerceId(data.id);
 
     // ID absolutely can't be missing if the oldID is empty (missing Id in response for a new record)
-    emberData_Debug.assert('\'' + modelName + '\' was saved to the server, but the response does not have an id and your record does not either.', !(id === null && oldId === null));
+    (true && !(!(id === null && oldId === null)) && Ember.assert('\'' + modelName + '\' was saved to the server, but the response does not have an id and your record does not either.', !(id === null && oldId === null)));
 
     // ID absolutely can't be different than oldID if oldID is not null
-    emberData_Debug.assert('\'' + modelName + ':' + oldId + '\' was saved to the server, but the response returned the new id \'' + id + '\'. The store cannot assign a new id to a record that already has an id.', !(oldId !== null && id !== oldId));
+
+    (true && !(!(oldId !== null && id !== oldId)) && Ember.assert('\'' + modelName + ':' + oldId + '\' was saved to the server, but the response returned the new id \'' + id + '\'. The store cannot assign a new id to a record that already has an id.', !(oldId !== null && id !== oldId)));
 
     // ID can be null if oldID is not null (altered ID in response for a record)
     // however, this is more than likely a developer error.
+
     if (oldId !== null && id === null) {
-      emberData_Debug.warn('Your ' + modelName + ' record was saved to the server, but the response does not have an id.', !(oldId !== null && id === null));
+      (true && Ember.warn('Your ' + modelName + ' record was saved to the server, but the response does not have an id.', !(oldId !== null && id === null)));
+
       return;
     }
+
+    var existingInternalModel = this._existingInternalModelForId(modelName, id);
+
+    (true && !(isNone(existingInternalModel) || existingInternalModel === internalModel) && Ember.assert('\'' + modelName + '\' was saved to the server, but the response returned the new id \'' + id + '\', which has already been used with another record.\'', isNone(existingInternalModel) || existingInternalModel === internalModel));
+
 
     this._internalModelsFor(internalModel.modelName).set(id, internalModel);
 
@@ -102495,9 +103347,15 @@ Store = Service.extend({
   _load: function _load(data) {
     var internalModel = this._internalModelForId(data.type, data.id);
 
+    var isUpdate = internalModel.currentState.isEmpty === false;
+
     internalModel.setupData(data);
 
-    this.recordArrayManager.recordDidChange(internalModel);
+    if (isUpdate) {
+      this.recordArrayManager.recordDidChange(internalModel);
+    } else {
+      this.recordArrayManager.recordWasLoaded(internalModel);
+    }
 
     return internalModel;
   },
@@ -102559,8 +103417,9 @@ Store = Service.extend({
     @return {DS.Model}
   */
   modelFor: function modelFor(modelName) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s modelFor method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s modelFor method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
 
     var normalizedModelName = normalizeModelName(modelName);
 
@@ -102593,9 +103452,10 @@ Store = Service.extend({
       // interopt with the future
       var klass = getOwner(this).factoryFor ? factory.class : factory;
 
-      emberData_Debug.assert('\'' + inspect(klass) + '\' does not appear to be an ember-data model', klass.isModel);
+      (true && !(klass.isModel) && Ember.assert('\'' + inspect(klass) + '\' does not appear to be an ember-data model', klass.isModel));
 
       // TODO: deprecate this
+
       klass.modelName = klass.modelName || modelName;
 
       this._modelFactoryCache[modelName] = factory;
@@ -102609,8 +103469,9 @@ Store = Service.extend({
    @private
    */
   modelFactoryFor: function modelFactoryFor(modelName) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s modelFactoryFor method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s modelFactoryFor method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
 
     var normalizedModelName = normalizeModelName(modelName);
     var owner = getOwner(this);
@@ -102809,7 +103670,8 @@ Store = Service.extend({
         return null;
       }
 
-      emberData_Debug.assert('Expected an object in the \'data\' property in a call to \'push\' for ' + jsonApiDoc.type + ', but was ' + typeOf(jsonApiDoc.data), typeOf(jsonApiDoc.data) === 'object');
+      (true && !(typeOf(jsonApiDoc.data) === 'object') && Ember.assert('Expected an object in the \'data\' property in a call to \'push\' for ' + jsonApiDoc.type + ', but was ' + typeOf(jsonApiDoc.data), typeOf(jsonApiDoc.data) === 'object'));
+
 
       return _this._pushInternalModel(jsonApiDoc.data);
     });
@@ -102827,34 +103689,34 @@ Store = Service.extend({
     }
   },
   _pushInternalModel: function _pushInternalModel(data) {
-    var _this2 = this;
-
     var modelName = data.type;
-    emberData_Debug.assert('You must include an \'id\' for ' + modelName + ' in an object passed to \'push\'', data.id !== null && data.id !== undefined && data.id !== '');
-    emberData_Debug.assert('You tried to push data with a type \'' + modelName + '\' but no model could be found with that name.', this._hasModelFor(modelName));
+    (true && !(data.id !== null && data.id !== undefined && data.id !== '') && Ember.assert('You must include an \'id\' for ' + modelName + ' in an object passed to \'push\'', data.id !== null && data.id !== undefined && data.id !== ''));
+    (true && !(this._hasModelFor(modelName)) && Ember.assert('You tried to push data with a type \'' + modelName + '\' but no model could be found with that name.', this._hasModelFor(modelName)));
 
-    emberData_Debug.runInDebug(function () {
+
+    {
       // If ENV.DS_WARN_ON_UNKNOWN_KEYS is set to true and the payload
       // contains unknown attributes or relationships, log a warning.
 
       if (ENV.DS_WARN_ON_UNKNOWN_KEYS) {
-        var modelClass = _this2._modelFor(modelName);
+        var modelClass = this._modelFor(modelName);
 
         // Check unknown attributes
         var unknownAttributes = Object.keys(data.attributes || {}).filter(function (key) {
           return !get$3(modelClass, 'fields').has(key);
         });
         var unknownAttributesMessage = 'The payload for \'' + modelName + '\' contains these unknown attributes: ' + unknownAttributes + '. Make sure they\'ve been defined in your model.';
-        emberData_Debug.warn(unknownAttributesMessage, unknownAttributes.length === 0, { id: 'ds.store.unknown-keys-in-payload' });
+        (true && Ember.warn(unknownAttributesMessage, unknownAttributes.length === 0, { id: 'ds.store.unknown-keys-in-payload' }));
 
         // Check unknown relationships
+
         var unknownRelationships = Object.keys(data.relationships || {}).filter(function (key) {
           return !get$3(modelClass, 'fields').has(key);
         });
         var unknownRelationshipsMessage = 'The payload for \'' + modelName + '\' contains these unknown relationships: ' + unknownRelationships + '. Make sure they\'ve been defined in your model.';
-        emberData_Debug.warn(unknownRelationshipsMessage, unknownRelationships.length === 0, { id: 'ds.store.unknown-keys-in-payload' });
+        (true && Ember.warn(unknownRelationshipsMessage, unknownRelationships.length === 0, { id: 'ds.store.unknown-keys-in-payload' }));
       }
-    });
+    }
 
     // Actually load the record into the store.
     var internalModel = this._load(data);
@@ -102944,10 +103806,11 @@ Store = Service.extend({
     if (!inputPayload) {
       payload = modelName;
       serializer = defaultSerializer(this);
-      emberData_Debug.assert('You cannot use \'store#pushPayload\' without a modelName unless your default serializer defines \'pushPayload\'', typeof serializer.pushPayload === 'function');
+      (true && !(typeof serializer.pushPayload === 'function') && Ember.assert('You cannot use \'store#pushPayload\' without a modelName unless your default serializer defines \'pushPayload\'', typeof serializer.pushPayload === 'function'));
     } else {
       payload = inputPayload;
-      emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+      (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
       var normalizedModelName = normalizeModelName(modelName);
       serializer = this.serializerFor(normalizedModelName);
     }
@@ -102976,8 +103839,9 @@ Store = Service.extend({
     @return {Object} The normalized payload
   */
   normalize: function normalize(modelName, payload) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s normalize method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + inspect(modelName), typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s normalize method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store methods has been removed. Please pass a dasherized string instead of ' + inspect(modelName), typeof modelName === 'string'));
+
     var normalizedModelName = normalizeModelName(modelName);
     var serializer = this.serializerFor(normalizedModelName);
     var model = this._modelFor(normalizedModelName);
@@ -102996,23 +103860,36 @@ Store = Service.extend({
     @return {InternalModel} internal model
   */
   _buildInternalModel: function _buildInternalModel(modelName, id, data) {
+    (true && !(typeof modelName === 'string') && Ember.assert('You can no longer pass a modelClass as the first argument to store._buildInternalModel. Pass modelName instead.', typeof modelName === 'string'));
 
-    emberData_Debug.assert('You can no longer pass a modelClass as the first argument to store._buildInternalModel. Pass modelName instead.', typeof modelName === 'string');
 
-    var recordMap = this._internalModelsFor(modelName);
+    var existingInternalModel = this._existingInternalModelForId(modelName, id);
 
-    emberData_Debug.assert('The id ' + id + ' has already been used with another record for modelClass \'' + modelName + '\'.', !id || !recordMap.get(id));
+    (true && !(!existingInternalModel) && Ember.assert('The id ' + id + ' has already been used with another record for modelClass \'' + modelName + '\'.', !existingInternalModel));
 
     // lookupFactory should really return an object that creates
     // instances with the injections applied
+
     var internalModel = new InternalModel(modelName, id, this, data);
 
-    recordMap.add(internalModel, id);
+    this._internalModelsFor(modelName).add(internalModel, id);
 
     return internalModel;
   },
+  _existingInternalModelForId: function _existingInternalModelForId(modelName, id) {
+    var internalModel = this._internalModelsFor(modelName).get(id);
+
+    if (internalModel && internalModel.hasScheduledDestroy()) {
+      // unloadRecord is async, if one attempts to unload + then sync create,
+      // we must ensure the unload is complete before starting the create
+      internalModel.destroySync();
+      internalModel = null;
+    }
+    return internalModel;
+  },
   buildInternalModel: function buildInternalModel(modelName, id, data) {
-    emberData_Debug.deprecate('buildInternalModel was documented as private and will be removed in the next version of Ember Data.');
+    (true && !(false) && Ember.deprecate('buildInternalModel was documented as private and will be removed in the next version of Ember Data.', false, { id: 'ember-data.buildInternalModel', until: '2.17.0' }));
+
     return this._buildInternalModel(modelName, id, data);
   },
 
@@ -103061,8 +103938,9 @@ Store = Service.extend({
     @return DS.Adapter
   */
   adapterFor: function adapterFor(modelName) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s adapterFor method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store.adapterFor has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s adapterFor method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store.adapterFor has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
     var normalizedModelName = normalizeModelName(modelName);
 
     return this._instanceCache.get('adapter', normalizedModelName);
@@ -103091,24 +103969,27 @@ Store = Service.extend({
     @return {DS.Serializer}
   */
   serializerFor: function serializerFor(modelName) {
-    emberData_Debug.assert('You need to pass a model name to the store\'s serializerFor method', isPresent(modelName));
-    emberData_Debug.assert('Passing classes to store.serializerFor has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string');
+    (true && !(isPresent(modelName)) && Ember.assert('You need to pass a model name to the store\'s serializerFor method', isPresent(modelName)));
+    (true && !(typeof modelName === 'string') && Ember.assert('Passing classes to store.serializerFor has been removed. Please pass a dasherized string instead of ' + modelName, typeof modelName === 'string'));
+
     var normalizedModelName = normalizeModelName(modelName);
 
     return this._instanceCache.get('serializer', normalizedModelName);
   },
   lookupAdapter: function lookupAdapter(name) {
-    emberData_Debug.deprecate('Use of lookupAdapter is deprecated, use adapterFor instead.', false, {
+    (true && !(false) && Ember.deprecate('Use of lookupAdapter is deprecated, use adapterFor instead.', false, {
       id: 'ds.store.lookupAdapter',
       until: '3.0'
-    });
+    }));
+
     return this.adapterFor(name);
   },
   lookupSerializer: function lookupSerializer(name) {
-    emberData_Debug.deprecate('Use of lookupSerializer is deprecated, use serializerFor instead.', false, {
+    (true && !(false) && Ember.deprecate('Use of lookupSerializer is deprecated, use serializerFor instead.', false, {
       id: 'ds.store.lookupSerializer',
       until: '3.0'
-    });
+    }));
+
     return this.serializerFor(name);
   },
   willDestroy: function willDestroy() {
@@ -103120,14 +104001,14 @@ Store = Service.extend({
     this.unloadAll();
   },
   _updateRelationshipState: function _updateRelationshipState(relationship) {
-    var _this3 = this;
+    var _this2 = this;
 
     if (this._updatedRelationships.push(relationship) !== 1) {
       return;
     }
 
     this._backburner.join(function () {
-      _this3._backburner.schedule('syncRelationships', _this3, _this3._flushUpdatedRelationships);
+      _this2._backburner.schedule('syncRelationships', _this2, _this2._flushUpdatedRelationships);
     });
   },
   _flushUpdatedRelationships: function _flushUpdatedRelationships() {
@@ -103160,9 +104041,10 @@ Store = Service.extend({
       return;
     }
 
-    emberData_Debug.assert('A ' + relationship.internalModel.modelName + ' record was pushed into the store with the value of ' + relationship.key + ' being ' + inspect(resourceIdentifier) + ', but ' + relationship.key + ' is a belongsTo relationship so the value must not be an array. You should probably check your data payload or serializer.', !Array.isArray(resourceIdentifier));
+    (true && !(!Array.isArray(resourceIdentifier)) && Ember.assert('A ' + relationship.internalModel.modelName + ' record was pushed into the store with the value of ' + relationship.key + ' being ' + inspect(resourceIdentifier) + ', but ' + relationship.key + ' is a belongsTo relationship so the value must not be an array. You should probably check your data payload or serializer.', !Array.isArray(resourceIdentifier)));
 
     //TODO:Better asserts
+
     return this._internalModelForId(resourceIdentifier.type, resourceIdentifier.id);
   },
   _pushResourceIdentifiers: function _pushResourceIdentifiers(relationship, resourceIdentifiers) {
@@ -103170,7 +104052,8 @@ Store = Service.extend({
       return;
     }
 
-    emberData_Debug.assert('A ' + relationship.internalModel.modelName + ' record was pushed into the store with the value of ' + relationship.key + ' being \'' + inspect(resourceIdentifiers) + '\', but ' + relationship.key + ' is a hasMany relationship so the value must be an array. You should probably check your data payload or serializer.', Array.isArray(resourceIdentifiers));
+    (true && !(Array.isArray(resourceIdentifiers)) && Ember.assert('A ' + relationship.internalModel.modelName + ' record was pushed into the store with the value of ' + relationship.key + ' being \'' + inspect(resourceIdentifiers) + '\', but ' + relationship.key + ' is a hasMany relationship so the value must be an array. You should probably check your data payload or serializer.', Array.isArray(resourceIdentifiers)));
+
 
     var _internalModels = new Array(resourceIdentifiers.length);
     for (var i = 0; i < resourceIdentifiers.length; i++) {
@@ -103191,13 +104074,15 @@ function _commit(adapter, store, operation, snapshot) {
   var internalModel = snapshot._internalModel;
   var modelName = snapshot.modelName;
   var modelClass = store._modelFor(modelName);
-  emberData_Debug.assert('You tried to update a record but you have no adapter (for ' + modelName + ')', adapter);
-  emberData_Debug.assert('You tried to update a record but your adapter (for ' + modelName + ') does not implement \'' + operation + '\'', typeof adapter[operation] === 'function');
+  (true && !(adapter) && Ember.assert('You tried to update a record but you have no adapter (for ' + modelName + ')', adapter));
+  (true && !(typeof adapter[operation] === 'function') && Ember.assert('You tried to update a record but your adapter (for ' + modelName + ') does not implement \'' + operation + '\'', typeof adapter[operation] === 'function'));
+
   var promise = adapter[operation](store, modelClass, snapshot);
   var serializer = serializerForAdapter(store, adapter, modelName);
   var label = 'DS: Extract and notify about ' + operation + ' completion of ' + internalModel;
 
-  emberData_Debug.assert('Your adapter\'s \'' + operation + '\' method must return a value, but it returned \'undefined\'', promise !== undefined);
+  (true && !(promise !== undefined) && Ember.assert('Your adapter\'s \'' + operation + '\' method must return a value, but it returned \'undefined\'', promise !== undefined));
+
 
   promise = Promise$1.resolve(promise, label);
   promise = _guard(promise, _bind(_objectIsAlive, store));
@@ -103291,30 +104176,30 @@ function setupRelationships(store, internalModel, data, modelNameToInverseMap) {
 
     if (relationshipRequiresNotification) {
       var relationshipData = data.relationships[relationshipName];
-      relationships.get(relationshipName).push(relationshipData);
+      relationships.get(relationshipName).push(relationshipData, false);
     }
 
     // in debug, assert payload validity eagerly
-    emberData_Debug.runInDebug(function () {
+    {
       var relationshipMeta = get$3(internalModel.type, 'relationshipsByName').get(relationshipName);
-      var relationshipData = data.relationships[relationshipName];
-      if (!relationshipData || !relationshipMeta) {
+      var _relationshipData = data.relationships[relationshipName];
+      if (!_relationshipData || !relationshipMeta) {
         return;
       }
 
-      if (relationshipData.links) {
+      if (_relationshipData.links) {
         var isAsync = relationshipMeta.options && relationshipMeta.options.async !== false;
-        emberData_Debug.warn('You pushed a record of type \'' + internalModel.type.modelName + '\' with a relationship \'' + relationshipName + '\' configured as \'async: false\'. You\'ve included a link but no primary data, this may be an error in your payload.', isAsync || relationshipData.data, {
+        (true && Ember.warn('You pushed a record of type \'' + internalModel.type.modelName + '\' with a relationship \'' + relationshipName + '\' configured as \'async: false\'. You\'ve included a link but no primary data, this may be an error in your payload.', isAsync || _relationshipData.data, {
           id: 'ds.store.push-link-for-sync-relationship'
-        });
-      } else if (relationshipData.data) {
+        }));
+      } else if (_relationshipData.data) {
         if (relationshipMeta.kind === 'belongsTo') {
-          emberData_Debug.assert('A ' + internalModel.type.modelName + ' record was pushed into the store with the value of ' + relationshipName + ' being ' + inspect(relationshipData.data) + ', but ' + relationshipName + ' is a belongsTo relationship so the value must not be an array. You should probably check your data payload or serializer.', !Array.isArray(relationshipData.data));
+          (true && !(!Array.isArray(_relationshipData.data)) && Ember.assert('A ' + internalModel.type.modelName + ' record was pushed into the store with the value of ' + relationshipName + ' being ' + inspect(_relationshipData.data) + ', but ' + relationshipName + ' is a belongsTo relationship so the value must not be an array. You should probably check your data payload or serializer.', !Array.isArray(_relationshipData.data)));
         } else if (relationshipMeta.kind === 'hasMany') {
-          emberData_Debug.assert('A ' + internalModel.type.modelName + ' record was pushed into the store with the value of ' + relationshipName + ' being \'' + inspect(relationshipData.data) + '\', but ' + relationshipName + ' is a hasMany relationship so the value must be an array. You should probably check your data payload or serializer.', Array.isArray(relationshipData.data));
+          (true && !(Array.isArray(_relationshipData.data)) && Ember.assert('A ' + internalModel.type.modelName + ' record was pushed into the store with the value of ' + relationshipName + ' being \'' + inspect(_relationshipData.data) + '\', but ' + relationshipName + ' is a hasMany relationship so the value must be an array. You should probably check your data payload or serializer.', Array.isArray(_relationshipData.data)));
         }
       }
-    });
+    }
   });
 }
 
@@ -103344,8 +104229,6 @@ var DS = Ember.Namespace.create({
 if (Ember.libraries) {
   Ember.libraries.registerCoreLibrary('Ember Data', DS.VERSION);
 }
-
-var _typeof$6 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /**
   `DS.belongsTo` is used to define One-To-One and One-To-Many
@@ -103422,7 +104305,7 @@ var _typeof$6 = typeof Symbol === "function" && typeof Symbol.iterator === "symb
 function belongsTo(modelName, options) {
   var opts = void 0,
       userEnteredModelName = void 0;
-  if ((typeof modelName === 'undefined' ? 'undefined' : _typeof$6(modelName)) === 'object') {
+  if (typeof modelName === 'object') {
     opts = modelName;
     userEnteredModelName = undefined;
   } else {
@@ -103434,7 +104317,8 @@ function belongsTo(modelName, options) {
     userEnteredModelName = normalizeModelName(userEnteredModelName);
   }
 
-  emberData_Debug.assert("The first argument to DS.belongsTo must be a string representing a model type key, not an instance of " + Ember.inspect(userEnteredModelName) + ". E.g., to define a relation to the Person model, use DS.belongsTo('person')", typeof userEnteredModelName === 'string' || typeof userEnteredModelName === 'undefined');
+  (true && !(typeof userEnteredModelName === 'string' || typeof userEnteredModelName === 'undefined') && Ember.assert("The first argument to DS.belongsTo must be a string representing a model type key, not an instance of " + Ember.inspect(userEnteredModelName) + ". E.g., to define a relation to the Person model, use DS.belongsTo('person')", typeof userEnteredModelName === 'string' || typeof userEnteredModelName === 'undefined'));
+
 
   opts = opts || {};
 
@@ -103450,15 +104334,15 @@ function belongsTo(modelName, options) {
   return Ember.computed({
     get: function get(key) {
       if (opts.hasOwnProperty('serialize')) {
-        emberData_Debug.warn('You provided a serialize option on the "' + key + '" property in the "' + this._internalModel.modelName + '" class, this belongs in the serializer. See DS.Serializer and it\'s implementations http://emberjs.com/api/data/classes/DS.Serializer.html', false, {
+        (true && Ember.warn('You provided a serialize option on the "' + key + '" property in the "' + this._internalModel.modelName + '" class, this belongs in the serializer. See DS.Serializer and it\'s implementations http://emberjs.com/api/data/classes/DS.Serializer.html', false, {
           id: 'ds.model.serialize-option-in-belongs-to'
-        });
+        }));
       }
 
       if (opts.hasOwnProperty('embedded')) {
-        emberData_Debug.warn('You provided an embedded option on the "' + key + '" property in the "' + this._internalModel.modelName + '" class, this belongs in the serializer. See DS.EmbeddedRecordsMixin http://emberjs.com/api/data/classes/DS.EmbeddedRecordsMixin.html', false, {
+        (true && Ember.warn('You provided an embedded option on the "' + key + '" property in the "' + this._internalModel.modelName + '" class, this belongs in the serializer. See DS.EmbeddedRecordsMixin http://emberjs.com/api/data/classes/DS.EmbeddedRecordsMixin.html', false, {
           id: 'ds.model.embedded-option-in-belongs-to'
-        });
+        }));
       }
 
       return this._internalModel._relationships.get(key).getRecord();
@@ -103510,12 +104394,6 @@ function isArrayLike(obj) {
   }
   return false;
 }
-
-var _typeof$7 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/**
-  @module ember-data
-*/
 
 var get$14 = Ember.get;
 
@@ -103627,12 +104505,13 @@ var get$14 = Ember.get;
 */
 
 function hasMany(type, options) {
-  if ((typeof type === 'undefined' ? 'undefined' : _typeof$7(type)) === 'object') {
+  if (typeof type === 'object') {
     options = type;
     type = undefined;
   }
 
-  emberData_Debug.assert('The first argument to DS.hasMany must be a string representing a model type key, not an instance of ' + Ember.inspect(type) + '. E.g., to define a relation to the Comment model, use DS.hasMany(\'comment\')', typeof type === 'string' || typeof type === 'undefined');
+  (true && !(typeof type === 'string' || typeof type === 'undefined') && Ember.assert('The first argument to DS.hasMany must be a string representing a model type key, not an instance of ' + Ember.inspect(type) + '. E.g., to define a relation to the Comment model, use DS.hasMany(\'comment\')', typeof type === 'string' || typeof type === 'undefined'));
+
 
   options = options || {};
 
@@ -103658,12 +104537,17 @@ function hasMany(type, options) {
       return this._internalModel._relationships.get(key).getRecords();
     },
     set: function set(key, records) {
-      emberData_Debug.assert('You must pass an array of records to set a hasMany relationship', isArrayLike(records));
-      emberData_Debug.assert('All elements of a hasMany relationship must be instances of DS.Model, you passed ' + Ember.inspect(records), function () {
+      (true && !(isArrayLike(records)) && Ember.assert('You must pass an array of records to set a hasMany relationship', isArrayLike(records)));
+      (true && !(function () {
         return Ember.A(records).every(function (record) {
           return record.hasOwnProperty('_internalModel') === true;
         });
-      }());
+      }()) && Ember.assert('All elements of a hasMany relationship must be instances of DS.Model, you passed ' + Ember.inspect(records), function () {
+        return Ember.A(records).every(function (record) {
+          return record.hasOwnProperty('_internalModel') === true;
+        });
+      }()));
+
 
       var relationship = this._internalModel._relationships.get(key);
       relationship.clear();
@@ -104123,8 +105007,6 @@ function parseResponseHeaders(headersString) {
   return headers;
 }
 
-var _typeof$8 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 /* globals global, window, self */
 
 // originally from https://github.com/emberjs/ember.js/blob/c0bd26639f50efd6a03ee5b87035fd200e313b8e/packages/ember-environment/lib/global.js
@@ -104140,14 +105022,11 @@ function checkElementIdShadowing(value) {
 }
 
 // export real global
-var global$1 = checkGlobal(checkElementIdShadowing((typeof global === 'undefined' ? 'undefined' : _typeof$8(global)) === 'object' && global)) || checkGlobal((typeof self === 'undefined' ? 'undefined' : _typeof$8(self)) === 'object' && self) || checkGlobal((typeof window === 'undefined' ? 'undefined' : _typeof$8(window)) === 'object' && window) || new Function('return this')(); // eval outside of strict mode
+var global$1 = checkGlobal(checkElementIdShadowing(typeof global === 'object' && global)) || checkGlobal(typeof self === 'object' && self) || checkGlobal(typeof window === 'object' && window) || new Function('return this')(); // eval outside of strict mode
 
-/**
-  @module ember-data
-*/
 var capitalize = Ember.String.capitalize;
 var underscore = Ember.String.underscore;
-var assert$1 = Ember.assert;
+var assert = Ember.assert;
 var get$16 = Ember.get;
 
 /*
@@ -104193,7 +105072,7 @@ var debugAdapter = Ember.DataAdapter.extend({
         }
       }
     }
-    assert$1("Cannot find model name. Please upgrade to Ember.js >= 1.13 for Ember Inspector support", !!modelName);
+    assert("Cannot find model name. Please upgrade to Ember.js >= 1.13 for Ember Inspector support", !!modelName);
     return this.get('store').peekAll(modelName);
   },
   getRecordColumnValues: function getRecordColumnValues(record) {
@@ -104316,13 +105195,72 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 });
 
-;define('ember-data/adapter', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-data/-debug/index', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Object.extend({
+  exports.instrument = instrument;
+  function instrument(method) {
+    return method();
+  }
+
+  /*
+    Assert that `addedRecord` has a valid type so it can be added to the
+    relationship of the `record`.
+  
+    The assert basically checks if the `addedRecord` can be added to the
+    relationship (specified via `relationshipMeta`) of the `record`.
+  
+    This utility should only be used internally, as both record parameters must
+    be an InternalModel and the `relationshipMeta` needs to be the meta
+    information about the relationship, retrieved via
+    `record.relationshipFor(key)`.
+  
+    @method assertPolymorphicType
+    @param {InternalModel} internalModel
+    @param {RelationshipMeta} relationshipMeta retrieved via
+           `record.relationshipFor(key)`
+    @param {InternalModel} addedRecord record which
+           should be added/set for the relationship
+  */
+  var assertPolymorphicType = void 0;
+
+  if (true) {
+    var checkPolymorphic = function checkPolymorphic(modelClass, addedModelClass) {
+      if (modelClass.__isMixin) {
+        //TODO Need to do this in order to support mixins, should convert to public api
+        //once it exists in Ember
+        return modelClass.__mixin.detect(addedModelClass.PrototypeMixin);
+      }
+      if (Ember.MODEL_FACTORY_INJECTIONS) {
+        modelClass = modelClass.superclass;
+      }
+      return modelClass.detect(addedModelClass);
+    };
+
+    exports.assertPolymorphicType = assertPolymorphicType = function assertPolymorphicType(parentInternalModel, relationshipMeta, addedInternalModel) {
+      var addedModelName = addedInternalModel.modelName;
+      var parentModelName = parentInternalModel.modelName;
+      var key = relationshipMeta.key;
+      var relationshipModelName = relationshipMeta.type;
+      var relationshipClass = parentInternalModel.store.modelFor(relationshipModelName);
+      var assertionMessage = 'You cannot add a record of modelClass \'' + addedModelName + '\' to the \'' + parentModelName + '.' + key + '\' relationship (only \'' + relationshipModelName + '\' allowed)';
+
+      (true && !(checkPolymorphic(relationshipClass, addedInternalModel.modelClass)) && Ember.assert(assertionMessage, checkPolymorphic(relationshipClass, addedInternalModel.modelClass)));
+    };
+  }
+
+  exports.assertPolymorphicType = assertPolymorphicType;
+});
+;define('ember-data/adapter', ['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = Ember.Object.extend({
 
     /**
       If you would like your adapter to use a custom serializer you can
@@ -104917,7 +105855,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     }
   });
 });
-;define('ember-data/adapters/json-api', ['exports', 'ember', 'ember-data/adapters/rest', 'ember-data/-private', 'ember-data/-debug'], function (exports, _ember, _rest, _private, _debug) {
+;define('ember-data/adapters/json-api', ['exports', 'ember-data/adapters/rest', 'ember-data/-private', 'ember-data/-debug'], function (exports, _rest, _private, _debug) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -105061,11 +105999,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
     @namespace DS
     @extends DS.RESTAdapter
   */
-  /* global heimdall */
-  /**
-    @module ember-data
-  */
-
   var JSONAPIAdapter = _rest.default.extend({
     defaultSerializer: '-json-api',
 
@@ -105143,8 +106076,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
       }
     },
     pathForType: function pathForType(modelName) {
-      var dasherized = _ember.default.String.dasherize(modelName);
-      return _ember.default.String.pluralize(dasherized);
+      var dasherized = Ember.String.dasherize(modelName);
+      return Ember.String.pluralize(dasherized);
     },
     updateRecord: function updateRecord(store, type, snapshot) {
       if ((0, _private.isEnabled)('ds-improved-ajax') && !this._hasCustomizedAjax()) {
@@ -105162,18 +106095,20 @@ Object.defineProperty(exports, '__esModule', { value: true });
     },
     _hasCustomizedAjax: function _hasCustomizedAjax() {
       if (this.ajax !== JSONAPIAdapter.prototype.ajax) {
-        (0, _debug.deprecate)('JSONAPIAdapter#ajax has been deprecated please use. `methodForRequest`, `urlForRequest`, `headersForRequest` or `dataForRequest` instead.', false, {
+        (true && !(false) && Ember.deprecate('JSONAPIAdapter#ajax has been deprecated please use. `methodForRequest`, `urlForRequest`, `headersForRequest` or `dataForRequest` instead.', false, {
           id: 'ds.json-api-adapter.ajax',
           until: '3.0.0'
-        });
+        }));
+
         return true;
       }
 
       if (this.ajaxOptions !== JSONAPIAdapter.prototype.ajaxOptions) {
-        (0, _debug.deprecate)('JSONAPIAdapterr#ajaxOptions has been deprecated please use. `methodForRequest`, `urlForRequest`, `headersForRequest` or `dataForRequest` instead.', false, {
+        (true && !(false) && Ember.deprecate('JSONAPIAdapterr#ajaxOptions has been deprecated please use. `methodForRequest`, `urlForRequest`, `headersForRequest` or `dataForRequest` instead.', false, {
           id: 'ds.json-api-adapter.ajax-options',
           until: '3.0.0'
-        });
+        }));
+
         return true;
       }
 
@@ -105238,24 +106173,17 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
   exports.default = JSONAPIAdapter;
 });
-;define('ember-data/adapters/rest', ['exports', 'ember', 'ember-data/adapter', 'ember-data/-private', 'ember-data/-debug'], function (exports, _ember, _adapter, _private, _debug) {
+;define('ember-data/adapters/rest', ['exports', 'ember-data/adapter', 'ember-data/-private', 'ember-data/-debug'], function (exports, _adapter, _private, _debug) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  };
-
-  var MapWithDefault = _ember.default.MapWithDefault,
-      get = _ember.default.get;
+  var MapWithDefault = Ember.MapWithDefault,
+      get = Ember.get;
 
 
-  var Promise = _ember.default.RSVP.Promise;
+  var Promise = Ember.RSVP.Promise;
 
   /**
     The REST adapter allows your store to communicate with an HTTP server by
@@ -105859,7 +106787,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
         hash.success = function (payload, textStatus, jqXHR) {
           var response = ajaxSuccess(adapter, jqXHR, payload, requestData);
-          _ember.default.run.join(null, resolve, response);
+          Ember.run.join(null, resolve, response);
         };
 
         hash.error = function (jqXHR, textStatus, errorThrown) {
@@ -105868,14 +106796,14 @@ Object.defineProperty(exports, '__esModule', { value: true });
             errorThrown: errorThrown
           };
           var error = ajaxError(adapter, jqXHR, requestData, responseData);
-          _ember.default.run.join(null, reject, error);
+          Ember.run.join(null, reject, error);
         };
 
         adapter._ajaxRequest(hash);
       }, 'DS: RESTAdapter#ajax ' + type + ' to ' + url);
     },
     _ajaxRequest: function _ajaxRequest(options) {
-      _ember.default.$.ajax(options);
+      Ember.$.ajax(options);
     },
     ajaxOptions: function ajaxOptions(url, type, options) {
       var hash = options || {};
@@ -105904,7 +106832,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
       var json = responseText;
 
       try {
-        json = _ember.default.$.parseJSON(responseText);
+        json = Ember.$.parseJSON(responseText);
       } catch (e) {
         // ignored
       }
@@ -105912,7 +106840,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
       return json;
     },
     normalizeErrorResponse: function normalizeErrorResponse(status, headers, payload) {
-      if (payload && (typeof payload === 'undefined' ? 'undefined' : _typeof(payload)) === 'object' && payload.errors) {
+      if (payload && typeof payload === 'object' && payload.errors) {
         return payload.errors;
       } else {
         return [{
@@ -105967,18 +106895,20 @@ Object.defineProperty(exports, '__esModule', { value: true });
     },
     _hasCustomizedAjax: function _hasCustomizedAjax() {
       if (this.ajax !== RESTAdapter.prototype.ajax) {
-        (0, _debug.deprecate)('RESTAdapter#ajax has been deprecated please use. `methodForRequest`, `urlForRequest`, `headersForRequest` or `dataForRequest` instead.', false, {
+        (true && !(false) && Ember.deprecate('RESTAdapter#ajax has been deprecated please use. `methodForRequest`, `urlForRequest`, `headersForRequest` or `dataForRequest` instead.', false, {
           id: 'ds.rest-adapter.ajax',
           until: '3.0.0'
-        });
+        }));
+
         return true;
       }
 
       if (this.ajaxOptions !== RESTAdapter.prototype.ajaxOptions) {
-        (0, _debug.deprecate)('RESTAdapter#ajaxOptions has been deprecated please use. `methodForRequest`, `urlForRequest`, `headersForRequest` or `dataForRequest` instead.', false, {
+        (true && !(false) && Ember.deprecate('RESTAdapter#ajaxOptions has been deprecated please use. `methodForRequest`, `urlForRequest`, `headersForRequest` or `dataForRequest` instead.', false, {
           id: 'ds.rest-adapter.ajax-options',
           until: '3.0.0'
-        });
+        }));
+
         return true;
       }
 
@@ -106142,11 +107072,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
         var requestData = { method: method, url: url };
 
-        return new _ember.default.RSVP.Promise(function (resolve, reject) {
+        return new Ember.RSVP.Promise(function (resolve, reject) {
 
           hash.success = function (payload, textStatus, jqXHR) {
             var response = ajaxSuccess(adapter, jqXHR, payload, requestData);
-            _ember.default.run.join(null, resolve, response);
+            Ember.run.join(null, resolve, response);
           };
 
           hash.error = function (jqXHR, textStatus, errorThrown) {
@@ -106155,7 +107085,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
               errorThrown: errorThrown
             };
             var error = ajaxError(adapter, jqXHR, requestData, responseData);
-            _ember.default.run.join(null, reject, error);
+            Ember.run.join(null, reject, error);
           };
 
           adapter._ajaxRequest(hash);
@@ -106180,13 +107110,13 @@ Object.defineProperty(exports, '__esModule', { value: true });
   }
 
   function ajaxError(adapter, jqXHR, requestData, responseData) {
-    (0, _debug.runInDebug)(function () {
+    if (true) {
       var message = 'The server returned an empty string for ' + requestData.method + ' ' + requestData.url + ', which cannot be parsed into a valid JSON. Return either null or {}.';
       var validJSONString = !(responseData.textStatus === "parsererror" && jqXHR.responseText === "");
-      (0, _debug.warn)(message, validJSONString, {
+      (true && Ember.warn(message, validJSONString, {
         id: 'ds.adapter.returned-empty-string-as-JSON'
-      });
-    });
+      }));
+    }
 
     var error = void 0;
 
@@ -106218,7 +107148,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
   exports.default = RESTAdapter;
 });
-;define('ember-data/attr', ['exports', 'ember', 'ember-data/-debug'], function (exports, _ember, _debug) {
+;define('ember-data/attr', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -106226,11 +107156,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
   });
   exports.default = attr;
 
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  };
 
   /**
     @module ember-data
@@ -106241,10 +107166,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
       return options.defaultValue.apply(null, arguments);
     } else {
       var defaultValue = options.defaultValue;
-      (0, _debug.deprecate)('Non primitive defaultValues are deprecated because they are shared between all instances. If you would like to use a complex object as a default value please provide a function that returns the complex object.', (typeof defaultValue === 'undefined' ? 'undefined' : _typeof(defaultValue)) !== 'object' || defaultValue === null, {
+      (true && !(typeof defaultValue !== 'object' || defaultValue === null) && Ember.deprecate('Non primitive defaultValues are deprecated because they are shared between all instances. If you would like to use a complex object as a default value please provide a function that returns the complex object.', typeof defaultValue !== 'object' || defaultValue === null, {
         id: 'ds.defaultValue.complex-object',
         until: '3.0.0'
-      });
+      }));
+
       return defaultValue;
     }
   }
@@ -106349,7 +107275,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
   */
 
   function attr(type, options) {
-    if ((typeof type === 'undefined' ? 'undefined' : _typeof(type)) === 'object') {
+    if (typeof type === 'object') {
       options = type;
       type = undefined;
     } else {
@@ -106362,7 +107288,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
       options: options
     };
 
-    return _ember.default.computed({
+    return Ember.computed({
       get: function get(key) {
         var internalModel = this._internalModel;
         if (hasValue(internalModel, key)) {
@@ -106400,7 +107326,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     }).meta(meta);
   }
 });
-;define("ember-data/index", ["exports", "ember", "ember-data/-debug", "ember-data/-private", "ember-data/setup-container", "ember-data/instance-initializers/initialize-store-service", "ember-data/transforms/transform", "ember-data/transforms/number", "ember-data/transforms/date", "ember-data/transforms/string", "ember-data/transforms/boolean", "ember-data/adapter", "ember-data/adapters/json-api", "ember-data/adapters/rest", "ember-data/serializer", "ember-data/serializers/json-api", "ember-data/serializers/json", "ember-data/serializers/rest", "ember-data/serializers/embedded-records-mixin", "ember-data/attr", "ember-inflector"], function (exports, _ember, _debug, _private, _setupContainer, _initializeStoreService, _transform, _number, _date, _string, _boolean, _adapter, _jsonApi, _rest, _serializer, _jsonApi2, _json, _rest2, _embeddedRecordsMixin, _attr) {
+;define("ember-data/index", ["exports", "ember-data/-private", "ember-data/setup-container", "ember-data/instance-initializers/initialize-store-service", "ember-data/transforms/transform", "ember-data/transforms/number", "ember-data/transforms/date", "ember-data/transforms/string", "ember-data/transforms/boolean", "ember-data/adapter", "ember-data/adapters/json-api", "ember-data/adapters/rest", "ember-data/serializer", "ember-data/serializers/json-api", "ember-data/serializers/json", "ember-data/serializers/rest", "ember-data/serializers/embedded-records-mixin", "ember-data/attr", "ember-inflector"], function (exports, _private, _setupContainer, _initializeStoreService, _transform, _number, _date, _string, _boolean, _adapter, _jsonApi, _rest, _serializer, _jsonApi2, _json, _rest2, _embeddedRecordsMixin, _attr) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -106414,8 +107340,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
     @main ember-data
   */
 
-  if (_ember.default.VERSION.match(/^1\.([0-9]|1[0-2])\./)) {
-    throw new _ember.default.Error("Ember Data requires at least Ember 1.13.0, but you have " + _ember.default.VERSION + ". Please upgrade your version of Ember, then upgrade Ember Data.");
+  if (Ember.VERSION.match(/^1\.([0-9]|1[0-2])\./)) {
+    throw new Ember.Error("Ember Data requires at least Ember 1.13.0, but you have " + Ember.VERSION + ". Please upgrade your version of Ember, then upgrade Ember Data.");
   }
 
   _private.DS.Store = _private.Store;
@@ -106496,7 +107422,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
   Object.defineProperty(_private.global, 'DS', {
     configurable: true,
     get: function get() {
-      (0, _debug.deprecate)('Using the global version of DS is deprecated. Please either import ' + 'the specific modules needed or `import DS from \'ember-data\';`.', false, { id: 'ember-data.global-ds', until: '3.0.0' });
+      (true && !(false) && Ember.deprecate('Using the global version of DS is deprecated. Please either import ' + 'the specific modules needed or `import DS from \'ember-data\';`.', false, { id: 'ember-data.global-ds', until: '3.0.0' }));
+
 
       return _private.DS;
     }
@@ -106504,7 +107431,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
   exports.default = _private.DS;
 });
-;define('ember-data/instance-initializers/initialize-store-service', ['exports', 'ember-data/-debug'], function (exports, _debug) {
+;define('ember-data/instance-initializers/initialize-store-service', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -106512,6 +107439,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
   });
   exports.default = initializeStoreService;
 
+
+  var deprecateOldEmberDataInitializers = void 0;
 
   /*
     Configures a registry for use with an Ember-Data
@@ -106528,44 +107457,48 @@ Object.defineProperty(exports, '__esModule', { value: true });
     // Eagerly generate the store so defaultStore is populated.
     container.lookup('service:store');
 
-    // In Ember 2.4+ instance.base is the `Ember.Application` or `Ember.Engine` instance
-    // In Ember 1.11 - 2.3 we fallback to `instance.application`
-    var base = instance.base || instance.application;
-    deprecateOldEmberDataInitializers(base.constructor.initializers);
-  }
-
-  var DEPRECATED_INITIALIZER_NAMES = ['data-adapter', 'injectStore', 'transforms', 'store'];
-
-  function matchesDeprecatedInititalizer(name) {
-    return DEPRECATED_INITIALIZER_NAMES.indexOf(name) !== -1;
-  }
-
-  function deprecateOldEmberDataInitializers(initializers) {
-    // collect all of the initializers
-    var keys = Object.keys(initializers);
-
-    for (var i = 0; i < keys.length; i++) {
-      var name = keys[i];
-
-      // filter out all of the Ember Data initializer. We have some
-      // deprecated initializers that depend on other deprecated
-      // initializers which may trigger the deprecation warning
-      // unintentionally.
-      if (!matchesDeprecatedInititalizer(name)) {
-        warnForDeprecatedInitializers(initializers[name]);
-      }
+    if (true) {
+      // In Ember 2.4+ instance.base is the `Ember.Application` or `Ember.Engine` instance
+      // In Ember 1.11 - 2.3 we fallback to `instance.application`
+      var base = instance.base || instance.application;
+      deprecateOldEmberDataInitializers(base.constructor.initializers);
     }
   }
 
-  function warnForDeprecatedInitializers(initializer) {
-    var deprecatedBeforeInitializer = matchesDeprecatedInititalizer(initializer.before);
-    var deprecatedAfterInitializer = matchesDeprecatedInititalizer(initializer.after);
-    var deprecatedProp = deprecatedBeforeInitializer ? 'before' : 'after';
+  if (true) {
+    var DEPRECATED_INITIALIZER_NAMES = ['data-adapter', 'injectStore', 'transforms', 'store'];
 
-    (0, _debug.deprecate)('The initializer `' + initializer[deprecatedProp] + '` has been deprecated. Please update your `' + initializer.name + '` initializer to use use `' + deprecatedProp + ': \'ember-data\'` instead.', !(deprecatedBeforeInitializer || deprecatedAfterInitializer), {
-      id: 'ds.deprecated-initializers',
-      until: '3.0.0'
-    });
+    var matchesDeprecatedInititalizer = function matchesDeprecatedInititalizer(name) {
+      return DEPRECATED_INITIALIZER_NAMES.indexOf(name) !== -1;
+    };
+
+    var warnForDeprecatedInitializers = function warnForDeprecatedInitializers(initializer) {
+      var deprecatedBeforeInitializer = matchesDeprecatedInititalizer(initializer.before);
+      var deprecatedAfterInitializer = matchesDeprecatedInititalizer(initializer.after);
+      var deprecatedProp = deprecatedBeforeInitializer ? 'before' : 'after';
+
+      (true && !(!(deprecatedBeforeInitializer || deprecatedAfterInitializer)) && Ember.deprecate('The initializer `' + initializer[deprecatedProp] + '` has been deprecated. Please update your `' + initializer.name + '` initializer to use use `' + deprecatedProp + ': \'ember-data\'` instead.', !(deprecatedBeforeInitializer || deprecatedAfterInitializer), {
+        id: 'ds.deprecated-initializers',
+        until: '3.0.0'
+      }));
+    };
+
+    deprecateOldEmberDataInitializers = function deprecateOldEmberDataInitializers(initializers) {
+      // collect all of the initializers
+      var keys = Object.keys(initializers);
+
+      for (var i = 0; i < keys.length; i++) {
+        var name = keys[i];
+
+        // filter out all of the Ember Data initializer. We have some
+        // deprecated initializers that depend on other deprecated
+        // initializers which may trigger the deprecation warning
+        // unintentionally.
+        if (!matchesDeprecatedInititalizer(name)) {
+          warnForDeprecatedInitializers(initializers[name]);
+        }
+      }
+    };
   }
 });
 ;define('ember-data/model', ['exports', 'ember-data/-private'], function (exports, _private) {
@@ -106600,13 +107533,13 @@ Object.defineProperty(exports, '__esModule', { value: true });
     }
   });
 });
-;define('ember-data/serializer', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-data/serializer', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Object.extend({
+  exports.default = Ember.Object.extend({
 
     /**
       The `store` property is the application's `store` that contains
@@ -106721,7 +107654,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     }
   });
 });
-;define('ember-data/serializers/embedded-records-mixin', ['exports', 'ember', 'ember-data/-debug'], function (exports, _ember, _debug) {
+;define('ember-data/serializers/embedded-records-mixin', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -106729,9 +107662,9 @@ Object.defineProperty(exports, '__esModule', { value: true });
   });
 
 
-  var get = _ember.default.get;
-  var set = _ember.default.set;
-  var camelize = _ember.default.String.camelize;
+  var get = Ember.get;
+  var set = Ember.set;
+  var camelize = Ember.String.camelize;
 
   /**
     ## Using Embedded Records
@@ -106825,7 +107758,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     @class EmbeddedRecordsMixin
     @namespace DS
   */
-  exports.default = _ember.default.Mixin.create({
+  exports.default = Ember.Mixin.create({
 
     /**
       Normalize the record and recursively normalize/extract all the embedded records
@@ -107100,7 +108033,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
       var serializedKey = this.keyForAttribute(relationship.key, 'serialize');
       var hasMany = snapshot.hasMany(relationship.key);
 
-      json[serializedKey] = _ember.default.A(hasMany).map(function (recordSnapshot) {
+      json[serializedKey] = Ember.A(hasMany).map(function (recordSnapshot) {
         //
         // I'm sure I'm being utterly naive here. Propably id is a configurate property and
         // type too, and the modelName has to be normalized somehow.
@@ -107114,7 +108047,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
         serializedKey = this.keyForRelationship(relationship.key, relationship.kind, "serialize");
       }
 
-      (0, _debug.warn)('The embedded relationship \'' + serializedKey + '\' is undefined for \'' + snapshot.modelName + '\' with id \'' + snapshot.id + '\'. Please include it in your original payload.', _ember.default.typeOf(snapshot.hasMany(relationship.key)) !== 'undefined', { id: 'ds.serializer.embedded-relationship-undefined' });
+      (true && Ember.warn('The embedded relationship \'' + serializedKey + '\' is undefined for \'' + snapshot.modelName + '\' with id \'' + snapshot.id + '\'. Please include it in your original payload.', Ember.typeOf(snapshot.hasMany(relationship.key)) !== 'undefined', { id: 'ds.serializer.embedded-relationship-undefined' }));
+
 
       json[serializedKey] = this._generateSerializedHasMany(snapshot, relationship);
     },
@@ -107125,7 +108059,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     */
     _generateSerializedHasMany: function _generateSerializedHasMany(snapshot, relationship) {
       var hasMany = snapshot.hasMany(relationship.key);
-      var manyArray = _ember.default.A(hasMany);
+      var manyArray = Ember.A(hasMany);
       var ret = new Array(manyArray.length);
 
       for (var i = 0; i < manyArray.length; i++) {
@@ -107323,7 +108257,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     isEmbeddedRecordsMixin: true
   });
 });
-;define('ember-data/serializers/json-api', ['exports', 'ember', 'ember-inflector', 'ember-data/-debug', 'ember-data/serializers/json', 'ember-data/-private'], function (exports, _ember, _emberInflector, _debug, _json, _private) {
+;define('ember-data/serializers/json-api', ['exports', 'ember-inflector', 'ember-data/serializers/json', 'ember-data/-private'], function (exports, _emberInflector, _json, _private) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -107331,7 +108265,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
   });
 
 
-  var dasherize = _ember.default.String.dasherize;
+  var dasherize = Ember.String.dasherize;
 
   /**
     Ember Data 2.0 Serializer:
@@ -107449,14 +108383,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
     @namespace DS
     @extends DS.JSONSerializer
   */
-  /**
-    @module ember-data
-  */
-
   var JSONAPISerializer = _json.default.extend({
     _normalizeDocumentHelper: function _normalizeDocumentHelper(documentHash) {
 
-      if (_ember.default.typeOf(documentHash.data) === 'object') {
+      if (Ember.typeOf(documentHash.data) === 'object') {
         documentHash.data = this._normalizeResourceHelper(documentHash.data);
       } else if (Array.isArray(documentHash.data)) {
         var ret = new Array(documentHash.data.length);
@@ -107488,10 +108418,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
         var deprecatedModelNameLookup = this.modelNameFromPayloadKey(relationshipDataHash.type);
 
         if (modelName !== deprecatedModelNameLookup && this._hasCustomModelNameFromPayloadKey()) {
-          (0, _debug.deprecate)("You are using modelNameFromPayloadKey to normalize the type for a relationship. This has been deprecated in favor of modelNameFromPayloadType", false, {
+          (true && !(false) && Ember.deprecate("You are using modelNameFromPayloadKey to normalize the type for a relationship. This has been deprecated in favor of modelNameFromPayloadType", false, {
             id: 'ds.json-api-serializer.deprecated-model-name-for-relationship',
             until: '3.0.0'
-          });
+          }));
+
 
           modelName = deprecatedModelNameLookup;
         }
@@ -107504,9 +108435,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
       return relationshipDataHash;
     },
     _normalizeResourceHelper: function _normalizeResourceHelper(resourceHash) {
-      (0, _debug.assert)(this.warnMessageForUndefinedType(), !_ember.default.isNone(resourceHash.type), {
+      (true && !(!Ember.isNone(resourceHash.type)) && Ember.assert(this.warnMessageForUndefinedType(), !Ember.isNone(resourceHash.type), {
         id: 'ds.serializer.type-is-undefined'
-      });
+      }));
+
 
       var modelName = void 0,
           usedLookup = void 0;
@@ -107518,10 +108450,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
         usedLookup = 'modelNameFromPayloadType';
 
         if (modelName !== deprecatedModelNameLookup && this._hasCustomModelNameFromPayloadKey()) {
-          (0, _debug.deprecate)("You are using modelNameFromPayloadKey to normalize the type for a resource. This has been deprecated in favor of modelNameFromPayloadType", false, {
+          (true && !(false) && Ember.deprecate("You are using modelNameFromPayloadKey to normalize the type for a resource. This has been deprecated in favor of modelNameFromPayloadType", false, {
             id: 'ds.json-api-serializer.deprecated-model-name-for-resource',
             until: '3.0.0'
-          });
+          }));
+
 
           modelName = deprecatedModelNameLookup;
           usedLookup = 'modelNameFromPayloadKey';
@@ -107532,9 +108465,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
       }
 
       if (!this.store._hasModelFor(modelName)) {
-        (0, _debug.warn)(this.warnMessageNoModelForType(modelName, resourceHash.type, usedLookup), false, {
+        (true && Ember.warn(this.warnMessageNoModelForType(modelName, resourceHash.type, usedLookup), false, {
           id: 'ds.serializer.model-for-type-missing'
-        });
+        }));
+
         return null;
       }
 
@@ -107561,9 +108495,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
     normalizeQueryRecordResponse: function normalizeQueryRecordResponse() {
       var normalized = this._super.apply(this, arguments);
 
-      (0, _debug.assert)('Expected the primary data returned by the serializer for a `queryRecord` response to be a single object but instead it was an array.', !Array.isArray(normalized.data), {
+      (true && !(!Array.isArray(normalized.data)) && Ember.assert('Expected the primary data returned by the serializer for a `queryRecord` response to be a single object but instead it was an array.', !Array.isArray(normalized.data), {
         id: 'ds.serializer.json-api.queryRecord-array-response'
-      });
+      }));
+
 
       return normalized;
     },
@@ -107578,11 +108513,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
           if (resourceHash.attributes[attributeKey] !== undefined) {
             attributes[key] = resourceHash.attributes[attributeKey];
           }
-          (0, _debug.runInDebug)(function () {
+          if (true) {
             if (resourceHash.attributes[attributeKey] === undefined && resourceHash.attributes[key] !== undefined) {
-              (0, _debug.assert)('Your payload for \'' + modelClass.modelName + '\' contains \'' + key + '\', but your serializer is setup to look for \'' + attributeKey + '\'. This is most likely because Ember Data\'s JSON API serializer dasherizes attribute keys by default. You should subclass JSONAPISerializer and implement \'keyForAttribute(key) { return key; }\' to prevent Ember Data from customizing your attribute keys.', false);
+              (true && !(false) && Ember.assert('Your payload for \'' + modelClass.modelName + '\' contains \'' + key + '\', but your serializer is setup to look for \'' + attributeKey + '\'. This is most likely because Ember Data\'s JSON API serializer dasherizes attribute keys by default. You should subclass JSONAPISerializer and implement \'keyForAttribute(key) { return key; }\' to prevent Ember Data from customizing your attribute keys.', false));
             }
-          });
+          }
         });
       }
 
@@ -107590,7 +108525,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     },
     extractRelationship: function extractRelationship(relationshipHash) {
 
-      if (_ember.default.typeOf(relationshipHash.data) === 'object') {
+      if (Ember.typeOf(relationshipHash.data) === 'object') {
         relationshipHash.data = this._normalizeRelationshipDataHelper(relationshipHash.data);
       }
 
@@ -107620,11 +108555,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
             var relationshipHash = resourceHash.relationships[relationshipKey];
             relationships[key] = _this2.extractRelationship(relationshipHash);
           }
-          (0, _debug.runInDebug)(function () {
+          if (true) {
             if (resourceHash.relationships[relationshipKey] === undefined && resourceHash.relationships[key] !== undefined) {
-              (0, _debug.assert)('Your payload for \'' + modelClass.modelName + '\' contains \'' + key + '\', but your serializer is setup to look for \'' + relationshipKey + '\'. This is most likely because Ember Data\'s JSON API serializer dasherizes relationship keys by default. You should subclass JSONAPISerializer and implement \'keyForRelationship(key) { return key; }\' to prevent Ember Data from customizing your relationship keys.', false);
+              (true && !(false) && Ember.assert('Your payload for \'' + modelClass.modelName + '\' contains \'' + key + '\', but your serializer is setup to look for \'' + relationshipKey + '\'. This is most likely because Ember Data\'s JSON API serializer dasherizes relationship keys by default. You should subclass JSONAPISerializer and implement \'keyForRelationship(key) { return key; }\' to prevent Ember Data from customizing your relationship keys.', false));
             }
-          });
+          }
         });
       }
 
@@ -107636,10 +108571,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
         var deprecatedModelNameLookup = this.modelNameFromPayloadKey(resourceHash.type);
 
         if (modelName !== deprecatedModelNameLookup && this._hasCustomModelNameFromPayloadKey()) {
-          (0, _debug.deprecate)("You are using modelNameFromPayloadKey to normalize the type for a polymorphic relationship. This has been deprecated in favor of modelNameFromPayloadType", false, {
+          (true && !(false) && Ember.deprecate("You are using modelNameFromPayloadKey to normalize the type for a polymorphic relationship. This has been deprecated in favor of modelNameFromPayloadType", false, {
             id: 'ds.json-api-serializer.deprecated-model-name-for-polymorphic-type',
             until: '3.0.0'
-          });
+          }));
+
 
           modelName = deprecatedModelNameLookup;
         }
@@ -107690,10 +108626,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
         var deprecatedPayloadTypeLookup = this.payloadKeyFromModelName(snapshot.modelName);
 
         if (payloadType !== deprecatedPayloadTypeLookup && this._hasCustomPayloadKeyFromModelName()) {
-          (0, _debug.deprecate)("You used payloadKeyFromModelName to customize how a type is serialized. Use payloadTypeFromModelName instead.", false, {
+          (true && !(false) && Ember.deprecate("You used payloadKeyFromModelName to customize how a type is serialized. Use payloadTypeFromModelName instead.", false, {
             id: 'ds.json-api-serializer.deprecated-payload-type-for-model',
             until: '3.0.0'
-          });
+          }));
+
 
           payloadType = deprecatedPayloadTypeLookup;
         }
@@ -107748,10 +108685,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
               var deprecatedPayloadTypeLookup = this.payloadKeyFromModelName(belongsTo.modelName);
 
               if (payloadType !== deprecatedPayloadTypeLookup && this._hasCustomPayloadKeyFromModelName()) {
-                (0, _debug.deprecate)("You used payloadKeyFromModelName to serialize type for belongs-to relationship. Use payloadTypeFromModelName instead.", false, {
+                (true && !(false) && Ember.deprecate("You used payloadKeyFromModelName to serialize type for belongs-to relationship. Use payloadTypeFromModelName instead.", false, {
                   id: 'ds.json-api-serializer.deprecated-payload-type-for-belongs-to',
                   until: '3.0.0'
-                });
+                }));
+
 
                 payloadType = deprecatedPayloadTypeLookup;
               }
@@ -107799,10 +108737,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
               var deprecatedPayloadTypeLookup = this.payloadKeyFromModelName(item.modelName);
 
               if (payloadType !== deprecatedPayloadTypeLookup && this._hasCustomPayloadKeyFromModelName()) {
-                (0, _debug.deprecate)("You used payloadKeyFromModelName to serialize type for belongs-to relationship. Use payloadTypeFromModelName instead.", false, {
+                (true && !(false) && Ember.deprecate("You used payloadKeyFromModelName to serialize type for belongs-to relationship. Use payloadTypeFromModelName instead.", false, {
                   id: 'ds.json-api-serializer.deprecated-payload-type-for-has-many',
                   until: '3.0.0'
-                });
+                }));
+
 
                 payloadType = deprecatedPayloadTypeLookup;
               }
@@ -107840,16 +108779,16 @@ Object.defineProperty(exports, '__esModule', { value: true });
     });
   }
 
-  (0, _debug.runInDebug)(function () {
+  if (true) {
     JSONAPISerializer.reopen({
       willMergeMixin: function willMergeMixin(props) {
         var constructor = this.constructor;
-        (0, _debug.warn)('You\'ve defined \'extractMeta\' in ' + constructor.toString() + ' which is not used for serializers extending JSONAPISerializer. Read more at http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#toc_customizing-meta on how to customize meta when using JSON API.', _ember.default.isNone(props.extractMeta) || props.extractMeta === _json.default.prototype.extractMeta, {
+        (true && Ember.warn('You\'ve defined \'extractMeta\' in ' + constructor.toString() + ' which is not used for serializers extending JSONAPISerializer. Read more at http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#toc_customizing-meta on how to customize meta when using JSON API.', Ember.isNone(props.extractMeta) || props.extractMeta === _json.default.prototype.extractMeta, {
           id: 'ds.serializer.json-api.extractMeta'
-        });
-        (0, _debug.warn)('The JSONAPISerializer does not work with the EmbeddedRecordsMixin because the JSON API spec does not describe how to format embedded resources.', !props.isEmbeddedRecordsMixin, {
+        }));
+        (true && Ember.warn('The JSONAPISerializer does not work with the EmbeddedRecordsMixin because the JSON API spec does not describe how to format embedded resources.', !props.isEmbeddedRecordsMixin, {
           id: 'ds.serializer.embedded-records-mixin-not-supported'
-        });
+        }));
       },
       warnMessageForUndefinedType: function warnMessageForUndefinedType() {
         return 'Encountered a resource object with an undefined type (resolved resource using ' + this.constructor.toString() + ')';
@@ -107858,26 +108797,21 @@ Object.defineProperty(exports, '__esModule', { value: true });
         return 'Encountered a resource object with type "' + originalType + '", but no model was found for model name "' + modelName + '" (resolved model name using \'' + this.constructor.toString() + '.' + usedLookup + '("' + originalType + '")\').';
       }
     });
-  });
+  }
 
   exports.default = JSONAPISerializer;
 });
-;define('ember-data/serializers/json', ['exports', 'ember', 'ember-data/-debug', 'ember-data/serializer', 'ember-data/-private'], function (exports, _ember, _debug, _serializer, _private) {
+;define('ember-data/serializers/json', ['exports', 'ember-data/serializer', 'ember-data/-private'], function (exports, _serializer, _private) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  };
 
-  var get = _ember.default.get;
-  var isNone = _ember.default.isNone;
-  var assign = _ember.default.assign || _ember.default.merge;
+  var get = Ember.get;
+  var isNone = Ember.isNone;
+  var assign = Ember.assign || Ember.merge;
 
   /**
     Ember Data 2.0 Serializer:
@@ -107935,7 +108869,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
       - `normalizeResponse` - entry method to the serializer.
       - `normalizeCreateRecordResponse` - a `normalizeResponse` for a specific operation is called.
       - `normalizeSingleResponse`|`normalizeArrayResponse` - for methods like `createRecord` we expect
-        a single record back, while for methods like `findAll` we expect multiple methods back.
+        a single record back, while for methods like `findAll` we expect multiple records back.
       - `normalize` - `normalizeArray` iterates and calls `normalize` for each of its records while `normalizeSingle`
         calls it once. This is the method you most likely want to subclass.
       - `extractId` | `extractAttributes` | `extractRelationships` - `normalize` delegates to these methods to
@@ -108106,7 +109040,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
       var meta = this.extractMeta(store, primaryModelClass, payload);
       if (meta) {
-        (0, _debug.assert)('The `meta` returned from `extractMeta` has to be an object, not "' + _ember.default.typeOf(meta) + '".', _ember.default.typeOf(meta) === 'object');
+        (true && !(Ember.typeOf(meta) === 'object') && Ember.assert('The `meta` returned from `extractMeta` has to be an object, not "' + Ember.typeOf(meta) + '".', Ember.typeOf(meta) === 'object'));
+
         documentHash.meta = meta;
       }
 
@@ -108146,7 +109081,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
       if (resourceHash) {
         this.normalizeUsingDeclaredMapping(modelClass, resourceHash);
-        if (_ember.default.typeOf(resourceHash.links) === 'object') {
+        if (Ember.typeOf(resourceHash.links) === 'object') {
           this.normalizeUsingDeclaredMapping(modelClass, resourceHash.links);
         }
 
@@ -108183,7 +109118,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
       return attributes;
     },
     extractRelationship: function extractRelationship(relationshipModelName, relationshipHash) {
-      if (_ember.default.isNone(relationshipHash)) {
+      if (Ember.isNone(relationshipHash)) {
         return null;
       }
       /*
@@ -108191,7 +109126,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
         is polymorphic. It could however also be embedded resources that the
         EmbeddedRecordsMixin has be able to process.
       */
-      if (_ember.default.typeOf(relationshipHash) === 'object') {
+      if (Ember.typeOf(relationshipHash) === 'object') {
         if (relationshipHash.id) {
           relationshipHash.id = (0, _private.coerceId)(relationshipHash.id);
         }
@@ -108204,10 +109139,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
             var deprecatedModelNameLookup = this.modelNameFromPayloadKey(relationshipHash.type);
 
             if (modelName !== deprecatedModelNameLookup && this._hasCustomModelNameFromPayloadKey()) {
-              (0, _debug.deprecate)("You used modelNameFromPayloadKey to customize how a type is normalized. Use modelNameFromPayloadType instead", false, {
+              (true && !(false) && Ember.deprecate("You used modelNameFromPayloadKey to customize how a type is normalized. Use modelNameFromPayloadType instead", false, {
                 id: 'ds.json-serializer.deprecated-type-for-polymorphic-relationship',
                 until: '3.0.0'
-              });
+              }));
+
 
               modelName = deprecatedModelNameLookup;
             }
@@ -108246,7 +109182,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
               data = _this3.extractRelationship(relationshipMeta.type, relationshipHash);
             }
           } else if (relationshipMeta.kind === 'hasMany') {
-            if (!_ember.default.isNone(relationshipHash)) {
+            if (!Ember.isNone(relationshipHash)) {
               data = new Array(relationshipHash.length);
               for (var i = 0, l = relationshipHash.length; i < l; i++) {
                 var item = relationshipHash[i];
@@ -108323,9 +109259,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
       }
     },
     _getMappedKey: function _getMappedKey(key, modelClass) {
-      (0, _debug.warn)('There is no attribute or relationship with the name `' + key + '` on `' + modelClass.modelName + '`. Check your serializers attrs hash.', get(modelClass, 'attributes').has(key) || get(modelClass, 'relationshipsByName').has(key), {
+      (true && Ember.warn('There is no attribute or relationship with the name `' + key + '` on `' + modelClass.modelName + '`. Check your serializers attrs hash.', get(modelClass, 'attributes').has(key) || get(modelClass, 'relationshipsByName').has(key), {
         id: 'ds.serializer.no-mapped-attrs-key'
-      });
+      }));
+
 
       var attrs = get(this, 'attrs');
       var mappedKey = void 0;
@@ -108355,10 +109292,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
     },
     shouldSerializeHasMany: function shouldSerializeHasMany(snapshot, key, relationship) {
       if (this._shouldSerializeHasMany !== JSONSerializer.prototype._shouldSerializeHasMany) {
-        (0, _debug.deprecate)('The private method _shouldSerializeHasMany has been promoted to the public API. Please remove the underscore to use the public shouldSerializeHasMany method.', false, {
+        (true && !(false) && Ember.deprecate('The private method _shouldSerializeHasMany has been promoted to the public API. Please remove the underscore to use the public shouldSerializeHasMany method.', false, {
           id: 'ds.serializer.private-should-serialize-has-many',
           until: '3.0.0'
-        });
+        }));
       }
 
       return this._shouldSerializeHasMany(snapshot, key, relationship);
@@ -108482,7 +109419,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     extractErrors: function extractErrors(store, typeClass, payload, id) {
       var _this6 = this;
 
-      if (payload && (typeof payload === 'undefined' ? 'undefined' : _typeof(payload)) === 'object' && payload.errors) {
+      if (payload && typeof payload === 'object' && payload.errors) {
         payload = (0, _private.errorsArrayToHash)(payload.errors);
 
         this.normalizeUsingDeclaredMapping(typeClass, payload);
@@ -108518,7 +109455,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
     transformFor: function transformFor(attributeType, skipAssertion) {
       var transform = (0, _private.getOwner)(this).lookup('transform:' + attributeType);
 
-      (0, _debug.assert)("Unable to find transform for '" + attributeType + "'", skipAssertion || !!transform);
+      (true && !(skipAssertion || !!transform) && Ember.assert("Unable to find transform for '" + attributeType + "'", skipAssertion || !!transform));
+
 
       return transform;
     }
@@ -108551,20 +109489,15 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
   exports.default = JSONSerializer;
 });
-;define('ember-data/serializers/rest', ['exports', 'ember', 'ember-inflector', 'ember-data/-debug', 'ember-data/serializers/json', 'ember-data/-private'], function (exports, _ember, _emberInflector, _debug, _json, _private) {
+;define('ember-data/serializers/rest', ['exports', 'ember-inflector', 'ember-data/serializers/json', 'ember-data/-private'], function (exports, _emberInflector, _json, _private) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  };
 
-  var camelize = _ember.default.String.camelize;
+  var camelize = Ember.String.camelize;
 
   /**
     Normally, applications will use the `RESTSerializer` by implementing
@@ -108616,10 +109549,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
     },
     normalize: function normalize(modelClass, resourceHash, prop) {
       if (this.normalizeHash && this.normalizeHash[prop]) {
-        (0, _debug.deprecate)('`RESTSerializer.normalizeHash` has been deprecated. Please use `serializer.normalize` to modify the payload of single resources.', false, {
+        (true && !(false) && Ember.deprecate('`RESTSerializer.normalizeHash` has been deprecated. Please use `serializer.normalize` to modify the payload of single resources.', false, {
           id: 'ds.serializer.normalize-hash-deprecated',
           until: '3.0.0'
-        });
+        }));
+
         this.normalizeHash[prop](resourceHash);
       }
       return this._super(modelClass, resourceHash);
@@ -108635,7 +109569,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
       var modelClass = store.modelFor(modelName);
       var serializer = store.serializerFor(modelName);
 
-      _ember.default.makeArray(arrayHash).forEach(function (hash) {
+      Ember.makeArray(arrayHash).forEach(function (hash) {
         var _normalizePolymorphic = _this._normalizePolymorphicRecord(store, hash, prop, modelClass, serializer),
             data = _normalizePolymorphic.data,
             included = _normalizePolymorphic.included;
@@ -108664,10 +109598,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
           var deprecatedModelNameLookup = this.modelNameFromPayloadKey(hash.type);
 
           if (modelName !== deprecatedModelNameLookup && !this._hasCustomModelNameFromPayloadType() && this._hasCustomModelNameFromPayloadKey()) {
-            (0, _debug.deprecate)("You are using modelNameFromPayloadKey to normalize the type for a polymorphic relationship. This is has been deprecated in favor of modelNameFromPayloadType", false, {
+            (true && !(false) && Ember.deprecate("You are using modelNameFromPayloadKey to normalize the type for a polymorphic relationship. This is has been deprecated in favor of modelNameFromPayloadType", false, {
               id: 'ds.rest-serializer.deprecated-model-name-for-polymorphic-type',
               until: '3.0.0'
-            });
+            }));
+
 
             modelName = deprecatedModelNameLookup;
           }
@@ -108691,7 +109626,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
       var meta = this.extractMeta(store, primaryModelClass, payload);
       if (meta) {
-        (0, _debug.assert)('The `meta` returned from `extractMeta` has to be an object, not "' + _ember.default.typeOf(meta) + '".', _ember.default.typeOf(meta) === 'object');
+        (true && !(Ember.typeOf(meta) === 'object') && Ember.assert('The `meta` returned from `extractMeta` has to be an object, not "' + Ember.typeOf(meta) + '".', Ember.typeOf(meta) === 'object'));
+
         documentHash.meta = meta;
       }
 
@@ -108726,9 +109662,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
         var typeName = this.modelNameFromPayloadKey(modelName);
         if (!store.modelFactoryFor(typeName)) {
-          (0, _debug.warn)(this.warnMessageNoModelForKey(modelName, typeName), false, {
+          (true && Ember.warn(this.warnMessageNoModelForKey(modelName, typeName), false, {
             id: 'ds.serializer.model-for-key-missing'
-          });
+          }));
+
           continue;
         }
 
@@ -108739,15 +109676,15 @@ Object.defineProperty(exports, '__esModule', { value: true });
           continue;
         }
 
-        (0, _debug.runInDebug)(function () {
+        if (true) {
           var isQueryRecordAnArray = requestType === 'queryRecord' && isPrimary && Array.isArray(value);
           var message = "The adapter returned an array for the primary data of a `queryRecord` response. This is deprecated as `queryRecord` should return a single record.";
 
-          (0, _debug.deprecate)(message, !isQueryRecordAnArray, {
+          (true && !(!isQueryRecordAnArray) && Ember.deprecate(message, !isQueryRecordAnArray, {
             id: 'ds.serializer.rest.queryRecord-array-response',
             until: '3.0'
-          });
-        });
+          }));
+        }
 
         /*
           Support primary data as an object instead of an array.
@@ -108828,15 +109765,16 @@ Object.defineProperty(exports, '__esModule', { value: true });
       for (var prop in payload) {
         var modelName = this.modelNameFromPayloadKey(prop);
         if (!store.modelFactoryFor(modelName)) {
-          (0, _debug.warn)(this.warnMessageNoModelForKey(prop, modelName), false, {
+          (true && Ember.warn(this.warnMessageNoModelForKey(prop, modelName), false, {
             id: 'ds.serializer.model-for-key-missing'
-          });
+          }));
+
           continue;
         }
         var type = store.modelFor(modelName);
         var typeSerializer = store.serializerFor(type.modelName);
 
-        _ember.default.makeArray(payload[prop]).forEach(function (hash) {
+        Ember.makeArray(payload[prop]).forEach(function (hash) {
           var _typeSerializer$norma = typeSerializer.normalize(type, hash, prop),
               data = _typeSerializer$norma.data,
               included = _typeSerializer$norma.included;
@@ -108884,15 +109822,16 @@ Object.defineProperty(exports, '__esModule', { value: true });
       // `keyForPolymorphicType`. If this is the case, a deprecation warning is
       // logged and the old way is restored (so nothing breaks).
       if (key !== typeKey && this.keyForPolymorphicType === RESTSerializer.prototype.keyForPolymorphicType) {
-        (0, _debug.deprecate)("The key to serialize the type of a polymorphic record is created via keyForAttribute which has been deprecated. Use the keyForPolymorphicType hook instead.", false, {
+        (true && !(false) && Ember.deprecate("The key to serialize the type of a polymorphic record is created via keyForAttribute which has been deprecated. Use the keyForPolymorphicType hook instead.", false, {
           id: 'ds.rest-serializer.deprecated-key-for-polymorphic-type',
           until: '3.0.0'
-        });
+        }));
+
 
         typeKey = key;
       }
 
-      if (_ember.default.isNone(belongsTo)) {
+      if (Ember.isNone(belongsTo)) {
         json[typeKey] = null;
       } else {
         if ((0, _private.isEnabled)("ds-payload-type-hooks")) {
@@ -108928,7 +109867,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
       var isPolymorphic = relationshipMeta.options.polymorphic;
       var typeProperty = this.keyForPolymorphicType(key, relationshipType, 'deserialize');
 
-      if (isPolymorphic && resourceHash[typeProperty] !== undefined && (typeof relationshipHash === 'undefined' ? 'undefined' : _typeof(relationshipHash)) !== 'object') {
+      if (isPolymorphic && resourceHash[typeProperty] !== undefined && typeof relationshipHash !== 'object') {
 
         if ((0, _private.isEnabled)("ds-payload-type-hooks")) {
 
@@ -108937,10 +109876,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
           var deprecatedTypeLookup = this.modelNameFromPayloadKey(payloadType);
 
           if (payloadType !== deprecatedTypeLookup && !this._hasCustomModelNameFromPayloadType() && this._hasCustomModelNameFromPayloadKey()) {
-            (0, _debug.deprecate)("You are using modelNameFromPayloadKey to normalize the type for a polymorphic relationship. This has been deprecated in favor of modelNameFromPayloadType", false, {
+            (true && !(false) && Ember.deprecate("You are using modelNameFromPayloadKey to normalize the type for a polymorphic relationship. This has been deprecated in favor of modelNameFromPayloadType", false, {
               id: 'ds.rest-serializer.deprecated-model-name-for-polymorphic-type',
               until: '3.0.0'
-            });
+            }));
+
 
             type = deprecatedTypeLookup;
           }
@@ -108987,13 +109927,13 @@ Object.defineProperty(exports, '__esModule', { value: true });
     });
   }
 
-  (0, _debug.runInDebug)(function () {
+  if (true) {
     RESTSerializer.reopen({
       warnMessageNoModelForKey: function warnMessageNoModelForKey(prop, typeKey) {
         return 'Encountered "' + prop + '" in payload, but no model was found for model name "' + typeKey + '" (resolved model name using ' + this.constructor.toString() + '.modelNameFromPayloadKey("' + prop + '"))';
       }
     });
-  });
+  }
 
   exports.default = RESTSerializer;
 });
@@ -109116,23 +110056,16 @@ Object.defineProperty(exports, '__esModule', { value: true });
     }
   });
 });
-;define('ember-data/transforms/boolean', ['exports', 'ember', 'ember-data/transforms/transform'], function (exports, _ember, _transform) {
+;define('ember-data/transforms/boolean', ['exports', 'ember-data/transforms/transform'], function (exports, _transform) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  };
-
-  var isNone = _ember.default.isNone;
+  var isNone = Ember.isNone;
   exports.default = _transform.default.extend({
     deserialize: function deserialize(serialized, options) {
-      var type = typeof serialized === 'undefined' ? 'undefined' : _typeof(serialized);
+      var type = typeof serialized;
 
       if (isNone(serialized) && options.allowNull === true) {
         return null;
@@ -109157,20 +110090,15 @@ Object.defineProperty(exports, '__esModule', { value: true });
     }
   });
 });
-;define('ember-data/transforms/date', ['exports', 'ember-data/transforms/transform', 'ember', 'ember-data/-debug'], function (exports, _transform, _ember, _debug) {
+;define('ember-data/transforms/date', ['exports', 'ember-data/transforms/transform'], function (exports, _transform) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  };
 
-  _ember.default.Date = _ember.default.Date || {};
+  Ember.Date = Ember.Date || {};
 
   /**
    Date.parse with progressive enhancement for ISO 8601 <https://github.com/csnover/js-iso8601>
@@ -109184,12 +110112,12 @@ Object.defineProperty(exports, '__esModule', { value: true });
    @static
    @deprecated
    */
-  _ember.default.Date.parse = function (date) {
-    // throw deprecation
-    (0, _debug.deprecate)('Ember.Date.parse is deprecated because Safari 5-, IE8-, and\n    Firefox 3.6- are no longer supported (see\n    https://github.com/csnover/js-iso8601 for the history of this issue).\n    Please use Date.parse instead', false, {
+  Ember.Date.parse = function (date) {
+    (true && !(false) && Ember.deprecate('Ember.Date.parse is deprecated because Safari 5-, IE8-, and\n    Firefox 3.6- are no longer supported (see\n    https://github.com/csnover/js-iso8601 for the history of this issue).\n    Please use Date.parse instead', false, {
       id: 'ds.ember.date.parse-deprecate',
       until: '3.0.0'
-    });
+    }));
+
 
     return Date.parse(date);
   };
@@ -109218,16 +110146,17 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
   exports.default = _transform.default.extend({
     deserialize: function deserialize(serialized) {
-      var type = typeof serialized === 'undefined' ? 'undefined' : _typeof(serialized);
+      var type = typeof serialized;
 
       if (type === "string") {
         var offset = serialized.indexOf('+');
 
         if (offset !== -1 && serialized.length - 3 === offset) {
-          (0, _debug.deprecate)('The ECMA2015 Spec for ISO 8601 dates does not allow for shorthand timezone offsets such as +00.\n          Ember Data\'s normalization of date\'s allowing for this shorthand has been deprecated, please update your API to return\n          UTC dates formatted with \xB1hh:mm timezone offsets or implement a custom UTC transform.', false, {
+          (true && !(false) && Ember.deprecate('The ECMA2015 Spec for ISO 8601 dates does not allow for shorthand timezone offsets such as +00.\n          Ember Data\'s normalization of date\'s allowing for this shorthand has been deprecated, please update your API to return\n          UTC dates formatted with \xB1hh:mm timezone offsets or implement a custom UTC transform.', false, {
             id: 'ds.attr.date.normalize-utc',
             until: '3.0.0'
-          });
+          }));
+
           return new Date(serialized + ':00');
 
           // this is a phantom specific bug fix in which +0000 is not supported
@@ -109255,7 +110184,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     }
   });
 });
-;define('ember-data/transforms/number', ['exports', 'ember', 'ember-data/transforms/transform'], function (exports, _ember, _transform) {
+;define('ember-data/transforms/number', ['exports', 'ember-data/transforms/transform'], function (exports, _transform) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -109263,7 +110192,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
   });
 
 
-  var empty = _ember.default.isEmpty;
+  var empty = Ember.isEmpty;
 
   function isNumber(value) {
     return value === value && value !== Infinity && value !== -Infinity;
@@ -109316,7 +110245,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     }
   });
 });
-;define('ember-data/transforms/string', ['exports', 'ember', 'ember-data/transforms/transform'], function (exports, _ember, _transform) {
+;define('ember-data/transforms/string', ['exports', 'ember-data/transforms/transform'], function (exports, _transform) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -109324,7 +110253,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
   });
 
 
-  var none = _ember.default.isNone;
+  var none = Ember.isNone;
 
   /**
     The `DS.StringTransform` class is used to serialize and deserialize
@@ -109357,13 +110286,13 @@ Object.defineProperty(exports, '__esModule', { value: true });
     }
   });
 });
-;define('ember-data/transforms/transform', ['exports', 'ember'], function (exports, _ember) {
+;define('ember-data/transforms/transform', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Object.extend({
+  exports.default = Ember.Object.extend({
     /**
       When given a deserialized value from a record attribute this
       method must return the serialized value.
@@ -109403,9 +110332,14 @@ Object.defineProperty(exports, '__esModule', { value: true });
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = "2.14.6";
+  exports.default = "2.15.0";
 });
 ;define('moment/index', ['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
   /* globals self */
 
   var moment = self.moment;
@@ -109431,7 +110365,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
     return self.moment(this);
   };
 
-  exports['default'] = moment;
+  exports.default = moment;
 });
 ;
 //# sourceMappingURL=vendor.map

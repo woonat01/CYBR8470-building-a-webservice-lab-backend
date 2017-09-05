@@ -2,7 +2,7 @@
 
 
 
-define('littlebits-frontend/app', ['exports', 'ember', 'littlebits-frontend/resolver', 'ember-load-initializers', 'littlebits-frontend/config/environment'], function (exports, _ember, _resolver, _emberLoadInitializers, _environment) {
+define('littlebits-frontend/app', ['exports', 'littlebits-frontend/resolver', 'ember-load-initializers', 'littlebits-frontend/config/environment'], function (exports, _resolver, _emberLoadInitializers, _environment) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -12,7 +12,7 @@ define('littlebits-frontend/app', ['exports', 'ember', 'littlebits-frontend/reso
 
   var App = void 0;
 
-  App = _ember.default.Application.extend({
+  App = Ember.Application.extend({
     modulePrefix: _environment.default.modulePrefix,
     podModulePrefix: _environment.default.podModulePrefix,
     Resolver: _resolver.default
@@ -1024,13 +1024,13 @@ define('littlebits-frontend/components/welcome-page', ['exports', 'ember-welcome
     }
   });
 });
-define('littlebits-frontend/controllers/application', ['exports', 'ember'], function (exports, _ember) {
+define('littlebits-frontend/controllers/application', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Controller.extend({
+  exports.default = Ember.Controller.extend({
     showMenu: '',
     actions: {
       toggleMenu: function toggleMenu() {
@@ -1043,21 +1043,21 @@ define('littlebits-frontend/controllers/application', ['exports', 'ember'], func
       logout: function logout() {
         this.get('auth').logout();
       },
-      activateCloudbit: function activateCloudbit() {
+      activateIFTTT: function activateIFTTT() {
         var data = {
           eventtype: 'dashboard_on',
           timestamp: Date.now().toString(),
           userid: this.get('auth.userid')
         };
 
-        _ember.default.$.ajax({
-          url: '/api/activatecloudbit',
+        Ember.$.ajax({
+          url: '/api/activateifttt',
           type: "POST",
           data: JSON.stringify(data),
           contentType: "application/json",
           dataType: "json",
           success: function success(response) {
-            console.log('Attempting to turn cloudbit on. Response from server is: ');
+            console.log('Attempting to turn ifttt on. Response from server is: ');
             console.log(response);
           }
         });
@@ -1065,22 +1065,22 @@ define('littlebits-frontend/controllers/application', ['exports', 'ember'], func
     }
   });
 });
-define('littlebits-frontend/controllers/index', ['exports', 'ember'], function (exports, _ember) {
+define('littlebits-frontend/controllers/index', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Controller.extend({});
+  exports.default = Ember.Controller.extend({});
 });
-define('littlebits-frontend/controllers/login', ['exports', 'ember'], function (exports, _ember) {
+define('littlebits-frontend/controllers/login', ['exports'], function (exports) {
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.default = _ember.default.Controller.extend({
-		auth: _ember.default.inject.service('auth-manager'),
+	exports.default = Ember.Controller.extend({
+		auth: Ember.inject.service('auth-manager'),
 		actions: {
 			login: function login() {
 				this.get('auth').login();
@@ -1091,7 +1091,7 @@ define('littlebits-frontend/controllers/login', ['exports', 'ember'], function (
 		}
 	});
 });
-define('littlebits-frontend/helpers/app-version', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-cli-app-version/utils/regexp'], function (exports, _ember, _environment, _regexp) {
+define('littlebits-frontend/helpers/app-version', ['exports', 'littlebits-frontend/config/environment', 'ember-cli-app-version/utils/regexp'], function (exports, _environment, _regexp) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -1113,7 +1113,7 @@ define('littlebits-frontend/helpers/app-version', ['exports', 'ember', 'littlebi
     return version;
   }
 
-  exports.default = _ember.default.Helper.helper(appVersion);
+  exports.default = Ember.Helper.helper(appVersion);
 });
 define('littlebits-frontend/helpers/bs-contains', ['exports', 'ember-bootstrap/helpers/bs-contains'], function (exports, _bsContains) {
   'use strict';
@@ -1153,64 +1153,64 @@ define('littlebits-frontend/helpers/bs-eq', ['exports', 'ember-bootstrap/helpers
     }
   });
 });
-define('littlebits-frontend/helpers/is-after', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-after'], function (exports, _ember, _environment, _isAfter) {
+define('littlebits-frontend/helpers/is-after', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-after'], function (exports, _environment, _isAfter) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _isAfter.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/is-before', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-before'], function (exports, _ember, _environment, _isBefore) {
+define('littlebits-frontend/helpers/is-before', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-before'], function (exports, _environment, _isBefore) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _isBefore.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/is-between', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-between'], function (exports, _ember, _environment, _isBetween) {
+define('littlebits-frontend/helpers/is-between', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-between'], function (exports, _environment, _isBetween) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _isBetween.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/is-same-or-after', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-same-or-after'], function (exports, _ember, _environment, _isSameOrAfter) {
+define('littlebits-frontend/helpers/is-same-or-after', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-same-or-after'], function (exports, _environment, _isSameOrAfter) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _isSameOrAfter.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/is-same-or-before', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-same-or-before'], function (exports, _ember, _environment, _isSameOrBefore) {
+define('littlebits-frontend/helpers/is-same-or-before', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-same-or-before'], function (exports, _environment, _isSameOrBefore) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _isSameOrBefore.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/is-same', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-same'], function (exports, _ember, _environment, _isSame) {
+define('littlebits-frontend/helpers/is-same', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/is-same'], function (exports, _environment, _isSame) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _isSame.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
 define('littlebits-frontend/helpers/lf-lock-model', ['exports', 'liquid-fire/helpers/lf-lock-model'], function (exports, _lfLockModel) {
@@ -1251,24 +1251,34 @@ define('littlebits-frontend/helpers/lf-or', ['exports', 'liquid-fire/helpers/lf-
     }
   });
 });
-define('littlebits-frontend/helpers/moment-add', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-add'], function (exports, _ember, _environment, _momentAdd) {
+define('littlebits-frontend/helpers/moment-add', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-add'], function (exports, _environment, _momentAdd) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _momentAdd.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/moment-calendar', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-calendar'], function (exports, _ember, _environment, _momentCalendar) {
+define('littlebits-frontend/helpers/moment-calendar', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-calendar'], function (exports, _environment, _momentCalendar) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _momentCalendar.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
+  });
+});
+define('littlebits-frontend/helpers/moment-diff', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-diff'], function (exports, _environment, _momentDiff) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _momentDiff.default.extend({
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
 define('littlebits-frontend/helpers/moment-duration', ['exports', 'ember-moment/helpers/moment-duration'], function (exports, _momentDuration) {
@@ -1284,74 +1294,74 @@ define('littlebits-frontend/helpers/moment-duration', ['exports', 'ember-moment/
     }
   });
 });
-define('littlebits-frontend/helpers/moment-format', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-format'], function (exports, _ember, _environment, _momentFormat) {
+define('littlebits-frontend/helpers/moment-format', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-format'], function (exports, _environment, _momentFormat) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _momentFormat.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/moment-from-now', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-from-now'], function (exports, _ember, _environment, _momentFromNow) {
+define('littlebits-frontend/helpers/moment-from-now', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-from-now'], function (exports, _environment, _momentFromNow) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _momentFromNow.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/moment-from', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-from'], function (exports, _ember, _environment, _momentFrom) {
+define('littlebits-frontend/helpers/moment-from', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-from'], function (exports, _environment, _momentFrom) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _momentFrom.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/moment-subtract', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-subtract'], function (exports, _ember, _environment, _momentSubtract) {
+define('littlebits-frontend/helpers/moment-subtract', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-subtract'], function (exports, _environment, _momentSubtract) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _momentSubtract.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/moment-to-date', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-to-date'], function (exports, _ember, _environment, _momentToDate) {
+define('littlebits-frontend/helpers/moment-to-date', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-to-date'], function (exports, _environment, _momentToDate) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _momentToDate.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/moment-to-now', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-to-now'], function (exports, _ember, _environment, _momentToNow) {
+define('littlebits-frontend/helpers/moment-to-now', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-to-now'], function (exports, _environment, _momentToNow) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _momentToNow.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
-define('littlebits-frontend/helpers/moment-to', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-to'], function (exports, _ember, _environment, _momentTo) {
+define('littlebits-frontend/helpers/moment-to', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/helpers/moment-to'], function (exports, _environment, _momentTo) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _momentTo.default.extend({
-    globalAllowEmpty: !!_ember.default.get(_environment.default, 'moment.allowEmpty')
+    globalAllowEmpty: !!Ember.get(_environment.default, 'moment.allowEmpty')
   });
 });
 define('littlebits-frontend/helpers/moment-unix', ['exports', 'ember-moment/helpers/unix'], function (exports, _unix) {
@@ -1522,7 +1532,7 @@ define('littlebits-frontend/initializers/ember-data', ['exports', 'ember-data/se
     initialize: _setupContainer.default
   };
 });
-define('littlebits-frontend/initializers/export-application-global', ['exports', 'ember', 'littlebits-frontend/config/environment'], function (exports, _ember, _environment) {
+define('littlebits-frontend/initializers/export-application-global', ['exports', 'littlebits-frontend/config/environment'], function (exports, _environment) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -1550,7 +1560,7 @@ define('littlebits-frontend/initializers/export-application-global', ['exports',
       if (typeof value === 'string') {
         globalName = value;
       } else {
-        globalName = _ember.default.String.classify(_environment.default.modulePrefix);
+        globalName = Ember.String.classify(_environment.default.modulePrefix);
       }
 
       if (!theGlobal[globalName]) {
@@ -1666,7 +1676,7 @@ define('littlebits-frontend/resolver', ['exports', 'ember-resolver'], function (
   });
   exports.default = _emberResolver.default;
 });
-define('littlebits-frontend/router', ['exports', 'ember', 'littlebits-frontend/config/environment'], function (exports, _ember, _environment) {
+define('littlebits-frontend/router', ['exports', 'littlebits-frontend/config/environment'], function (exports, _environment) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -1674,7 +1684,7 @@ define('littlebits-frontend/router', ['exports', 'ember', 'littlebits-frontend/c
   });
 
 
-  var Router = _ember.default.Router.extend({
+  var Router = Ember.Router.extend({
     location: _environment.default.locationType,
     rootURL: _environment.default.bURL
   });
@@ -1685,7 +1695,7 @@ define('littlebits-frontend/router', ['exports', 'ember', 'littlebits-frontend/c
 
   exports.default = Router;
 });
-define('littlebits-frontend/routes/index', ['exports', 'ember'], function (exports, _ember) {
+define('littlebits-frontend/routes/index', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -1693,34 +1703,34 @@ define('littlebits-frontend/routes/index', ['exports', 'ember'], function (expor
   });
 
 
-  var defaultitems = _ember.default.A([{
-    title: '2017 Gencyber Announcement',
-    description: 'We are excited to have you!',
+  var defaultitems = Ember.A([{
+    title: 'CYBR 8470',
+    description: 'Exciting stuff!',
     img: 'img/NGC-logo.png',
     link: '',
-    link_external: 'http://www.nebraskagencyber.com'
+    link_external: 'http://mlhale.github.io/CYBR8470'
 
   }, {
-    title: 'Event Template',
-    description: 'You are seeing this template, because you haven\'t loaded any data into your client yet. This Template will be used to display events from your Cloudbit',
-    img: 'img/littlebits.jpg',
+    title: 'Masonry-based Event Display Template',
+    description: 'You are seeing this template, because you haven\'t loaded any data into your client yet. This Template will be used to display events as they load from your REST API.',
+    img: 'img/template-icon.svg',
     link: 'index'
 
   }]);
 
-  exports.default = _ember.default.Route.extend({
+  exports.default = Ember.Route.extend({
     getData: function getData() {
-      var items = _ember.default.A([]);
-      return _ember.default.$.get('/api/deviceevents').then(function (events) {
+      var items = Ember.A([]);
+      return Ember.$.get('/api/deviceevents').then(function (events) {
         events.forEach(function (event) {
           // console.log(event);
           items.addObject({
             id: event.pk,
-            eventtype: event.fields.eventtype.replace('amplitude:', ''),
+            eventtype: event.fields.eventtype,
             requestor: event.fields.requestor,
             timestamp: event.fields.timestamp,
             userid: event.fields.userid,
-            img: 'img/littlebits.jpg',
+            img: 'img/event-icon.jpg',
             link: 'index'
           });
         });
@@ -1734,7 +1744,7 @@ define('littlebits-frontend/routes/index', ['exports', 'ember'], function (expor
       this._super(controller, model);
       controller.set('defaultitems', defaultitems);
       var route = this;
-      setInterval(_ember.default.run.later(route, function () {
+      setInterval(Ember.run.later(route, function () {
         // code here will execute within a RunLoop about every minute
         if (controller.get('auth.isLoggedIn')) {
           route.getData().then(function (data) {
@@ -1747,13 +1757,13 @@ define('littlebits-frontend/routes/index', ['exports', 'ember'], function (expor
     }
   });
 });
-define('littlebits-frontend/routes/login', ['exports', 'ember'], function (exports, _ember) {
+define('littlebits-frontend/routes/login', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Route.extend({});
+  exports.default = Ember.Route.extend({});
 });
 define('littlebits-frontend/services/ajax', ['exports', 'ember-ajax/services/ajax'], function (exports, _ajax) {
   'use strict';
@@ -1768,15 +1778,15 @@ define('littlebits-frontend/services/ajax', ['exports', 'ember-ajax/services/aja
     }
   });
 });
-define('littlebits-frontend/services/auth-manager', ['exports', 'ember'], function (exports, _ember) {
+define('littlebits-frontend/services/auth-manager', ['exports'], function (exports) {
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.default = _ember.default.Service.extend({
-		store: _ember.default.inject.service('store'),
-		routing: _ember.default.inject.service('-routing'),
+	exports.default = Ember.Service.extend({
+		store: Ember.inject.service('store'),
+		routing: Ember.inject.service('-routing'),
 
 		//field vars
 		username: '',
@@ -1802,7 +1812,7 @@ define('littlebits-frontend/services/auth-manager', ['exports', 'ember'], functi
 			var auth = this;
 
 			//make api request
-			_ember.default.$.post('/api/session', data, function (response) {
+			Ember.$.post('/api/session', data, function (response) {
 
 				if (response.isauthenticated) {
 					//success
@@ -1834,7 +1844,7 @@ define('littlebits-frontend/services/auth-manager', ['exports', 'ember'], functi
 		logout: function logout() {
 			console.log('Logging out');
 			var auth = this;
-			_ember.default.$.ajax({ url: '/api/session', type: 'DELETE' }).then(function (response) {
+			Ember.$.ajax({ url: '/api/session', type: 'DELETE' }).then(function (response) {
 				console.log('Logout DELETE Request to /api/session/ was successful:' + response);
 				auth.set('isLoggedIn', false);
 				auth.set('errorMsg', '');
@@ -1867,7 +1877,7 @@ define('littlebits-frontend/services/auth-manager', ['exports', 'ember'], functi
 			}
 
 			//check to see if the user is logged into the API
-			_ember.default.$.get('/api/session', function (response) {
+			Ember.$.get('/api/session', function (response) {
 				if (response.isauthenticated) {
 					//success
 					console.log('The user: \'' + response.username + '\' is currently logged in.');
@@ -1882,13 +1892,13 @@ define('littlebits-frontend/services/auth-manager', ['exports', 'ember'], functi
 		}
 	});
 });
-define('littlebits-frontend/services/constants', ['exports', 'ember', 'littlebits-frontend/config/environment'], function (exports, _ember, _environment) {
+define('littlebits-frontend/services/constants', ['exports', 'littlebits-frontend/config/environment'], function (exports, _environment) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = _ember.default.Service.extend({
+  exports.default = Ember.Service.extend({
     rootURL: _environment.default.rootURL
   });
 });
@@ -1900,14 +1910,14 @@ define("littlebits-frontend/services/liquid-fire-transitions", ["exports", "liqu
   });
   exports.default = _transitionMap.default;
 });
-define('littlebits-frontend/services/moment', ['exports', 'ember', 'littlebits-frontend/config/environment', 'ember-moment/services/moment'], function (exports, _ember, _environment, _moment) {
+define('littlebits-frontend/services/moment', ['exports', 'littlebits-frontend/config/environment', 'ember-moment/services/moment'], function (exports, _environment, _moment) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _moment.default.extend({
-    defaultFormat: _ember.default.get(_environment.default, 'moment.outputFormat')
+    defaultFormat: Ember.get(_environment.default, 'moment.outputFormat')
   });
 });
 define("littlebits-frontend/templates/application", ["exports"], function (exports) {
@@ -1916,7 +1926,7 @@ define("littlebits-frontend/templates/application", ["exports"], function (expor
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "Foe6yXZl", "block": "{\"statements\":[[11,\"div\",[]],[15,\"class\",\"container-fluid\"],[15,\"id\",\"app-main\"],[13],[0,\"\\n\\t\"],[11,\"div\",[]],[16,\"class\",[34,[\"row row-offcanvas row-offcanvas-left \",[26,[\"showMenu\"]]]]],[13],[0,\"\\n\\t\\t\"],[4,\"   *** SIDEBAR ***\"],[0,\"\\n\\t\\t\"],[11,\"div\",[]],[15,\"id\",\"sidebar\"],[15,\"class\",\"col-xs-6 col-sm-4 col-md-3 sidebar-offcanvas\"],[13],[0,\"\\n\\t\\t\\t\"],[11,\"div\",[]],[15,\"class\",\"sidebar-content\"],[13],[0,\"\\n\"],[6,[\"link-to\"],[\"index\"],null,{\"statements\":[[0,\"\\t\\t\\t\\t    \"],[11,\"p\",[]],[15,\"class\",\"sidebar-p\"],[13],[11,\"img\",[]],[16,\"src\",[34,[[28,[\"constants\",\"rootURL\"]],\"img/NGC-logo.png\"]]],[15,\"width\",\"100%\"],[15,\"class\",\"img-rounded\"],[13],[14],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"        \"],[11,\"h4\",[]],[13],[0,\"Dashboard Demo App\"],[14],[0,\"\\n\\t\\t\\t\\t\"],[4,\" <p class=\\\"sidebar-p\\\"></p> \"],[0,\"\\n\\n\\t\\t\\t\\t\"],[11,\"ul\",[]],[15,\"class\",\"sidebar-menu\"],[13],[0,\"\\n\\n\"],[6,[\"if\"],[[28,[\"auth\",\"isLoggedIn\"]]],null,{\"statements\":[[0,\"\\t\\t\\t\\t\\t\\tLogged in as: \"],[1,[28,[\"auth\",\"username\"]],false],[0,\" (\"],[11,\"a\",[]],[5,[\"action\"],[[28,[null]],\"logout\"]],[13],[0,\"Logout\"],[14],[0,\")\\n\"]],\"locals\":[]},{\"statements\":[[0,\"\\t\\t\\t\\t\\t\\t\"],[6,[\"active-link\"],null,null,{\"statements\":[[6,[\"link-to\"],[\"login\"],null,{\"statements\":[[0,\"Login\"]],\"locals\":[]},null]],\"locals\":[]},null],[0,\"\\n\"]],\"locals\":[]}],[0,\"\\t\\t\\t\\t\\t\"],[6,[\"active-link\"],null,null,{\"statements\":[[6,[\"link-to\"],[\"index\"],null,{\"statements\":[[0,\"Home\"]],\"locals\":[]},null]],\"locals\":[]},null],[0,\"\\n\\t\\t\\t\\t\"],[14],[0,\"\\n\\t\\t\\t\\t\"],[11,\"p\",[]],[15,\"class\",\"social\"],[13],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"a\",[]],[15,\"href\",\"https://github.com/MLHale/\"],[15,\"data-animate-hover\",\"pulse\"],[15,\"target\",\"_blank\"],[15,\"class\",\"external facebook\"],[13],[11,\"i\",[]],[15,\"class\",\"fa fa-github\"],[13],[14],[14],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"a\",[]],[15,\"href\",\"https://scholar.google.com/citations?user=YGtxqR4AAAAJ&hl\"],[15,\"data-animate-hover\",\"pulse\"],[15,\"target\",\"_blank\"],[15,\"class\",\"external facebook\"],[13],[11,\"i\",[]],[15,\"class\",\"fa fa-google\"],[13],[14],[14],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"a\",[]],[15,\"href\",\"https://twitter.com/mlhale_\"],[15,\"target\",\"_blank\"],[15,\"data-animate-hover\",\"pulse\"],[15,\"class\",\"external twitter\"],[13],[11,\"i\",[]],[15,\"class\",\"fa fa-twitter\"],[13],[14],[14],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"a\",[]],[15,\"href\",\"mailto:mlhale@unomaha.edu\"],[15,\"target\",\"_blank\"],[15,\"data-animate-hover\",\"pulse\"],[15,\"class\",\"email\"],[13],[11,\"i\",[]],[15,\"class\",\"fa fa-envelope\"],[13],[14],[14],[14],[0,\"\\n\\t\\t\\t\\t\"],[11,\"div\",[]],[15,\"class\",\"copyright\"],[13],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"p\",[]],[15,\"class\",\"credit\"],[13],[0,\"©2017 Dr. Matthew Hale\"],[14],[0,\"\\n\\n\\n\\t\\t\\t\\t\"],[14],[0,\"\\n\\t\\t\\t\"],[14],[0,\"\\n\"],[6,[\"if\"],[[28,[\"auth\",\"isLoggedIn\"]]],null,{\"statements\":[[0,\"\\t      \"],[11,\"div\",[]],[15,\"class\",\"col-xs-12\"],[13],[0,\"\\n\\n\\t        \"],[11,\"div\",[]],[15,\"class\",\"btn btn-block btn-lg btn-success\"],[5,[\"action\"],[[28,[null]],\"activateCloudbit\"]],[13],[11,\"span\",[]],[15,\"class\",\"glyphicon glyphicon-play\"],[13],[14],[0,\" Turn Cloudbit On\"],[14],[0,\"\\n\\t      \"],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\t\\t\"],[14],[0,\"\\n\\t\\t\"],[4,\"   *** SIDEBAR END ***  \"],[0,\"\\n\\t\\t\"],[11,\"div\",[]],[15,\"class\",\"col-xs-12 col-sm-8 col-md-9 content-column\"],[13],[0,\"\\n\\t\\t\\t\"],[11,\"div\",[]],[15,\"class\",\"small-navbar visible-xs\"],[13],[0,\"\\n\\t\\t\\t\\t\"],[11,\"button\",[]],[15,\"type\",\"button\"],[15,\"data-toggle\",\"offcanvas\"],[15,\"class\",\"btn btn-ghost pull-left\"],[5,[\"action\"],[[28,[null]],\"toggleMenu\"]],[13],[0,\" \"],[11,\"i\",[]],[15,\"class\",\"fa fa-align-left\"],[13],[0,\" \"],[14],[0,\"Menu\"],[14],[0,\"\\n\\t\\t\\t\\t\"],[11,\"h1\",[]],[15,\"class\",\"small-navbar-heading\"],[13],[6,[\"link-to\"],[\"index\"],null,{\"statements\":[[0,\"Nebraska GenCyber 2017\"]],\"locals\":[]},null],[14],[0,\"\\n\\t\\t\\t\"],[14],[0,\"\\n\\t\\t\\t\"],[1,[33,[\"liquid-outlet\"],[\"main\"],null],false],[0,\"\\n\\t\\t\"],[14],[0,\"\\n\\t\"],[14],[0,\"\\n\\n\"],[14],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "littlebits-frontend/templates/application.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "X5AnBve3", "block": "{\"statements\":[[11,\"div\",[]],[15,\"class\",\"container-fluid\"],[15,\"id\",\"app-main\"],[13],[0,\"\\n\\t\"],[11,\"div\",[]],[16,\"class\",[34,[\"row row-offcanvas row-offcanvas-left \",[26,[\"showMenu\"]]]]],[13],[0,\"\\n\\t\\t\"],[4,\"   *** SIDEBAR ***\"],[0,\"\\n\\t\\t\"],[11,\"div\",[]],[15,\"id\",\"sidebar\"],[15,\"class\",\"col-xs-6 col-sm-4 col-md-3 sidebar-offcanvas\"],[13],[0,\"\\n\\t\\t\\t\"],[11,\"div\",[]],[15,\"class\",\"sidebar-content\"],[13],[0,\"\\n\"],[6,[\"link-to\"],[\"index\"],null,{\"statements\":[[0,\"\\t\\t\\t\\t    \"],[11,\"p\",[]],[15,\"class\",\"sidebar-p\"],[13],[11,\"img\",[]],[16,\"src\",[34,[[28,[\"constants\",\"rootURL\"]],\"img/NGC-logo.png\"]]],[15,\"width\",\"100%\"],[15,\"class\",\"img-rounded\"],[13],[14],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"        \"],[11,\"h4\",[]],[13],[0,\"Dashboard Demo App\"],[14],[0,\"\\n\\t\\t\\t\\t\"],[4,\" <p class=\\\"sidebar-p\\\"></p> \"],[0,\"\\n\\n\\t\\t\\t\\t\"],[11,\"ul\",[]],[15,\"class\",\"sidebar-menu\"],[13],[0,\"\\n\\n\"],[6,[\"if\"],[[28,[\"auth\",\"isLoggedIn\"]]],null,{\"statements\":[[0,\"\\t\\t\\t\\t\\t\\tLogged in as: \"],[1,[28,[\"auth\",\"username\"]],false],[0,\" (\"],[11,\"a\",[]],[5,[\"action\"],[[28,[null]],\"logout\"]],[13],[0,\"Logout\"],[14],[0,\")\\n\"]],\"locals\":[]},{\"statements\":[[0,\"\\t\\t\\t\\t\\t\\t\"],[6,[\"active-link\"],null,null,{\"statements\":[[6,[\"link-to\"],[\"login\"],null,{\"statements\":[[0,\"Login\"]],\"locals\":[]},null]],\"locals\":[]},null],[0,\"\\n\"]],\"locals\":[]}],[0,\"\\t\\t\\t\\t\\t\"],[6,[\"active-link\"],null,null,{\"statements\":[[6,[\"link-to\"],[\"index\"],null,{\"statements\":[[0,\"Home\"]],\"locals\":[]},null]],\"locals\":[]},null],[0,\"\\n\\t\\t\\t\\t\"],[14],[0,\"\\n\\t\\t\\t\\t\"],[11,\"p\",[]],[15,\"class\",\"social\"],[13],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"a\",[]],[15,\"href\",\"https://github.com/MLHale/\"],[15,\"data-animate-hover\",\"pulse\"],[15,\"target\",\"_blank\"],[15,\"class\",\"external facebook\"],[13],[11,\"i\",[]],[15,\"class\",\"fa fa-github\"],[13],[14],[14],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"a\",[]],[15,\"href\",\"https://scholar.google.com/citations?user=YGtxqR4AAAAJ&hl\"],[15,\"data-animate-hover\",\"pulse\"],[15,\"target\",\"_blank\"],[15,\"class\",\"external facebook\"],[13],[11,\"i\",[]],[15,\"class\",\"fa fa-google\"],[13],[14],[14],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"a\",[]],[15,\"href\",\"https://twitter.com/mlhale_\"],[15,\"target\",\"_blank\"],[15,\"data-animate-hover\",\"pulse\"],[15,\"class\",\"external twitter\"],[13],[11,\"i\",[]],[15,\"class\",\"fa fa-twitter\"],[13],[14],[14],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"a\",[]],[15,\"href\",\"mailto:mlhale@unomaha.edu\"],[15,\"target\",\"_blank\"],[15,\"data-animate-hover\",\"pulse\"],[15,\"class\",\"email\"],[13],[11,\"i\",[]],[15,\"class\",\"fa fa-envelope\"],[13],[14],[14],[14],[0,\"\\n\\t\\t\\t\\t\"],[11,\"div\",[]],[15,\"class\",\"copyright\"],[13],[0,\"\\n\\t\\t\\t\\t\\t\"],[11,\"p\",[]],[15,\"class\",\"credit\"],[13],[0,\"©2017 Dr. Matthew Hale\"],[14],[0,\"\\n\\n\\n\\t\\t\\t\\t\"],[14],[0,\"\\n\\t\\t\\t\"],[14],[0,\"\\n\"],[6,[\"if\"],[[28,[\"auth\",\"isLoggedIn\"]]],null,{\"statements\":[[0,\"\\t      \"],[11,\"div\",[]],[15,\"class\",\"col-xs-12\"],[13],[0,\"\\n\\n\\t        \"],[11,\"div\",[]],[15,\"class\",\"btn btn-block btn-lg btn-success\"],[5,[\"action\"],[[28,[null]],\"activateIFTTT\"]],[13],[11,\"span\",[]],[15,\"class\",\"glyphicon glyphicon-play\"],[13],[14],[0,\" Turn IFTTT On\"],[14],[0,\"\\n\\t      \"],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\t\\t\"],[14],[0,\"\\n\\t\\t\"],[4,\"   *** SIDEBAR END ***  \"],[0,\"\\n\\t\\t\"],[11,\"div\",[]],[15,\"class\",\"col-xs-12 col-sm-8 col-md-9 content-column\"],[13],[0,\"\\n\\t\\t\\t\"],[11,\"div\",[]],[15,\"class\",\"small-navbar visible-xs\"],[13],[0,\"\\n\\t\\t\\t\\t\"],[11,\"button\",[]],[15,\"type\",\"button\"],[15,\"data-toggle\",\"offcanvas\"],[15,\"class\",\"btn btn-ghost pull-left\"],[5,[\"action\"],[[28,[null]],\"toggleMenu\"]],[13],[0,\" \"],[11,\"i\",[]],[15,\"class\",\"fa fa-align-left\"],[13],[0,\" \"],[14],[0,\"Menu\"],[14],[0,\"\\n\\t\\t\\t\\t\"],[11,\"h1\",[]],[15,\"class\",\"small-navbar-heading\"],[13],[6,[\"link-to\"],[\"index\"],null,{\"statements\":[[0,\"CYBR8470 Demo APP\"]],\"locals\":[]},null],[14],[0,\"\\n\\t\\t\\t\"],[14],[0,\"\\n\\t\\t\\t\"],[1,[33,[\"liquid-outlet\"],[\"main\"],null],false],[0,\"\\n\\t\\t\"],[14],[0,\"\\n\\t\"],[14],[0,\"\\n\\n\"],[14],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "littlebits-frontend/templates/application.hbs" } });
 });
 define("littlebits-frontend/templates/index", ["exports"], function (exports) {
   "use strict";
