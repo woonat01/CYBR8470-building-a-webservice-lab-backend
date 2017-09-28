@@ -29,3 +29,53 @@ class ApiKey(models.Model):
 
 class ApiKeyAdmin(admin.ModelAdmin):
     list_display = ('owner','key')
+
+class Breed(models.Model):
+    TINY = 'Tiny'
+    SMALL = 'Small'
+    MEDIUM = 'Medium'
+    LARGE = 'Large'
+    ONE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
+
+    number_choices = (
+        (ONE, 1),
+        (TWO, 2),
+        (THREE, 3),
+        (FOUR, 4),
+        (FIVE, 5),
+    )
+    size_choices = (
+        (TINY, 'Tiny'),
+        (SMALL, 'Small'),
+        (MEDIUM, 'Medium'),
+        (LARGE, 'Large'),
+    )
+
+    breedname = models.CharField(max_length=1000, blank=False)
+    size = models.CharField(max_length=6, choices = size_choices, default = MEDIUM, blank=False)#needs to be one of several choices
+    friendliness = models.IntegerField(choices = number_choices, default = THREE, blank=False)#needs to be 1-5
+    trainability = models.IntegerField(choices = number_choices, default = THREE, blank=False)#needs to be 1-5
+    sheddingamount = models.IntegerField(choices = number_choices, default = THREE, blank=False)#needs to be 1-5
+    exerciseneeds = models.IntegerField(choices = number_choices, default = THREE, blank=False)#needs to be 1-5
+
+class BreedAdmin(admin.ModelAdmin):
+    list_display = ('id', 'breedname')
+
+class Dog(models.Model):
+    name = models.CharField(max_length=1000, blank=False)
+    age = models.IntegerField(blank=False)
+    gender = models.CharField(max_length=1000, blank=False)
+    color = models.CharField(max_length=1000, blank=False)
+    favoriteFood = models.CharField(max_length=1000, blank=False)
+    favoriteToy = models.CharField(max_length=1000, blank=False)
+    breed = models.CharField(max_length=1000, blank=False)#needs to be a forign key field
+    """breed = models.ForeignKey(
+        'Breed',
+        on_delete=models.CASCADE
+    )"""
+class DogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')

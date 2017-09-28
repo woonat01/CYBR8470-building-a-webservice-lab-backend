@@ -55,6 +55,115 @@ def xss_example(request):
   return render_to_response('dumb-test-app/index.html',
               {}, RequestContext(request))
 
+class DogList(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.BrowsableAPIRenderer, )
+
+    def get(self, request, format=None):
+        dog = Dog.objects.all()
+        json_data = serializers.serialize('json', dog)
+        content = {'dog': json_data}
+        return HttpResponse(json_data, content_type='json')
+
+
+    def post(self,request, *args, **kwargs):
+        print 'REQUEST DATA'
+        print str(request.data)
+        name = request.data.get('name')
+        age = int(request.data.get('age'))
+        gender = request.data.get('gender')
+        color = request.data.get('color')
+        favoriteFood = request.data.get('favoriteFood')
+        favoriteToy = request.data.get('favoriteToy')
+        breed = request.data.get('breed')
+
+        newDog = Dog(
+            name=name,
+            gender=gender,
+            age=age,
+            color=color,
+            favoriteToy=favoriteToy,
+            favoriteFood=favoriteFood,
+            breed=breed
+        )
+        try:
+            newDog.clean_fields()
+        except ValidationError as e:
+            print e
+            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+        newDog.save()
+
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+class DogDetail(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.BrowsableAPIRenderer, renderers.JSONRenderer, )
+
+    def get(self, request, format=None):
+        return Response({'status':1234})
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+class BreedList(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get(self, request, format=None):
+        breed = Breed.objects.all()
+        json_data = serializers.serialize('json', breed)
+        content = {'breed': json_data}
+        return HttpResponse(json_data, content_type='json')
+        return Response({'status':4444})
+
+    def post(self,request, *args, **kwargs):
+        print 'REQUEST DATA'
+        print str(request.data)
+        breedname = request.data.get('breedname')
+        size = request.data.get('size')
+        friendliness = request.data.get('friendliness')
+        trainability = request.data.get('trainability')
+        sheddingamount = request.data.get('sheddingamount')
+        exerciseneeds = request.data.get('exerciseneeds')
+
+        newBreed = Breed(
+        breedname=breedname,
+        size=size,
+        friendliness=friendliness,
+        trainability=trainability,
+        sheddingamount=sheddingamount,
+        exerciseneeds=exerciseneeds
+        )
+        try:
+            newBreed.clean_fields()
+        except ValidationError as e:
+            print e
+            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+        newBreed.save()
+
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+class BreedDetail(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get(self, request, format=None):
+        return Response({'status':4444})
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 class Register(APIView):
     permission_classes = (AllowAny,)
 
@@ -122,7 +231,7 @@ class Session(APIView):
 class Events(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser,parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer, )
+    renderer_classes = (renderers.BrowsableAPIRenderer, renderers.JSONRenderer)
 
     def post(self, request, *args, **kwargs):
         print 'REQUEST DATA'
