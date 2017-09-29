@@ -58,7 +58,7 @@ def xss_example(request):
 class DogList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser,parsers.FormParser)
-    renderer_classes = (renderers.BrowsableAPIRenderer, )
+    renderer_classes = (renderers.JSONRenderer, )
 
     def get(self, request, format=None):
         dog = Dog.objects.all()
@@ -100,16 +100,51 @@ class DogList(APIView):
 class DogDetail(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser,parsers.FormParser)
-    renderer_classes = (renderers.BrowsableAPIRenderer, renderers.JSONRenderer, )
+    renderer_classes = (renderers.JSONRenderer, )
 
-    def get(self, request, format=None):
-        return Response({'status':1234})
+    def get(self, request, id):
+        dog = Dog.objects.filter(pk=id)
+        json_data = serializers.serialize('json', dog)
+        content = {'dog': json_data}
+        return HttpResponse(json_data, content_type='json')
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+    def put(self, request, id):
+        name = request.data.get('name')
+        age = int(request.data.get('age'))
+        gender = request.data.get('gender')
+        color = request.data.get('color')
+        favoriteFood = request.data.get('favoriteFood')
+        favoriteToy = request.data.get('favoriteToy')
+        breed = request.data.get('breed')
+
+        updateDog = Dog(
+            pk = id,
+            name=name,
+            gender=gender,
+            age=age,
+            color=color,
+            favoriteToy=favoriteToy,
+            favoriteFood=favoriteFood,
+            breed=breed
+        )
+        try:
+            updateDog.clean_fields()
+        except ValidationError as e:
+            print e
+            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+        updateDog.save()
+
+        return Response({'success': True}, status=status.HTTP_200_OK)
+    def delete(self, request, id):
+        try:
+            dog = Dog.objects.filter(pk=id).delete()
+        except ValidationError as e:
+            print e
+            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'success': True}, status=status.HTTP_200_OK)
 
 class BreedList(APIView):
     permission_classes = (AllowAny,)
@@ -134,12 +169,12 @@ class BreedList(APIView):
         exerciseneeds = request.data.get('exerciseneeds')
 
         newBreed = Breed(
-        breedname=breedname,
-        size=size,
-        friendliness=friendliness,
-        trainability=trainability,
-        sheddingamount=sheddingamount,
-        exerciseneeds=exerciseneeds
+            breedname=breedname,
+            size=size,
+            friendliness=friendliness,
+            trainability=trainability,
+            sheddingamount=sheddingamount,
+            exerciseneeds=exerciseneeds
         )
         try:
             newBreed.clean_fields()
@@ -156,14 +191,48 @@ class BreedDetail(APIView):
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
-    def get(self, request, format=None):
-        return Response({'status':4444})
+    def get(self, request, id, format=None):
+        breed = Breed.objects.filter(pk=id)
+        json_data = serializers.serialize('json', breed)
+        content = {'breed': json_data}
+        return HttpResponse(json_data, content_type='json')
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+    def put(self, request, id):
+        breedname = request.data.get('breedname')
+        size = request.data.get('size')
+        friendliness = request.data.get('friendliness')
+        trainability = request.data.get('trainability')
+        sheddingamount = request.data.get('sheddingamount')
+        exerciseneeds = request.data.get('exerciseneeds')
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+        updateBreed = Breed(
+            pk = id,
+            breedname=breedname,
+            size=size,
+            friendliness=friendliness,
+            trainability=trainability,
+            sheddingamount=sheddingamount,
+            exerciseneeds=exerciseneeds
+        )
+        try:
+            updateBreed.clean_fields()
+        except ValidationError as e:
+            print e
+            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+        updateBreed.save()
+
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+    def delete(self, request,id):
+
+        try:
+            breed = Breed.objects.filter(pk=id).delete()
+        except ValidationError as e:
+            print e
+            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'success': True}, status=status.HTTP_200_OK)
 class Register(APIView):
     permission_classes = (AllowAny,)
 
