@@ -156,7 +156,7 @@ class BreedList(APIView):
         json_data = serializers.serialize('json', breed)
         content = {'breed': json_data}
         return HttpResponse(json_data, content_type='json')
-        return Response({'status':4444})
+
 
     def post(self,request, *args, **kwargs):
         print 'REQUEST DATA'
@@ -233,6 +233,7 @@ class BreedDetail(APIView):
             return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'success': True}, status=status.HTTP_200_OK)
+    
 class Register(APIView):
     permission_classes = (AllowAny,)
 

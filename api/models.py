@@ -72,10 +72,10 @@ class Dog(models.Model):
     color = models.CharField(max_length=1000, blank=False)
     favoriteFood = models.CharField(max_length=1000, blank=False)
     favoriteToy = models.CharField(max_length=1000, blank=False)
-    breed = models.CharField(max_length=1000, blank=False)#needs to be a forign key field
-    """breed = models.ForeignKey(
-        'Breed',
+    #breed = models.CharField(max_length=1000, blank=False)#needs to be a forign key field
+    breed = models.ForeignKey(
+        Breed,
         on_delete=models.CASCADE
-    )"""
+    )
 class DogAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
