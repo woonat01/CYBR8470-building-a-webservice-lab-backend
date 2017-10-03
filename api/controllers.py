@@ -76,7 +76,11 @@ class DogList(APIView):
         color = request.data.get('color')
         favoriteFood = request.data.get('favoriteFood')
         favoriteToy = request.data.get('favoriteToy')
-        breed = request.data.get('breed')
+        #breed = request.data.get('breed')
+        #request breed object via string
+        breedObject = Breed.objects.get(
+        breedname = request.data.get('breed')
+        )
 
         newDog = Dog(
             name=name,
@@ -233,7 +237,7 @@ class BreedDetail(APIView):
             return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'success': True}, status=status.HTTP_200_OK)
-    
+
 class Register(APIView):
     permission_classes = (AllowAny,)
 
