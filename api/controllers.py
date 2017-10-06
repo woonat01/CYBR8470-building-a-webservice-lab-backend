@@ -40,6 +40,8 @@ import json, datetime, pytz
 from django.core import serializers
 import requests
 
+#bleach for input sanitization
+import bleach
 
 def home(request):
    """
@@ -70,17 +72,15 @@ class DogList(APIView):
     def post(self,request, *args, **kwargs):
         print 'REQUEST DATA'
         print str(request.data)
-        name = request.data.get('name')
+        name = bleach.clean(request.data.get('name'))
         age = int(request.data.get('age'))
-        gender = request.data.get('gender')
-        color = request.data.get('color')
-        favoriteFood = request.data.get('favoriteFood')
-        favoriteToy = request.data.get('favoriteToy')
+        gender = bleach.clean(request.data.get('gender'))
+        color = bleach.clean(request.data.get('color'))
+        favoriteFood = bleach.clean(request.data.get('favoriteFood'))
+        favoriteToy = bleach.clean(request.data.get('favoriteToy'))
         #breed = request.data.get('breed')
         #request breed object via string
-        breedObject = Breed.objects.get(
-        breedname = request.data.get('breed')
-        )
+        breedObject = Breed.objects.get(breedname = bleach.clean(request.data.get('breed')))
 
         newDog = Dog(
             name=name,
@@ -114,13 +114,15 @@ class DogDetail(APIView):
 
 
     def put(self, request, id):
-        name = request.data.get('name')
+        name = bleach.clean(request.data.get('name'))
         age = int(request.data.get('age'))
-        gender = request.data.get('gender')
-        color = request.data.get('color')
-        favoriteFood = request.data.get('favoriteFood')
-        favoriteToy = request.data.get('favoriteToy')
-        breed = request.data.get('breed')
+        gender = bleach.clean(request.data.get('gender'))
+        color = bleach.clean(request.data.get('color'))
+        favoriteFood = bleach.clean(request.data.get('favoriteFood'))
+        favoriteToy = bleach.clean(request.data.get('favoriteToy'))
+        #breed = request.data.get('breed')
+        #request breed object via string
+        breedObject = Breed.objects.get(breedname = bleach.clean(request.data.get('breed')))
 
         updateDog = Dog(
             pk = id,
@@ -165,12 +167,12 @@ class BreedList(APIView):
     def post(self,request, *args, **kwargs):
         print 'REQUEST DATA'
         print str(request.data)
-        breedname = request.data.get('breedname')
-        size = request.data.get('size')
-        friendliness = request.data.get('friendliness')
-        trainability = request.data.get('trainability')
-        sheddingamount = request.data.get('sheddingamount')
-        exerciseneeds = request.data.get('exerciseneeds')
+        breedname = bleach.clean(request.data.get('breedname'))
+        size = bleach.clean(request.data.get('size'))
+        friendliness = bleach.clean(request.data.get('friendliness'))
+        trainability = bleach.clean(request.data.get('trainability'))
+        sheddingamount = bleach.clean(request.data.get('sheddingamount'))
+        exerciseneeds = bleach.clean(request.data.get('exerciseneeds'))
 
         newBreed = Breed(
             breedname=breedname,
@@ -202,12 +204,12 @@ class BreedDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id):
-        breedname = request.data.get('breedname')
-        size = request.data.get('size')
-        friendliness = request.data.get('friendliness')
-        trainability = request.data.get('trainability')
-        sheddingamount = request.data.get('sheddingamount')
-        exerciseneeds = request.data.get('exerciseneeds')
+        breedname = bleach.clean(request.data.get('breedname'))
+        size = bleach.clean(request.data.get('size'))
+        friendliness = bleach.clean(request.data.get('friendliness'))
+        trainability = bleach.clean(request.data.get('trainability'))
+        sheddingamount = bleach.clean(request.data.get('sheddingamount'))
+        exerciseneeds = bleach.clean(request.data.get('exerciseneeds'))
 
         updateBreed = Breed(
             pk = id,
@@ -243,15 +245,15 @@ class Register(APIView):
 
     def post(self, request, *args, **kwargs):
         # Login
-        username = request.POST.get('username') #you need to apply validators to these
+        username = bleach.clean(request.POST.get('username')) #you need to apply validators to these
         print username
-        password = request.POST.get('password') #you need to apply validators to these
-        email = request.POST.get('email') #you need to apply validators to these
-        gender = request.POST.get('gender') #you need to apply validators to these
-        age = request.POST.get('age') #you need to apply validators to these
-        educationlevel = request.POST.get('educationlevel') #you need to apply validators to these
-        city = request.POST.get('city') #you need to apply validators to these
-        state = request.POST.get('state') #you need to apply validators to these
+        password = bleach.clean(request.POST.get('password')) #you need to apply validators to these
+        email = bleach.clean(request.POST.get('email')) #you need to apply validators to these
+        gender = bleach.clean(request.POST.get('gender')) #you need to apply validators to these
+        age = bleach.clean(request.POST.get('age')) #you need to apply validators to these
+        educationlevel = bleach.clean(request.POST.get('educationlevel')) #you need to apply validators to these
+        city = bleach.clean(request.POST.get('city')) #you need to apply validators to these
+        state = bleach.clean(request.POST.get('state')) #you need to apply validators to these
 
         print request.POST.get('username')
         if User.objects.filter(username=username).exists():
@@ -287,8 +289,8 @@ class Session(APIView):
 
     def post(self, request, *args, **kwargs):
         # Login
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = bleach.clean(request.POST.get('username'))
+        password = bleach.clean(request.POST.get('password'))
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
@@ -305,15 +307,15 @@ class Session(APIView):
 class Events(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser,parsers.FormParser)
-    renderer_classes = (renderers.BrowsableAPIRenderer, renderers.JSONRenderer)
+    renderer_classes = (renderers.JSONRenderer,)
 
     def post(self, request, *args, **kwargs):
         print 'REQUEST DATA'
         print str(request.data)
 
-        eventtype = request.data.get('eventtype')
+        eventtype = bleach.clean(request.data.get('eventtype'))
         timestamp = int(request.data.get('timestamp'))
-        userid = request.data.get('userid')
+        userid = bleach.clean(request.data.get('userid'))
         requestor = request.META['REMOTE_ADDR']
 
         newEvent = Event(
@@ -348,7 +350,8 @@ class ActivateIFTTT(APIView):
         print 'REQUEST DATA'
         print str(request.data)
 
-        eventtype = request.data.get('eventtype')
+        eventtype = bleach.clean(request.data.get('eventtype'))
+
         timestamp = int(request.data.get('timestamp'))
         requestor = request.META['REMOTE_ADDR']
         api_key = ApiKey.objects.all().first()

@@ -10,7 +10,7 @@ import base64
 
 class Event(models.Model):
     eventtype = models.CharField(max_length=1000, blank=False)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(max_length=10, blank=False)
     userid = models.CharField(max_length=1000, blank=True)
     requestor = models.GenericIPAddressField(blank=False)
 
