@@ -42,6 +42,9 @@ import requests
 
 #bleach for input sanitization
 import bleach
+#re for regex
+import re
+
 
 def home(request):
    """
@@ -72,16 +75,32 @@ class DogList(APIView):
     def post(self,request, *args, **kwargs):
         print 'REQUEST DATA'
         print str(request.data)
-        name = bleach.clean(request.data.get('name'))
-        age = int(request.data.get('age'))
-        gender = bleach.clean(request.data.get('gender'))
-        color = bleach.clean(request.data.get('color'))
-        favoriteFood = bleach.clean(request.data.get('favoriteFood'))
-        favoriteToy = bleach.clean(request.data.get('favoriteToy'))
-        #breed = request.data.get('breed')
-        #request breed object via string
-        breedObject = Breed.objects.get(breedname = bleach.clean(request.data.get('breed')))
 
+        name = bleach.clean(request.data.get('name'))
+        if not re.match("^[A-Za-z]*$", name):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
+
+        age = int(request.data.get('age'))
+
+        gender = bleach.clean(request.data.get('gender'))
+        if not re.match("^[A-Za-z]*$", gender):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
+
+        color = bleach.clean(request.data.get('color'))
+        if not re.match("^[A-Za-z]*$", color):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
+
+        favoriteFood = bleach.clean(request.data.get('favoriteFood'))
+        if not re.match("^[A-Za-z]*$", favoriteFood):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
+
+        favoriteToy = bleach.clean(request.data.get('favoriteToy'))
+        if not re.match("^[A-Za-z]*$", favoriteToy):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
+        print "test pre breed object"
+        #request breed object via string
+        breedObject = Breed.objects.get(breedname = 'breed')
+        print "test pre breed object"
         newDog = Dog(
             name=name,
             gender=gender,
@@ -89,8 +108,9 @@ class DogList(APIView):
             color=color,
             favoriteToy=favoriteToy,
             favoriteFood=favoriteFood,
-            breed=breed
+            breed=breedObject
         )
+        print "test"
         try:
             newDog.clean_fields()
         except ValidationError as e:
@@ -115,11 +135,26 @@ class DogDetail(APIView):
 
     def put(self, request, id):
         name = bleach.clean(request.data.get('name'))
+        if not re.match("^[A-Za-z]*$", name):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
+
         age = int(request.data.get('age'))
+
         gender = bleach.clean(request.data.get('gender'))
+        if not re.match("^[A-Za-z]*$", gender):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
+
         color = bleach.clean(request.data.get('color'))
+        if not re.match("^[A-Za-z]*$", color):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
+
         favoriteFood = bleach.clean(request.data.get('favoriteFood'))
+        if not re.match("^[A-Za-z]*$", favoriteFood):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
+
         favoriteToy = bleach.clean(request.data.get('favoriteToy'))
+        if not re.match("^[A-Za-z]*$", favoriteToy):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
         #breed = request.data.get('breed')
         #request breed object via string
         breedObject = Breed.objects.get(breedname = bleach.clean(request.data.get('breed')))
@@ -132,7 +167,7 @@ class DogDetail(APIView):
             color=color,
             favoriteToy=favoriteToy,
             favoriteFood=favoriteFood,
-            breed=breed
+            breed=breedObject
         )
         try:
             updateDog.clean_fields()
@@ -168,11 +203,16 @@ class BreedList(APIView):
         print 'REQUEST DATA'
         print str(request.data)
         breedname = bleach.clean(request.data.get('breedname'))
+        if not re.match("^[A-Za-z]*$", breedname):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
         size = bleach.clean(request.data.get('size'))
+        if not re.match("^[A-Za-z]*$", size):
+            return Response({'success':False}, status=status.HTTP_400_BAD_REQUEST)
         friendliness = bleach.clean(request.data.get('friendliness'))
         trainability = bleach.clean(request.data.get('trainability'))
         sheddingamount = bleach.clean(request.data.get('sheddingamount'))
         exerciseneeds = bleach.clean(request.data.get('exerciseneeds'))
+
 
         newBreed = Breed(
             breedname=breedname,
@@ -285,19 +325,21 @@ class Session(APIView):
         # Get the current user
         if request.user.is_authenticated():
             return self.form_response(True, request.user.id, request.user.username)
-        return self.form_response(False, None, None)
+        return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, *args, **kwargs):
         # Login
         username = bleach.clean(request.POST.get('username'))
         password = bleach.clean(request.POST.get('password'))
         user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return self.form_response(True, user.id, user.username)
-            return self.form_response(False, None, None, "Account is suspended")
-        return self.form_response(False, None, None, "Invalid username or password")
+        if request.user.is_authenticated():
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return self.form_response(True, user.id, user.username)
+                return self.form_response(False, None, None, "Account is suspended")
+            return self.form_response(False, None, None, "Invalid username or password")
+        return self.form_response(False, None, None)
 
     def delete(self, request, *args, **kwargs):
         # Logout
@@ -309,31 +351,45 @@ class Events(APIView):
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer,)
 
+    def form_response(self, isauthenticated, userid, username, error=""):
+        data = {
+            'isauthenticated': isauthenticated,
+            'userid': userid,
+            'username': username
+        }
+        if error:
+            data['message'] = error
+
+        return Response(data)
     def post(self, request, *args, **kwargs):
-        print 'REQUEST DATA'
-        print str(request.data)
+        if request.user.is_authenticated():
 
-        eventtype = bleach.clean(request.data.get('eventtype'))
-        timestamp = int(request.data.get('timestamp'))
-        userid = bleach.clean(request.data.get('userid'))
-        requestor = request.META['REMOTE_ADDR']
+            print 'REQUEST DATA'
+            print str(request.data)
 
-        newEvent = Event(
-            eventtype=eventtype,
-            timestamp=datetime.datetime.fromtimestamp(timestamp/1000, pytz.utc),
-            userid=userid,
-            requestor=requestor
-        )
+            eventtype = bleach.clean(request.data.get('eventtype'))
+            timestamp = int(request.data.get('timestamp'))
 
-        try:
-            newEvent.clean_fields()
-        except ValidationError as e:
-            print e
-            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+            userid = bleach.clean(request.data.get('userid'))
+            requestor = request.META['REMOTE_ADDR']
 
-        newEvent.save()
-        print 'New Event Logged from: ' + requestor
-        return Response({'success': True}, status=status.HTTP_200_OK)
+            newEvent = Event(
+                eventtype=eventtype,
+                timestamp=datetime.datetime.fromtimestamp(timestamp/1000, pytz.utc),
+                userid=userid,
+                requestor=requestor
+            )
+
+            try:
+                newEvent.clean_fields()
+            except ValidationError as e:
+                print e
+                return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+            newEvent.save()
+            print 'New Event Logged from: ' + requestor
+            return Response({'success': True}, status=status.HTTP_200_OK)
+        return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, format=None):
         events = Event.objects.all()
